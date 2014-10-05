@@ -1,4 +1,4 @@
-package placeholder;
+package diary;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

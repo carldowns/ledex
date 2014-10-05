@@ -1,4 +1,4 @@
-package placeholder;
+package diary;
 
 import java.util.Iterator;
 import javax.ws.rs.GET;

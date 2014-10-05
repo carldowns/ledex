@@ -1,4 +1,4 @@
-package placeholder;
+package diary;
 
 
 import com.codahale.metrics.health.HealthCheck;

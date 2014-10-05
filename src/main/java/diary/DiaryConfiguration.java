@@ -1,4 +1,4 @@
-package placeholder;
+package diary;
 
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;

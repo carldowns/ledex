@@ -1,4 +1,4 @@
-package placeholder;
+package diary;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,4 +1,4 @@
-package placeholder;
+package diary;
 
 import io.dropwizard.Application;
 import io.dropwizard.jdbi.DBIFactory;
