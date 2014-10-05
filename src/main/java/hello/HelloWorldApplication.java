@@ -51,7 +51,7 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
     /**
      * 
      * @param config
-     * @param environment
+     * @param env
      */
     private void initResources(HelloWorldConfiguration config, Environment env) {
 
@@ -64,7 +64,7 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
     /**
      * 
      * @param config
-     * @param environment
+     * @param env
      */
     private void initHealthChecks(HelloWorldConfiguration config, Environment env) {
 
@@ -86,7 +86,9 @@ public class HelloWorldApplication extends Application<HelloWorldConfiguration> 
         final DBIFactory factory = new DBIFactory();
         final DBI jdbi = factory.build(environment,
                 config.getDataSourceFactory(), "postgresql");
-        final MyDAO dao = jdbi.onDemand(MyDAO.class);
+
+        jdbi.onDemand(MyDAO.class);
+        // final MyDAO dao = jdbi.onDemand(MyDAO.class);
         // environment.jersey().register(new UserResource(dao));
     }
 }

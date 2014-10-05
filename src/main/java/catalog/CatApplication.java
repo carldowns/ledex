@@ -59,7 +59,7 @@ public class CatApplication extends Application<CatConfiguration> {
     /**
      * 
      * @param config
-     * @param environment
+     * @param env
      * @throws ClassNotFoundException
      */
     private void initResources(CatConfiguration config, Environment env) 
@@ -75,7 +75,7 @@ public class CatApplication extends Application<CatConfiguration> {
     /**
      * 
      * @param config
-     * @param environment
+     * @param env
      */
     private void initHealthChecks(CatConfiguration config, Environment env) {
 
