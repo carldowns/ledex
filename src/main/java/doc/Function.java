@@ -19,18 +19,5 @@ public class Function {
         rules.add(r);
         return this;
     }
-    
-    public static enum FunctionName {
-        POWER,
-        LIGHT,
-        CONTROLLER,
-        HARNESS,
-        SWITCH,
-        SENSOR,
-        PLUG,
-        LEAD,
-        CASE,
-        CELL,
-        CUSTOM,
-    }
+
 }
