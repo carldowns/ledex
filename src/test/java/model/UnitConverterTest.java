@@ -1,11 +1,10 @@
-package doc;
+package model;
 
 import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Test;
-import doc.UnitConverter;
-import doc.UnitConverter.UnitType;
-import doc.UnitConverter.UnitTypeValue;
+import model.UnitConverter.UnitType;
+import model.UnitConverter.UnitTypeValue;
 
 public class UnitConverterTest {
 

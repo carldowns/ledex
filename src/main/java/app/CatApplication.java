@@ -1,4 +1,4 @@
-package diary;
+package app;
 
 import io.dropwizard.Application;
 import io.dropwizard.jdbi.DBIFactory;
@@ -8,6 +8,7 @@ import io.dropwizard.setup.Environment;
 //import com.example.helloworld.health.TemplateHealthCheck;
 
 import org.skife.jdbi.v2.DBI;
+import supplier.SupplierDAO;
 
 /**
  * Dropwizard application
@@ -15,7 +16,7 @@ import org.skife.jdbi.v2.DBI;
  * @author carl_downs
  * 
  */
-public class DiaryApplication extends Application<DiaryConfiguration> {
+public class CatApplication extends Application<CatConfiguration> {
 
     /**
      * Entry point for the application.
@@ -26,19 +27,19 @@ public class DiaryApplication extends Application<DiaryConfiguration> {
     public static void main(String[] args) 
             throws Exception {
         
-        new DiaryApplication().run(args);
+        new CatApplication().run(args);
     }
 
     @Override
     public String getName() {
-        return "diary";
+        return "LED Exchange Catalog";
     }
 
     /**
      * 
      */
     @Override
-    public void initialize(Bootstrap<DiaryConfiguration> bootstrap) {
+    public void initialize(Bootstrap<CatConfiguration> bootstrap) {
         // nothing to do yet
         //bootstrap.addBundle(bundle);
         //bootstrap.addCommand(command);
@@ -48,7 +49,7 @@ public class DiaryApplication extends Application<DiaryConfiguration> {
      * 
      */
     @Override
-    public void run(DiaryConfiguration config, Environment env)
+    public void run(CatConfiguration config, Environment env)
             throws ClassNotFoundException {
 
         initResources(config, env);
@@ -58,27 +59,27 @@ public class DiaryApplication extends Application<DiaryConfiguration> {
     /**
      * 
      * @param config
-     * @param environment
+     * @param env
      * @throws ClassNotFoundException
      */
-    private void initResources(DiaryConfiguration config, Environment env) 
+    private void initResources(CatConfiguration config, Environment env) 
             throws ClassNotFoundException {
 
         final DBIFactory factory = new DBIFactory();
         final DBI dbi = factory.build(env, config.getDataSourceFactory(), "postgresql");
         
-        final DiaryDAO dao = dbi.onDemand(DiaryDAO.class);
-        env.jersey().register(new DiaryResource(dao));
+        final SupplierDAO dao = dbi.onDemand(SupplierDAO.class);
+        env.jersey().register(new SupplierResource(dao));
     }
     
     /**
      * 
      * @param config
-     * @param environment
+     * @param env
      */
-    private void initHealthChecks(DiaryConfiguration config, Environment env) {
+    private void initHealthChecks(CatConfiguration config, Environment env) {
 
-        final DiaryHealth check = new DiaryHealth(
+        final CatHealth check = new CatHealth(
                 config.getTemplate());
 
         env.healthChecks().register("template", check);

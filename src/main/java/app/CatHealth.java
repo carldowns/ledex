@@ -1,4 +1,4 @@
-package catalog;
+package app;
 
 
 import com.codahale.metrics.health.HealthCheck;

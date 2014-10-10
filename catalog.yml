@@ -12,7 +12,7 @@ database:
   password: fiddlesticks
 
   # the JDBC URL
-  url: jdbc:postgresql:catalog
+  url: jdbc:postgresql:app
 
   # any properties specific to your JDBC driver:
   properties: 

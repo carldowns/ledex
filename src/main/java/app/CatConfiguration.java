@@ -1,4 +1,4 @@
-package diary;
+package app;
 
 import io.dropwizard.Configuration;
 import io.dropwizard.db.DataSourceFactory;
@@ -10,12 +10,12 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DiaryConfiguration extends Configuration {
+public class CatConfiguration extends Configuration {
     @NotEmpty
     private String template;
 
     @NotEmpty
-    private String defaultName = "Stranger";
+    private String defaultName = "Integrated LED Catalog";
 
     @Valid
     @NotNull

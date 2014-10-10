@@ -1,4 +1,4 @@
-package doc;
+package model;
 
 
 public class PartProperty {

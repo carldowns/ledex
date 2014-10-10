@@ -1,4 +1,4 @@
-package doc;
+package model;
 
 import java.math.BigDecimal;
 import org.eclipse.jetty.util.StringUtil;

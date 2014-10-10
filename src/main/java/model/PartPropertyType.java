@@ -1,4 +1,4 @@
-package doc;
+package model;
 
 public enum PartPropertyType {
     VOLTAGE("Voltage rating for the circuit"), 

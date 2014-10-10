@@ -1,4 +1,4 @@
-package catalog;
+package app;
 
 import java.util.Iterator;
 import javax.ws.rs.GET;

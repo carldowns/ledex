@@ -1,8 +1,8 @@
 package rule;
 
 import java.util.List;
-import doc.Assembly;
-import doc.Part;
+import model.Assembly;
+import model.Part;
 import rule.RuleEngine.RuleIssue;
 
 

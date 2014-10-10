@@ -1,4 +1,4 @@
-package doc;
+package model;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -9,14 +9,6 @@ import org.junit.Test;
 import rule.RuleEngine;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import doc.Assembly;
-import doc.Part;
-import doc.PartCost;
-import doc.PartCostIncrement;
-import doc.PartDims;
-import doc.PartDimsIncrement;
-import doc.PartIncrement;
-import doc.PartProperty;
 
 public class AssemblyTest {
 

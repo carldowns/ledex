@@ -1,4 +1,4 @@
-package doc;
+package model;
 
 /**
 * Created by carl_downs on 10/5/14.

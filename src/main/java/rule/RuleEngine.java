@@ -2,7 +2,7 @@ package rule;
 
 import java.util.ArrayList;
 import java.util.List;
-import doc.Assembly;
+import model.Assembly;
 
 
 public class RuleEngine {

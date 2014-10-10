@@ -60,14 +60,14 @@ public interface SupplierDAO {
     static String CREATE_TABLE_SUPPLIER_DOC = ""
             + "create table SupplierDoc ("
             + "supplierID text REFERENCES Supplier,"
-            + "doc text,"
+            + "model text,"
             + "ts timestamp with time zone NOT NULL DEFAULT now()"
             + ");";
     
     @SqlUpdate(CREATE_TABLE_SUPPLIER_DOC)
     void createSupplierDocTable();
 
-    @SqlUpdate("insert into supplierDoc (supplierID, doc) values (:supplierID, :doc)")
+    @SqlUpdate("insert into supplierDoc (supplierID, model) values (:supplierID, :model)")
     void insertSupplierDoc(@Bind("supplierID") String supplierID, @Bind("doc") String doc);
 
     @SqlQuery("select * from supplierDoc where supplierId = :supplierId")
