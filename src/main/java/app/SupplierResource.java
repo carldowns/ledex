@@ -28,23 +28,34 @@ public class SupplierResource {
 //    }
     
     @GET 
-    @Path ("/list")
+    @Path ("/findAll")
     @Timed
     public Iterator<SupplierEntity> getAllSuppliers () {
-        return dao.findAll();
+        return dao.getAllSuppliers();
     }
     
     @GET
     @Timed
+    @Path ("/findAllNames")
     public Iterator<String> findAllNames () {
-        return dao.findAllNames();
+        return dao.getAllSupplierNames();
     }
-    
-    @GET 
-    @Path ("/detail")
+
+    @GET
+    @Path ("/find")
+    @Timed
+    public SupplierEntity getSupplier (@QueryParam("supplierID") String id ) {
+        return dao.getSupplierByID(id);
+    }
+
+    ///////////////////////////
+    // Supplier Doc Methods
+    ///////////////////////////
+
+    @GET
+    @Path ("/findDoc")
     @Timed
     public SupplierDocEntity getSupplierDoc (@QueryParam("supplierID") String id ) {
-        System.out.println ("got here with Id " + id);
         return dao.getSupplierDoc(id);
     }
     

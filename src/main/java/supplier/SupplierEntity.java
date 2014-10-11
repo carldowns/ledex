@@ -26,8 +26,20 @@ public class SupplierEntity {
     }
 
     @JsonProperty
+    public void setId(String id)
+    {
+        this.id = id;
+    }
+
+    @JsonProperty
     public String getName() {
         return name;
     }
-    
+
+    @JsonProperty
+    public void setName(String name)
+    {
+        this.name = name;
+    }
+
 }

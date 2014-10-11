@@ -33,21 +33,22 @@ public interface SupplierDAO {
     @SqlUpdate(CREATE_TABLE_SUPPLIER)
     void createSupplierTable();
 
-    @SqlUpdate("insert into supplier (supplierID, name) values (:supplierID, :name)")
-    void insertPerson(@Bind("supplierID") String supplierID, @Bind("name") String name);
+//    @SqlUpdate("insert into supplier (supplierID, name) values (:supplierID, :name)")
+//    void insertPerson(@Bind("supplierID") String supplierID, @Bind("name") String name);
+//
+//    @SqlQuery("select name from supplier where id > :from and id < :to")
+//    List<String> findNamesBetween(@Bind("from") int from, @Bind("to") int to);
 
-    @SqlQuery("select name from supplier where supplierID = :supplierID")
-    String findNameByPersonId(@Bind("supplierID") int supplierID);
-    
-    @SqlQuery("select name from supplier where id > :from and id < :to")
-    List<String> findNamesBetween(@Bind("from") int from, @Bind("to") int to);
-    
+    @SqlQuery("select * from supplier where supplierID = :supplierID")
+    @Mapper(SupplierEntityMapper.class)
+    SupplierEntity getSupplierByID(@Bind("supplierID") String supplierID);
+
     @SqlQuery("select name from supplier")
-    Iterator<String> findAllNames();
+    Iterator<String> getAllSupplierNames();
 
     @SqlQuery("select * from supplier")
     @Mapper(SupplierEntityMapper.class)
-    Iterator<SupplierEntity> findAll();
+    Iterator<SupplierEntity> getAllSuppliers();
 
     
     //////////////////////////////
