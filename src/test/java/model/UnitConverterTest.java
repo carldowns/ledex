@@ -3,8 +3,9 @@ package model;
 import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Test;
-import model.UnitConverter.UnitType;
-import model.UnitConverter.UnitTypeValue;
+import util.UnitConverter;
+import util.UnitConverter.UnitType;
+import util.UnitConverter.UnitTypeValue;
 
 public class UnitConverterTest {
 
@@ -17,8 +18,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("  300.05 USD        ");
         UnitTypeValue utv = uc.getCurrencyType();
 
-        Assert.assertEquals(utv.value, "300.05");
-        Assert.assertTrue(utv.type == UnitType.USD);
+        Assert.assertEquals(utv.getValue(), "300.05");
+        Assert.assertTrue(utv.getType() == UnitType.USD);
 
         // uc.toRMB();
         uc.toUSD();
@@ -29,8 +30,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("$300");
         UnitTypeValue utv = uc.getCurrencyType();
 
-        Assert.assertEquals(utv.value, "300");
-        Assert.assertTrue(utv.type == UnitType.USD);
+        Assert.assertEquals(utv.getValue(), "300");
+        Assert.assertTrue(utv.getType() == UnitType.USD);
 
         // uc.toRMB();
         uc.toUSD();
@@ -51,8 +52,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("7.5m");
         UnitTypeValue utv = uc.getLengthType();
 
-        Assert.assertEquals(utv.value, "7.5");
-        Assert.assertTrue(utv.type == UnitType.M);
+        Assert.assertEquals(utv.getValue(), "7.5");
+        Assert.assertTrue(utv.getType() == UnitType.M);
 
         utv.validate();
     }
@@ -62,8 +63,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("57.5cm");
         UnitTypeValue utv = uc.getLengthType();
 
-        Assert.assertEquals(utv.value, "57.5");
-        Assert.assertTrue(utv.type == UnitType.CM);
+        Assert.assertEquals(utv.getValue(), "57.5");
+        Assert.assertTrue(utv.getType() == UnitType.CM);
 
         utv.validate();
     }
@@ -73,8 +74,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("120mm");
         UnitTypeValue utv = uc.getLengthType();
 
-        Assert.assertEquals(utv.value, "120");
-        Assert.assertTrue(utv.type == UnitType.MM);
+        Assert.assertEquals(utv.getValue(), "120");
+        Assert.assertTrue(utv.getType() == UnitType.MM);
 
         utv.validate();
     }
@@ -84,8 +85,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("12in");
         UnitTypeValue utv = uc.getLengthType();
 
-        Assert.assertEquals(utv.value, "12");
-        Assert.assertTrue(utv.type == UnitType.IN);
+        Assert.assertEquals(utv.getValue(), "12");
+        Assert.assertTrue(utv.getType() == UnitType.IN);
 
         utv.validate();
     }
@@ -95,8 +96,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("12\"");
         UnitTypeValue utv = uc.getLengthType();
 
-        Assert.assertEquals(utv.value, "12");
-        Assert.assertTrue(utv.type == UnitType.IN);
+        Assert.assertEquals(utv.getValue(), "12");
+        Assert.assertTrue(utv.getType() == UnitType.IN);
 
         utv.validate();
     }
@@ -106,8 +107,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("12\'");
         UnitTypeValue utv = uc.getLengthType();
 
-        Assert.assertEquals(utv.value, "12");
-        Assert.assertTrue(utv.type == UnitType.FT);
+        Assert.assertEquals(utv.getValue(), "12");
+        Assert.assertTrue(utv.getType() == UnitType.FT);
 
         utv.validate();
     }
@@ -117,8 +118,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("12ft");
         UnitTypeValue utv = uc.getLengthType();
 
-        Assert.assertEquals(utv.value, "12");
-        Assert.assertTrue(utv.type == UnitType.FT);
+        Assert.assertEquals(utv.getValue(), "12");
+        Assert.assertTrue(utv.getType() == UnitType.FT);
 
         utv.validate();
     }
@@ -138,8 +139,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("12 lbs");
         UnitTypeValue utv = uc.getWeightType();
 
-        Assert.assertEquals(utv.value, "12");
-        Assert.assertTrue(utv.type == UnitType.LB);
+        Assert.assertEquals(utv.getValue(), "12");
+        Assert.assertTrue(utv.getType() == UnitType.LB);
 
         utv.validate();
     }
@@ -149,8 +150,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("12.6kg");
         UnitTypeValue utv = uc.getWeightType();
 
-        Assert.assertEquals(utv.value, "12.6");
-        Assert.assertTrue(utv.type == UnitType.KG);
+        Assert.assertEquals(utv.getValue(), "12.6");
+        Assert.assertTrue(utv.getType() == UnitType.KG);
 
         utv.validate();
         Assert.assertEquals(new BigDecimal("12.6"), utv.toDecimal());
@@ -161,8 +162,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("400 g");
         UnitTypeValue utv = uc.getWeightType();
 
-        Assert.assertEquals(utv.value, "400");
-        Assert.assertTrue(utv.type == UnitType.G);
+        Assert.assertEquals(utv.getValue(), "400");
+        Assert.assertTrue(utv.getType() == UnitType.G);
 
         utv.validate();
         Assert.assertEquals(new BigDecimal("400"), utv.toDecimal());

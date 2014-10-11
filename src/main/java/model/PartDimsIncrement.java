@@ -2,6 +2,7 @@ package model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import util.UnitConverter;
 
 /**
  * decide if we are going to normalize of not

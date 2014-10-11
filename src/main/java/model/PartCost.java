@@ -1,6 +1,7 @@
 package model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import util.UnitConverter;
 
 import java.util.ArrayList;
 import java.util.List;

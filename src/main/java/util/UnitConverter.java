@@ -1,4 +1,4 @@
-package model;
+package util;
 
 import java.math.BigDecimal;
 import org.eclipse.jetty.util.StringUtil;
@@ -100,7 +100,23 @@ public class UnitConverter {
                 throw new IllegalArgumentException ("value must be in decimal format: " + value);
             }
         }
-        
+
+        public UnitType getType() {
+            return type;
+        }
+
+        public void setType(UnitType type) {
+            this.type = type;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
         public BigDecimal toDecimal () {
             return new BigDecimal (value);
         }

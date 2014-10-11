@@ -8,6 +8,9 @@ import java.io.*;
 import java.net.URI;
 
 /**
+ * In here for historical.  We started with this but Jackson is simply faster and it is what DropWizard uses.
+ * So we have this hear for grins.
+ *
  * Created by carl_downs on 10/11/14.
  */
 public class GsonUtil {
