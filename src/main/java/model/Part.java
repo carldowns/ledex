@@ -1,5 +1,7 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,21 +20,25 @@ public class Part implements Cloneable {
     /**
      * Part name
      */
+    @JsonProperty ("name")
     String name;
     
     /**
      * function in the set
      */
-    String function; 
+    @JsonProperty ("function")
+    String function;
     
     /**
      * properties
      */
+    @JsonProperty ("properties")
     List<PartProperty> properties = new ArrayList<PartProperty>();
     
     /**
      * quantity pricing
      */
+    @JsonProperty ("costs")
     List<PartCost> costs = new ArrayList<PartCost>();
     
     /**
@@ -40,7 +46,17 @@ public class Part implements Cloneable {
      * modified incrementally 
      * @see PartDimsIncrement
      */
-    PartDims dims;    
+    PartDims dims;
+
+    /////////////////////////
+    // Constructors
+    /////////////////////////
+
+    /**
+     * default constructor for Jackson
+     */
+    public Part () {
+    }
 
     /**
      * copy constructor
@@ -54,7 +70,12 @@ public class Part implements Cloneable {
         this.name = partName;
         this.function = functionName;
     }
-    
+
+
+    /////////////////////////
+    // Methods
+    /////////////////////////
+
     public Part setDims (PartDims dims) {
        this.dims = dims; 
        return this;    
@@ -122,5 +143,10 @@ public class Part implements Cloneable {
     @Override
     public Part clone () {
         throw new UnsupportedOperationException ();    
+    }
+
+    @Override
+    public String toString () {
+        return "name:" + name + " function:" + function;
     }
 }

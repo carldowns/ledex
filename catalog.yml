@@ -1,6 +1,9 @@
 template: Hello, %s!
 defaultName: Catalog
 
+importDirectory: /Users/carl_downs/work/dev/ledex/data/import
+exportDirectory: /Users/carl_downs/work/dev/ledex/data/export
+
 database:
   # the name of your JDBC driver
   driverClass: org.postgresql.Driver
@@ -12,7 +15,7 @@ database:
   password: fiddlesticks
 
   # the JDBC URL
-  url: jdbc:postgresql:app
+  url: jdbc:postgresql:catalog
 
   # any properties specific to your JDBC driver:
   properties: 

@@ -17,6 +17,12 @@ public class CatConfiguration extends Configuration {
     @NotEmpty
     private String defaultName = "Integrated LED Catalog";
 
+    @NotEmpty
+    private String importDirectory;
+
+    @NotEmpty
+    private String exportDirectory;
+
     @Valid
     @NotNull
     @JsonProperty
@@ -46,5 +52,16 @@ public class CatConfiguration extends Configuration {
     public DataSourceFactory getDataSourceFactory() {
         return database;
     }
+
+    @JsonProperty
+    public String getImportDirectory() {
+        return importDirectory;
+    }
+
+    @JsonProperty
+    public String getExportDirectory() {
+        return exportDirectory;
+    }
+
 
 }

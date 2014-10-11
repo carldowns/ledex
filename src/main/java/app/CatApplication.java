@@ -1,5 +1,6 @@
 package app;
 
+import command.ImportCommand;
 import io.dropwizard.Application;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
@@ -9,6 +10,7 @@ import io.dropwizard.setup.Environment;
 
 import org.skife.jdbi.v2.DBI;
 import supplier.SupplierDAO;
+import task.GenericTask;
 
 /**
  * Dropwizard application
@@ -40,9 +42,11 @@ public class CatApplication extends Application<CatConfiguration> {
      */
     @Override
     public void initialize(Bootstrap<CatConfiguration> bootstrap) {
-        // nothing to do yet
-        //bootstrap.addBundle(bundle);
-        //bootstrap.addCommand(command);
+
+        // bootstrap.addBundle(new AssetsBundle("/assets/css", "/css", null, "css"));
+        // bootstrap.addBundle(new AssetsBundle("/assets/js", "/js", null, "js"));
+        // bootstrap.addBundle(new AssetsBundle("/assets/fonts", "/fonts", null, "fonts"));
+        bootstrap.addCommand(new ImportCommand());
     }
 
     /**
@@ -70,6 +74,7 @@ public class CatApplication extends Application<CatConfiguration> {
         
         final SupplierDAO dao = dbi.onDemand(SupplierDAO.class);
         env.jersey().register(new SupplierResource(dao));
+        env.admin().addTask(new GenericTask(dao));
     }
     
     /**

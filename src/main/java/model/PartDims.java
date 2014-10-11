@@ -1,5 +1,7 @@
 package model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,25 +14,38 @@ public class PartDims {
     /**
      * weight in milligrams
      */
+    @JsonProperty("weight")
     String weight;
     
     /**
      * height in millimeters
      */
+    @JsonProperty("height")
     String height;
     
     /**
      * length in millimeters
      */
+    @JsonProperty("length")
     String length;
 
     /**
      * width in millimeters
      */
+    @JsonProperty("width")
     String width;
 
+    /**
+     * means of assigning incremental metrics changes
+     */
+    @JsonProperty("increments")
     List<PartDimsIncrement> increments;
-    
+
+    /**
+     * default constructor for Jackson
+     */
+    public PartDims() {}
+
     PartDims(String weight, String height, String length, String width) {
         setWeight(weight);
         setHeight(height);

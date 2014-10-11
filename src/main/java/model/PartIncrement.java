@@ -1,6 +1,7 @@
 package model;
 
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author carl_downs
@@ -11,21 +12,24 @@ public class PartIncrement {
     /**
      *  minimum value allowed
      */
+    @JsonProperty("incMin")
     String incMin;
     
     /**
      *  maximum units allowed
      */
+    @JsonProperty("incMax")
     String incMax;
     
     /**
      *  increment must be wholly divisible by this number
      */
+    @JsonProperty("incDiv")
     String incDiv;
         
     
     /**
-     * sereialization
+     * Jackson
      */
     PartIncrement () {}
     
@@ -39,5 +43,29 @@ public class PartIncrement {
         this.incMin = UnitConverter.assertLengthType(min);
         this.incMax = UnitConverter.assertLengthType(max);
         this.incDiv = UnitConverter.assertLengthType(div);
+    }
+
+    public String getIncMin() {
+        return incMin;
+    }
+
+    public void setIncMin(String incMin) {
+        this.incMin = incMin;
+    }
+
+    public String getIncMax() {
+        return incMax;
+    }
+
+    public void setIncMax(String incMax) {
+        this.incMax = incMax;
+    }
+
+    public String getIncDiv() {
+        return incDiv;
+    }
+
+    public void setIncDiv(String incDiv) {
+        this.incDiv = incDiv;
     }
 }

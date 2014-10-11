@@ -1,14 +1,16 @@
 package model;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+
 import org.junit.Assert;
 import org.junit.Test;
 import rule.RuleEngine;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import util.GsonUtil;
 
 public class AssemblyTest {
 
@@ -46,22 +48,17 @@ public class AssemblyTest {
      */
 
     @Test
-    public void test() {
-//        Set set = new Set("Basic LED Strip Set");
-//        Function f1 = new Function("POWER");
-//        f1.add (new Rule("VOLTAGE"));
-//        f1.add (new Rule("AMPERAGE"));
-//        set.add(f1);
-//
-//        set.add(new Function ("LIGHT_SOURCE"));
-//        set.add(new Function ("HARNESS"));
+    public void test() throws Exception {
         
         Assembly asm = new Assembly("ADI Jim Bean 3 Bottle Set");
         asm.add(getPart1());
         asm.add(getPart2());
 
-        toJson (asm);
-        //Assembly deserialized = fromJson();
+        File file = File.createTempFile("assembly", ".json");
+        file.deleteOnExit();
+
+        GsonUtil.toJsonFile(asm, file.toURI());
+        Assembly asmReadIn = GsonUtil.fromJson(file.toURI());
         
         RuleEngine e = new RuleEngine(asm);
         Assert.assertTrue(e.isValid());
@@ -128,54 +125,5 @@ public class AssemblyTest {
         p.addCost(cost100).addCost(cost250).addCost(cost500);
        
         return p;
-    }
-
-    /**
-     * 
-     */
-    public void toJson(Assembly obj) {
-
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        // convert java object to JSON format,
-        // and returned as JSON formatted string
-        String json = gson.toJson(obj);
-
-        try {
-            // write converted json data to a file named "file.json"
-            FileWriter writer = new FileWriter("file.json");
-            writer.write(json);
-            writer.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(json);
-
-    }
-
-    /**
-     * 
-     */
-    public Assembly fromJson() {
-
-        Gson gson = new Gson();
-
-        try {
-
-            BufferedReader br = new BufferedReader(new FileReader("file.json"));
-
-            // convert the json string back to object
-            Assembly obj = gson.fromJson(br, Assembly.class);
-
-            //System.out.println(obj);
-            return obj;
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
-        return null;
     }
 }

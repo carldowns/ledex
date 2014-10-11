@@ -1,0 +1,22 @@
+[
+    {
+        "name" : "part 1",
+        "function" : "whatever"
+    },
+    {
+        "name" : "part 2",
+        "function" : "doctor"
+    },
+    {
+        "name" : "part 3",
+        "function" : "tomorrow"
+    },
+    {
+        "name" : "part 4",
+        "function" : "yesterday"
+    },
+    {
+        "name" : "part 5",
+        "function" : "forever"
+    }
+]

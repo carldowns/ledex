@@ -1,0 +1,45 @@
+[
+    {
+        "name" : "assembly 1",
+        "parts" : [
+            {
+                "name" : "part 1",
+                "function" : "POWER"
+            },
+            {
+                "name" : "part 2",
+                "function" : "LIGHT"
+            },
+            {
+                "name" : "part 3",
+                "function" : "SWITCH"
+            },
+            {
+                "name" : "part 4",
+                "function" : "SENSOR"
+            },
+            {
+                "name" : "part 5",
+                "function" : "LEAD"
+            }
+        ]
+    },
+    {
+        "name" : "assembly 2",
+        "parts" : [
+            {
+                "name" : "part 1",
+                "function" : "POWER"
+            }
+        ]
+    },
+    {
+        "name" : "assembly 3",
+        "parts" : [
+            {
+                "name" : "part 1",
+                "function" : "POWER"
+            }
+        ]
+    }
+]
