@@ -27,7 +27,7 @@ public class Part implements Cloneable {
      * function in the set
      */
     @JsonProperty ("function")
-    String function;
+    FunctionType function;
     
     /**
      * properties
@@ -68,7 +68,7 @@ public class Part implements Cloneable {
     
     public Part (String partName, String functionName) {
         this.name = partName;
-        this.function = functionName;
+        this.function = FunctionType.valueOf(functionName);
     }
 
 
@@ -97,12 +97,12 @@ public class Part implements Cloneable {
     
     
     public String getFunction() {
-        return function;
+        return function.name();
     }
 
     
     public void setFunction(String function) {
-        this.function = function;
+        this.function = FunctionType.valueOf(function);
     }
 
     

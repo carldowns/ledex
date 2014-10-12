@@ -1,22 +1,46 @@
 [
     {
         "name" : "part 1",
-        "function" : "whatever"
+        "function" : "POWER"
     },
     {
         "name" : "part 2",
-        "function" : "doctor"
+        "function" : "LIGHT"
     },
     {
         "name" : "part 3",
-        "function" : "tomorrow"
+        "function" : "CONTROLLER"
     },
     {
         "name" : "part 4",
-        "function" : "yesterday"
+        "function" : "HARNESS"
     },
     {
         "name" : "part 5",
-        "function" : "forever"
+        "function" : "SWITCH"
+    },
+    {
+        "name" : "part 6",
+        "function" : "SENSOR"
+    },
+    {
+        "name" : "part 7",
+        "function" : "PLUG"
+    },
+    {
+        "name" : "part 8",
+        "function" : "LEAD"
+    },
+    {
+        "name" : "part 9",
+        "function" : "CASE"
+    },
+    {
+        "name" : "part 10",
+        "function" : "CELL"
+    },
+    {
+        "name" : "part 11",
+        "function" : "CUSTOM"
     }
 ]
