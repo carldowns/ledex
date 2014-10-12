@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
 /**
  * Unit tests for {@link PersonResource}.
  */
-public class SupplierDAOUnitTest {
+public class SupplierSourceTest {
     private static final SupplierDAO DAO = mock(SupplierDAO.class);
 
     @ClassRule

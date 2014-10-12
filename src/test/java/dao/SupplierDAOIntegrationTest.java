@@ -8,12 +8,12 @@ import supplier.SupplierDAO;
 import java.util.Iterator;
 
 /**
- * Testing
+ * Testing a direct call to local PostresSQL database instance.
  * Created by carl_downs on 10/11/14.
  */
 public class SupplierDAOIntegrationTest {
 
-private SupplierDAO dao;
+    private SupplierDAO dao;
 
     @Before
     public void setup() {
@@ -28,7 +28,7 @@ private SupplierDAO dao;
         org.junit.Assert.assertNotNull(results);
         while (results.hasNext()) {
             String name = results.next();
-            System.out.println (name);
+            System.out.println(name);
         }
     }
 }
