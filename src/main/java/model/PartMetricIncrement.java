@@ -9,7 +9,7 @@ import util.UnitConverter;
  * @author carl_downs
  *
  */
-public class PartDimsIncrement {
+public class PartMetricIncrement {
 
     /**
      * 
@@ -44,9 +44,9 @@ public class PartDimsIncrement {
     /**
      * default constructor for Jackson
      */
-    public PartDimsIncrement() {}
+    public PartMetricIncrement() {}
 
-    PartDimsIncrement (String name, String addWeight, String addHeight, String addLength, String addWidth) {
+    PartMetricIncrement(String name, String addWeight, String addHeight, String addLength, String addWidth) {
         this.name = name;
         this.addWeight = UnitConverter.assertWeightType(addWeight);
         this.addHeight = UnitConverter.assertLengthType(addHeight);

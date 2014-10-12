@@ -1,15 +1,10 @@
 package model;
 
 import java.io.*;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 import org.junit.Assert;
 import org.junit.Test;
 import rule.RuleEngine;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import util.GsonUtil;
 
 public class AssemblyTest {
@@ -75,9 +70,9 @@ public class AssemblyTest {
         
         p.addProperty (new PartProperty("POWER_CORD", "Cord length", new PartIncrement ("24in","72in","1in")));
         
-        PartDims dims = new PartDims("5g","2mm","10mm","10mm");
-        dims.add(new PartDimsIncrement ("CORD","1kg","5cm","6cm","1cm"));
-        p.setDims(dims);
+        PartMetric dims = new PartMetric("5g","2mm","10mm","10mm");
+        dims.add(new PartMetricIncrement("CORD","1kg","5cm","6cm","1cm"));
+        p.setMetrics(dims);
         
         PartCost cost100 = new PartCost (100, "$4.00");
         cost100.add (new PartCostIncrement ("POWER_CORD", "0.05 USD"));

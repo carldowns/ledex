@@ -44,9 +44,10 @@ public class Part implements Cloneable {
     /**
      * part dimensions, baseline.  These are a fixed set of values but can be 
      * modified incrementally 
-     * @see PartDimsIncrement
+     * @see PartMetricIncrement
      */
-    PartDims dims;
+    @JsonProperty ("metrics")
+    PartMetric metrics;
 
     /////////////////////////
     // Constructors
@@ -76,8 +77,8 @@ public class Part implements Cloneable {
     // Methods
     /////////////////////////
 
-    public Part setDims (PartDims dims) {
-       this.dims = dims; 
+    public Part setMetrics(PartMetric metrics) {
+       this.metrics = metrics;
        return this;    
     }
     
@@ -126,13 +127,13 @@ public class Part implements Cloneable {
     }
 
     
-    public PartDims getDimensions() {
-        return dims;
+    public PartMetric getMetric() {
+        return metrics;
     }
 
     
-    public void setDimensions(PartDims dimensions) {
-        this.dims = dimensions;
+    public void setMetric(PartMetric metric) {
+        this.metrics = metric;
     }
 
     

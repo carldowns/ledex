@@ -10,7 +10,7 @@ import java.util.List;
  * All dimensions are normalized to metric base.
  * @author carl_downs
  */
-public class PartDims {
+public class PartMetric {
 
     /**
      * weight in milligrams
@@ -40,14 +40,14 @@ public class PartDims {
      * means of assigning incremental metrics changes
      */
     @JsonProperty("increments")
-    List<PartDimsIncrement> increments;
+    List<PartMetricIncrement> increments;
 
     /**
      * default constructor for Jackson
      */
-    public PartDims() {}
+    public PartMetric() {}
 
-    PartDims(String weight, String height, String length, String width) {
+    PartMetric(String weight, String height, String length, String width) {
         setWeight(weight);
         setHeight(height);
         setLength(length);
@@ -70,9 +70,9 @@ public class PartDims {
         width = UnitConverter.assertLengthType(measure);
     }
 
-    PartDims add (PartDimsIncrement increment) {
+    PartMetric add (PartMetricIncrement increment) {
         if (increments == null) {
-            increments = new ArrayList<PartDimsIncrement>();
+            increments = new ArrayList<PartMetricIncrement>();
         }
         
         increments.add(increment);

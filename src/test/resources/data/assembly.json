@@ -62,7 +62,7 @@
           ]
         }
       ],
-      "dims": {
+      "metrics": {
         "weight": "5g",
         "height": "2mm",
         "length": "10mm",
