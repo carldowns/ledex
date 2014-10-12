@@ -7,16 +7,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * @author carl_downs
  *
  */
-public class SupplierDocEntity {
+public class SupplierDoc {
     private String id;
     private String doc;
     private Timestamp ts;
 
-    public SupplierDocEntity() {
-        // Jackson deserialization
+    public SupplierDoc() {
     }
 
-    public SupplierDocEntity(String id, String doc, Timestamp ts) {
+    public SupplierDoc(String id, String doc, Timestamp ts) {
         this.id = id;
         this.doc = doc;
         this.ts = ts;

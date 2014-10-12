@@ -1,7 +1,7 @@
 package supplier;
 
 import java.util.Iterator;
-import java.util.List;
+
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
@@ -40,15 +40,15 @@ public interface SupplierDAO {
 //    List<String> findNamesBetween(@Bind("from") int from, @Bind("to") int to);
 
     @SqlQuery("select * from supplier where supplierID = :supplierID")
-    @Mapper(SupplierEntityMapper.class)
-    SupplierEntity getSupplierByID(@Bind("supplierID") String supplierID);
+    @Mapper(SupplierMapper.class)
+    Supplier getSupplierByID(@Bind("supplierID") String supplierID);
 
     @SqlQuery("select name from supplier")
     Iterator<String> getAllSupplierNames();
 
     @SqlQuery("select * from supplier")
-    @Mapper(SupplierEntityMapper.class)
-    Iterator<SupplierEntity> getAllSuppliers();
+    @Mapper(SupplierMapper.class)
+    Iterator<Supplier> getAllSuppliers();
 
     
     //////////////////////////////
@@ -72,6 +72,6 @@ public interface SupplierDAO {
     void insertSupplierDoc(@Bind("supplierID") String supplierID, @Bind("doc") String doc);
 
     @SqlQuery("select * from supplierDoc where supplierId = :supplierId")
-    @Mapper(SupplierDocEntityMapper.class)
-    SupplierDocEntity getSupplierDoc(@Bind("supplierId") String supplierId);
+    @Mapper(SupplierDocMapper.class)
+    SupplierDoc getSupplierDoc(@Bind("supplierId") String supplierId);
 }

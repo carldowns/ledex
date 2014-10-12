@@ -38,11 +38,16 @@ create table Part (
 
 create table PartDoc (
   partID text REFERENCES Part,
-  batchID text REFERENCES Batch,
+  batchID text REFERENCES SupplierBatch,
   doc text,
   ts timestamp with time zone NOT NULL DEFAULT now()
 );
 
+create table PartByType (
+  partID text REFERENCES Part,
+  function text,
+  type text
+);
 
 -----------------------------
 -- Assembly 
@@ -124,7 +129,7 @@ create table OrderDoc (
 -----------------------------
 
 create table Job (
-  jobID text,
+  projectID text,
   quoteID text REFERENCES Quote,
   custID text REFERENCES Customer,
   PRIMARY KEY (jobID)

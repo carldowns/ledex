@@ -1,4 +1,4 @@
-package logic;
+package util;
 
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
@@ -19,7 +19,7 @@ import java.util.List;
  *
  * Created by carl_downs on 10/9/14.
  */
-public class FileMgr {
+public class FileUtil {
 
     static ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
 

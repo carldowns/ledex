@@ -1,8 +1,9 @@
-package logic;
+package util;
 
 import model.Assembly;
 import model.Part;
 import org.junit.Test;
+import util.FileUtil;
 
 import java.net.URL;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * Ok
  * Created by carl_downs on 10/10/14.
  */
-public class FileMgrTest {
+public class FileUtilTest {
 
     @Test
     public void readAssemblyFile () throws Exception{
@@ -19,7 +20,7 @@ public class FileMgrTest {
         URL url = getClass().getResource("/data/assembly.json");
         System.out.println ("URL " + url);
 
-        FileMgr mgr = new FileMgr();
+        FileUtil mgr = new FileUtil();
         Assembly asm = mgr.importAssembly(url.toURI());
         System.out.println ("assembly " + asm);
 
@@ -31,7 +32,7 @@ public class FileMgrTest {
         URL url = getClass().getResource("/data/assemblies.json");
         System.out.println ("URL " + url);
 
-        FileMgr mgr = new FileMgr();
+        FileUtil mgr = new FileUtil();
         List<Assembly> asms = mgr.importAssemblies(url.toURI());
         System.out.println ("assemblies " + asms);
 
@@ -43,7 +44,7 @@ public class FileMgrTest {
         URL url = getClass().getResource("/data/part.json");
         System.out.println ("URL " + url);
 
-        FileMgr mgr = new FileMgr();
+        FileUtil mgr = new FileUtil();
         Part part = mgr.importPart(url.toURI());
         System.out.println ("part " + part.toString());
     }
@@ -54,7 +55,7 @@ public class FileMgrTest {
         URL url = getClass().getResource("/data/parts.json");
         System.out.println ("URL " + url);
 
-        FileMgr mgr = new FileMgr();
+        FileUtil mgr = new FileUtil();
         List<Part> parts = mgr.importParts(url.toURI());
         System.out.println ("parts " + parts.toString());
     }

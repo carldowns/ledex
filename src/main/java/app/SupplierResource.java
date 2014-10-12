@@ -6,9 +6,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+
+import supplier.Supplier;
 import supplier.SupplierDAO;
-import supplier.SupplierDocEntity;
-import supplier.SupplierEntity;
+import supplier.SupplierDoc;
 import com.codahale.metrics.annotation.Timed;
 
 @Path("/supplier")
@@ -30,7 +31,7 @@ public class SupplierResource {
     @GET 
     @Path ("/findAll")
     @Timed
-    public Iterator<SupplierEntity> getAllSuppliers () {
+    public Iterator<Supplier> getAllSuppliers () {
         return dao.getAllSuppliers();
     }
     
@@ -44,7 +45,7 @@ public class SupplierResource {
     @GET
     @Path ("/find")
     @Timed
-    public SupplierEntity getSupplier (@QueryParam("supplierID") String id ) {
+    public Supplier getSupplier (@QueryParam("supplierID") String id ) {
         return dao.getSupplierByID(id);
     }
 
@@ -55,7 +56,7 @@ public class SupplierResource {
     @GET
     @Path ("/findDoc")
     @Timed
-    public SupplierDocEntity getSupplierDoc (@QueryParam("supplierID") String id ) {
+    public SupplierDoc getSupplierDoc (@QueryParam("supplierID") String id ) {
         return dao.getSupplierDoc(id);
     }
     

@@ -2,7 +2,6 @@ package dao;
 
 
 import app.SupplierResource;
-import com.google.common.base.Optional;
 import io.dropwizard.testing.junit.ResourceTestRule;
 import org.junit.After;
 import org.junit.Before;
@@ -11,8 +10,8 @@ import org.junit.Test;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import supplier.Supplier;
 import supplier.SupplierDAO;
-import supplier.SupplierEntity;
 
 import static org.mockito.Mockito.*;
 
@@ -27,11 +26,11 @@ public class SupplierSourceTest {
             .addResource(new SupplierResource(DAO))
             .build();
 
-    private SupplierEntity supplier;
+    private Supplier supplier;
 
     @Before
     public void setup() {
-        supplier = new SupplierEntity("S100", "China FooBar Electric");
+        supplier = new Supplier("S100", "China FooBar Electric");
     }
 
     @After
@@ -44,7 +43,7 @@ public class SupplierSourceTest {
 
         when(DAO.getSupplierByID("S100")).thenReturn(supplier);
 
-        SupplierEntity found = resources.client().resource("/supplier/find?supplierID=S100").get(SupplierEntity.class);
+        Supplier found = resources.client().resource("/supplier/find?supplierID=S100").get(Supplier.class);
         assertThat(found.getId()).isEqualTo(supplier.getId());
 
         verify(DAO).getSupplierByID("S100");
