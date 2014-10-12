@@ -8,7 +8,7 @@ import util.UnitConverter;
  * @author carl_downs
  *
  */
-public class PartIncrement {
+public class PartPropertyIncrement {
     
     /**
      *  minimum value allowed
@@ -32,15 +32,15 @@ public class PartIncrement {
     /**
      * Jackson
      */
-    PartIncrement () {}
-    
-    PartIncrement (String min, String max) {
+    PartPropertyIncrement() {}
+
+    PartPropertyIncrement(String min, String max) {
         this.incMin = UnitConverter.assertLengthType(min);
         this.incMax = UnitConverter.assertLengthType(max);
         this.incDiv = incMin;
     }
-    
-    PartIncrement (String min, String max, String div) {
+
+    PartPropertyIncrement(String min, String max, String div) {
         this.incMin = UnitConverter.assertLengthType(min);
         this.incMax = UnitConverter.assertLengthType(max);
         this.incDiv = UnitConverter.assertLengthType(div);

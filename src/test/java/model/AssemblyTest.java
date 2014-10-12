@@ -68,7 +68,7 @@ public class AssemblyTest {
         p.addProperty (new PartProperty("AMPERAGE", "Amp output", "100mA"));
         p.addProperty (new PartProperty("SWITCH", "Inline On/Off switch", "yes"));
         
-        p.addProperty (new PartProperty("POWER_CORD", "Cord length", new PartIncrement ("24in","72in","1in")));
+        p.addProperty (new PartProperty("POWER_CORD", "Cord length", new PartPropertyIncrement("24in","72in","1in")));
         
         PartMetric dims = new PartMetric("5g","2mm","10mm","10mm");
         dims.add(new PartMetricIncrement("CORD","1kg","5cm","6cm","1cm"));
@@ -98,9 +98,9 @@ public class AssemblyTest {
         p.addProperty (new PartProperty("VOLTAGE", "Supported Voltage", "4.5VDC"));        
         p.addProperty (new PartProperty("CONNECTION_PLUG_TYPE", "Connection Plug Type", "J17"));        
 
-        p.addProperty (new PartProperty("STRIP_LENGTH", "Strip Length", new PartIncrement ("5mm","72mm","5mm")));
-        p.addProperty (new PartProperty("STRIP_INPUT_LEAD_LENGTH", "Strip Input Lead Length", new PartIncrement ("2in","24in","1in")));
-        p.addProperty (new PartProperty("STRIP_OUTPUT_LEAD_LENGTH", "Strip Output Lead Length", new PartIncrement ("2in","3in","1in")));
+        p.addProperty (new PartProperty("STRIP_LENGTH", "Strip Length", new PartPropertyIncrement("5mm","72mm","5mm")));
+        p.addProperty (new PartProperty("STRIP_INPUT_LEAD_LENGTH", "Strip Input Lead Length", new PartPropertyIncrement("2in","24in","1in")));
+        p.addProperty (new PartProperty("STRIP_OUTPUT_LEAD_LENGTH", "Strip Output Lead Length", new PartPropertyIncrement("2in","3in","1in")));
         
         PartCost cost100 = new PartCost (100, "4.55 USD");
         cost100.add (new PartCostIncrement ("STRIP_LENGTH", "Strip Length", "0.05 USD"));

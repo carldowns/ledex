@@ -24,7 +24,8 @@ public class PartProperty {
      * Measurement constraint Typical measures are length, size, etc. measures
      * usually impact both price and dimensional weight as the increase
      */
-    PartIncrement increment;
+    @JsonProperty("increment")
+    PartPropertyIncrement increment;
 
     /**
      * default constructor for Jackson
@@ -43,7 +44,7 @@ public class PartProperty {
         this.value = value;
     }
 
-    public PartProperty(String type, String name, PartIncrement increment) {
+    public PartProperty(String type, String name, PartPropertyIncrement increment) {
         this.type = PartPropertyType.valueOf(type);
         this.name = name;
         this.increment = increment;
@@ -89,11 +90,11 @@ public class PartProperty {
         this.description = description;
     }
 
-    public PartIncrement getIncrement() {
+    public PartPropertyIncrement getIncrement() {
         return increment;
     }
 
-    public void setIncrement(PartIncrement increment) {
+    public void setIncrement(PartPropertyIncrement increment) {
         this.increment = increment;
     }
 
