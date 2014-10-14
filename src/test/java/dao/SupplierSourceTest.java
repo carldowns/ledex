@@ -11,7 +11,7 @@ import org.junit.Test;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import supplier.Supplier;
-import supplier.SupplierDAO;
+import supplier.SupplierSQL;
 
 import static org.mockito.Mockito.*;
 
@@ -19,7 +19,7 @@ import static org.mockito.Mockito.*;
  * Unit tests for {@link PersonResource}.
  */
 public class SupplierSourceTest {
-    private static final SupplierDAO DAO = mock(SupplierDAO.class);
+    private static final SupplierSQL DAO = mock(SupplierSQL.class);
 
     @ClassRule
     public static final ResourceTestRule resources = ResourceTestRule.builder()

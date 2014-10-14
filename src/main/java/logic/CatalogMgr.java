@@ -1,12 +1,6 @@
 package logic;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import model.Assembly;
-
-import java.io.File;
+import cmd.ImportPartsCmd;
 
 /**
  * Manages the online catalog.
@@ -18,12 +12,23 @@ import java.io.File;
  *
  * The Catalog Manager is responsible for maintenance and display of the product catalog.
  *
+ *
+ *
+ *
+ *
  */
 public class CatalogMgr {
 
     /////////////////////////
     // Parts CRUD
     /////////////////////////
+
+    public void importParts (ImportPartsCmd cmd) {
+    }
+
+    public void exportParts (ImportPartsCmd cmd) {
+    }
+
 
     /////////////////////////
     // Assembly CRUD

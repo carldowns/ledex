@@ -8,7 +8,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  *
  */
 public class Supplier {
+
+    @JsonProperty ("supplierID")
     private String id;
+
+    @JsonProperty ("name")
     private String name;
 
     public Supplier() {
@@ -19,23 +23,19 @@ public class Supplier {
         this.name = name;
     }
 
-    @JsonProperty
     public String getId() {
         return id;
     }
 
-    @JsonProperty
     public void setId(String id)
     {
         this.id = id;
     }
 
-    @JsonProperty
     public String getName() {
         return name;
     }
 
-    @JsonProperty
     public void setName(String name)
     {
         this.name = name;

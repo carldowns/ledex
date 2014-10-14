@@ -3,7 +3,7 @@ package dao;
 import org.junit.Before;
 import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
-import supplier.SupplierDAO;
+import supplier.SupplierSQL;
 
 import java.util.Iterator;
 
@@ -13,13 +13,13 @@ import java.util.Iterator;
  */
 public class SupplierDAOIntegrationTest {
 
-    private SupplierDAO dao;
+    private SupplierSQL dao;
 
     @Before
     public void setup() {
         // TODO change this to work with a DW configuration
         DBI dbi = new DBI("jdbc:postgresql:catalog", "program", "fiddlesticks");
-        dao = dbi.onDemand(SupplierDAO.class);
+        dao = dbi.onDemand(SupplierSQL.class);
     }
 
     @Test

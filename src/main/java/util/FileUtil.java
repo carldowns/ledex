@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Assembly;
 import model.Part;
+import supplier.Supplier;
 
 import java.io.File;
 import java.net.URI;
@@ -111,4 +112,30 @@ public class FileUtil {
             throw new RuntimeException ("unable to parse part file : " + t.toString());
         }
     }
+
+    /**
+     */
+    public List<Supplier> importSuppliers(URI fileURI) {
+
+        try {
+            List<Supplier> list = new ArrayList<>();
+            JsonFactory f = new JsonFactory();
+            JsonParser jp = f.createParser(new File(fileURI));
+
+            // advance stream to START_ARRAY first:
+            jp.nextToken();
+
+            // and then each time, advance to opening START_OBJECT
+            while (jp.nextToken() == JsonToken.START_OBJECT) {
+                Supplier supplier = mapper.readValue(jp, Supplier.class);
+                list.add(supplier);
+            }
+            return list;
+        }
+        catch (Throwable t) {
+            throw new RuntimeException ("unable to parse suppliers file : " + t.toString());
+        }
+    }
+
+
 }

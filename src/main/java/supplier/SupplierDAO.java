@@ -1,77 +1,100 @@
 package supplier;
 
-import java.util.Iterator;
+import ch.qos.logback.classic.Logger;
+import org.skife.jdbi.v2.DBI;
+import org.skife.jdbi.v2.Handle;
+import org.skife.jdbi.v2.Query;
+import org.skife.jdbi.v2.util.StringMapper;
+import org.slf4j.LoggerFactory;
 
-import org.skife.jdbi.v2.sqlobject.Bind;
-import org.skife.jdbi.v2.sqlobject.SqlQuery;
-import org.skife.jdbi.v2.sqlobject.SqlUpdate;
-import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
+
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
- * CREATE EXTENSION "uuid-ossp”;
- * needed to use the uuid for a column:
- * "entryID UUID NOT NULL DEFAULT uuid_generate_v4(),"
- * @author carl_downs
- *
+ * Created by carl_downs on 10/12/14.
  */
-public interface SupplierDAO {
+public class SupplierDAO {
 
-    //////////////////////////////
-    // Supplier
-    //////////////////////////////
-    
-    /**
-     *  
-     */   
-    static String CREATE_TABLE_SUPPLIER = ""
-            + "create table supplier ( "
-            + "supplierID text, "
-            + "name text, "
-            + "PRIMARY KEY(supplierID) "
-            + ");";
+    private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(SupplierDAO.class);
+    DBI dbi;
 
-    @SqlUpdate(CREATE_TABLE_SUPPLIER)
-    void createSupplierTable();
+    public SupplierDAO(DBI dbi) {
+        this.dbi = dbi;
+    }
 
-//    @SqlUpdate("insert into supplier (supplierID, name) values (:supplierID, :name)")
-//    void insertPerson(@Bind("supplierID") String supplierID, @Bind("name") String name);
-//
-//    @SqlQuery("select name from supplier where id > :from and id < :to")
-//    List<String> findNamesBetween(@Bind("from") int from, @Bind("to") int to);
+    public List<Supplier> getSuppliers () {
+        return null;
+    }
 
-    @SqlQuery("select * from supplier where supplierID = :supplierID")
-    @Mapper(SupplierMapper.class)
-    Supplier getSupplierByID(@Bind("supplierID") String supplierID);
+    Supplier getSupplierByID(String supplierID) {
+        return null;
+    }
 
-    @SqlQuery("select name from supplier")
-    Iterator<String> getAllSupplierNames();
+    public List<String> getAllSupplierNames() {
+        Handle h = null;
+        //LOGGER.info("retrieving all supplier names");
 
-    @SqlQuery("select * from supplier")
-    @Mapper(SupplierMapper.class)
-    Iterator<Supplier> getAllSuppliers();
+        try {
+            h = dbi.open();
+            Query<Map<String, Object>> q =
+                    h.createQuery("select name from supplier");
 
-    
-    //////////////////////////////
-    // SupplierDoc
-    //////////////////////////////
+            Query<String> q2 = q.map(StringMapper.FIRST);
+            List<String> rs = q2.list();
+            return rs;
+        } finally {
+            if (h != null)
+                h.close();
+        }
+    }
 
-    /**
-     * SupplierDoc
-     */   
-    static String CREATE_TABLE_SUPPLIER_DOC = ""
-            + "create table SupplierDoc ("
-            + "supplierID text REFERENCES Supplier,"
-            + "model text,"
-            + "ts timestamp with time zone NOT NULL DEFAULT now()"
-            + ");";
-    
-    @SqlUpdate(CREATE_TABLE_SUPPLIER_DOC)
-    void createSupplierDocTable();
+    public Iterator<Supplier> getAllSuppliers() {
+        SupplierSQL sql = null;
+        try {
+            sql = dbi.open(SupplierSQL.class);
+            return sql.getAllSuppliers();
+        } finally {
+            if (sql != null)
+                sql.close();
+        }
+    }
 
-    @SqlUpdate("insert into supplierDoc (supplierID, model) values (:supplierID, :model)")
-    void insertSupplierDoc(@Bind("supplierID") String supplierID, @Bind("doc") String doc);
+    public Iterator<Supplier> getAllSuppliers2() {
+        Handle h = null;
+        try {
+            h = dbi.open();
+            h.registerMapper(new SupplierMapper());// TRY IT HERE... YES use mapTo()  THIS WORKS !!!!!!!!!!!!!!!!!!
 
-    @SqlQuery("select * from supplierDoc where supplierId = :supplierId")
-    @Mapper(SupplierDocMapper.class)
-    SupplierDoc getSupplierDoc(@Bind("supplierId") String supplierId);
+            Query<Map<String,Object>> q =
+                    h.createQuery("select * from supplier");
+            Query<Supplier> q2 = q.mapTo(Supplier.class);
+            List<Supplier> l = q2.list();
+            return q2.iterator();
+
+        } finally {
+            if (h != null)
+                h.close();
+        }
+    }
+
+    public Iterator<Supplier> getAllSuppliers3() {
+        Handle h = null;
+        try {
+            h = dbi.open();
+            h.registerMapper(new SupplierMapper());
+
+            List<Supplier> rs =
+            h.createQuery("select * from supplier")
+            .map(Supplier.class)
+            .list();
+
+            return rs.iterator();
+
+        } finally {
+            if (h != null)
+                h.close();
+        }
+    }
 }
