@@ -3,6 +3,7 @@ package util;
 import model.Assembly;
 import model.Part;
 import org.junit.Test;
+import supplier.Supplier;
 import util.FileUtil;
 
 import java.net.URL;
@@ -58,5 +59,16 @@ public class FileUtilTest {
         FileUtil mgr = new FileUtil();
         List<Part> parts = mgr.importParts(url.toURI());
         System.out.println ("parts " + parts.toString());
+    }
+
+    @Test
+    public void readSupplierFile () throws Exception{
+
+        URL url = getClass().getResource("/data/suppliers.json");
+        System.out.println ("URL " + url);
+
+        FileUtil mgr = new FileUtil();
+        List<Supplier> parts = mgr.importSuppliers(url.toURI());
+        System.out.println ("suppliers " + parts.toString());
     }
 }
