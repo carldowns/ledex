@@ -76,12 +76,16 @@ public interface SupplierSQL {
     @SqlUpdate(CREATE_TABLE_SUPPLIER_DOC)
     void createSupplierDocTable();
 
-    @SqlUpdate("insert into supplierDoc (supplierID, model) values (:supplierID, :model)")
+    @SqlUpdate("insert into supplierDoc (supplierID, doc) values (:supplierID, :doc)")
     void insertSupplierDoc(@Bind("supplierID") String supplierID, @Bind("doc") String doc);
 
     @SqlQuery("select * from supplierDoc where supplierId = :supplierId")
     @Mapper(SupplierDocMapper.class)
     SupplierDoc getSupplierDoc(@Bind("supplierId") String supplierId);
+
+    @SqlQuery("select * from supplierDoc")
+    @Mapper(SupplierDocMapper.class)
+    List<SupplierDoc> getAllSupplierDocs();
 
     public void close ();
 }

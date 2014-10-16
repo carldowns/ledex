@@ -5,6 +5,7 @@ import com.codahale.metrics.annotation.ExceptionMetered;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import supplier.Supplier;
+import supplier.SupplierDoc;
 import supplier.SupplierSQL;
 import util.FileUtil;
 
@@ -30,7 +31,7 @@ public class SupplierMgr {
     // Supplier Import / Export
     /////////////////////////////
 
-    public void importSuppliers (ImportSuppliersCmd cmd) {
+    public void importSuppliers (ImportSuppliersCmd cmd) throws Exception {
         // open the file
 
         URI uri = cmd.getInputFilePath();
@@ -42,7 +43,9 @@ public class SupplierMgr {
                 continue;
             }
 
+            String json = mapper.writeValueAsString(s);
             sql.insertSupplier (s.getId(), s.getName());
+            sql.insertSupplierDoc (s.getId(), json);
             cmd.log("supplier " + s.getName() + " added");
         }
 
@@ -73,7 +76,14 @@ public class SupplierMgr {
             return;
         }
 
-        List<Supplier> suppliers = sql.getSuppliersList();
+        //List<Supplier> suppliers = sql.getSuppliersList();
+
+        List<Supplier> suppliers = new ArrayList<>();
+        for (SupplierDoc doc : sql.getAllSupplierDocs()) {
+            Supplier supplier = mapper.readValue(doc.getDoc(), Supplier.class);
+            suppliers.add(supplier);
+        }
+
         ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
         writer.writeValue(file, suppliers);
         cmd.setState("completed");

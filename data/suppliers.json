@@ -1,17 +1,12 @@
 [
     {
-        "supplierID" : "S100",
-        "name" : "Nanking Golden Corral",
+        "supplierID" : "S1000",
+        "name" : "Nan King Golden Corral",
         "phone" : [
             {
                 "type" : "office",
                 "countryCode" : "01",
                 "number" : "444-345-3456"
-            },
-            {
-                "type" : "cell",
-                "countryCode" : "01",
-                "number" : "512-353-3454"
             }
         ],
         "address" : [
@@ -19,7 +14,7 @@
                 "type" : "factory",
                 "street" : "1200 Lang Dong",
                 "city" : "Shanghai",
-                "postalCode" : "01344-344",
+                "code" : "01344-344",
                 "region" : "JiangSu",
                 "province" : "Guang Dong",
                 "country" : "China"
@@ -31,29 +26,48 @@
                 "address" : "www.sign-display.com"
             },
             {
-                "type" : "email",
-                "address" : "Lily@gg.com"
+                "type" : "email_company",
+                "address" : "sales@KingCorral.com"
             },
             {
                 "type" : "chat",
-                "address" : "weChin"
+                "address" : "KingCorral"
+            }
+        ],
+        "contact" : [
+            {
+                "name" : "Lucy Lynn",
+                "title" : "Project Manager",
+                "phone" : [
+                    {
+                        "type" : "cell",
+                        "countryCode" : "01",
+                        "number" : "444-333-555"
+                    }
+                ],
+                "internet" : [
+                    {
+                        "type" : "email",
+                        "address" : "lucylynn@yahoo.com"
+                    }
+                ]
             }
         ]
     },
     {
-        "supplierID" : "S101",
+        "supplierID" : "S1001",
         "name" : "WeeBo Novelty"
     },
     {
-        "supplierID" : "S102",
+        "supplierID" : "S1002",
         "name" : "HungLo Electronics"
     },
     {
-        "supplierID" : "S103",
+        "supplierID" : "S1003",
         "name" : "Blissfully Electrical"
     },
     {
-        "supplierID" : "S104",
+        "supplierID" : "S1004",
         "name" : "Shining Top LED"
     }
 ]
