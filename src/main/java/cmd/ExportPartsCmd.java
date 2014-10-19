@@ -13,7 +13,7 @@ public class ExportPartsCmd extends BaseCmd {
     private URI outputFilePath;
 
     public ExportPartsCmd() {
-        super("catalog", "exportParts", "started");
+        super();
     }
 
     public URI getOutputFilePath() {

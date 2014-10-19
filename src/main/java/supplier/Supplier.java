@@ -63,6 +63,7 @@ public class Supplier {
     // Json Inner Classes
     //////////////////////////
 
+    @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
     static class Contact {
 
         @JsonProperty ("name")
@@ -81,6 +82,7 @@ public class Supplier {
         private List<Internet> internet;
     }
 
+    @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
     static class Phone {
         static enum PhoneType {office,office_direct,office_mail,cell,home}
 
@@ -94,6 +96,7 @@ public class Supplier {
         private String phoneNumber;
     }
 
+    @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
     static class Address {
         static enum AddressType {office,office_field,factory,home}
 
@@ -122,6 +125,7 @@ public class Supplier {
         private String country;
     }
 
+    @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
     static class Internet {
         static enum InternetType {web,web_mobile,email,email_work,email_company,email_personal,skype,chat,we_chat,hip_chat}
 

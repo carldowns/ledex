@@ -9,6 +9,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import cmd.ExportSuppliersCmd;
+import cmd.GetSupplierCmd;
 import cmd.ImportSuppliersCmd;
 import logic.SupplierMgr;
 import supplier.Supplier;
@@ -28,54 +29,16 @@ public class SupplierResource {
         this.mgr = new SupplierMgr(sql);
     }
 
-//    @GET
-//    @Timed
-//    public EntryRep addEntry (@QueryParam("name") Optional<String> name, @QueryParam("entry") Optional<String> entry) {
-//        return new EntryRep();
-//    }
-    
-    @GET 
-    @Path ("/findAll")
-    @Timed
-    public Iterator<Supplier> getAllSuppliers () {
-        return sql.getAllSuppliers();
-    }
-
-    @GET
-    @Timed
-    @Path ("/findAllNames")
-    public Iterator<String> findAllNames () {
-        return sql.getAllSupplierNames();
-    }
-
-    @GET
-    @Path ("/find")
-    @Timed
-    public Supplier getSupplier (@QueryParam("supplierID") String id ) {
-        return sql.getSupplierByID(id);
-    }
-
-    ///////////////////////////
-    // Supplier Doc Methods
-    ///////////////////////////
-
-    @GET
-    @Path ("/findDoc")
-    @Timed
-    public SupplierDoc getSupplierDoc (@QueryParam("supplierID") String id ) {
-        return sql.getSupplierDoc(id);
-    }
-
     ////////////////////////////
-    // Manager Methods
+    // Command Methods
     ////////////////////////////
 
     @GET
     @Path ("/importSuppliers")
     @Timed
-    public ImportSuppliersCmd importSuppliers (@QueryParam("pathURI") String pathURI) throws Exception {
+    public ImportSuppliersCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
         ImportSuppliersCmd cmd = new ImportSuppliersCmd();
-        cmd.setInputFilePath(new URI(pathURI));
+        cmd.setInputFilePath(pathURI);
         mgr.importSuppliers(cmd);
         return cmd;
     }
@@ -83,11 +46,32 @@ public class SupplierResource {
     @GET
     @Path ("/exportSuppliers")
     @Timed
-    public ExportSuppliersCmd exportSuppliers (@QueryParam("pathURI") String pathURI) throws Exception {
+    public ExportSuppliersCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
         ExportSuppliersCmd cmd = new ExportSuppliersCmd();
-        cmd.setOutputFilePath(new URI(pathURI));
+        cmd.setOutputFilePath(pathURI);
         mgr.exportSuppliers(cmd);
         return cmd;
+    }
+
+    @GET
+    @Path ("/getSupplier")
+    @Timed
+    public GetSupplierCmd getSupplier (@QueryParam("supplierID") String id ) {
+        GetSupplierCmd cmd = new GetSupplierCmd();
+        cmd.setSupplierID(id);
+        mgr.getSupplier(cmd);
+        return cmd;
+    }
+
+    ////////////////////////////
+    // Direct SQL Methods
+    ////////////////////////////
+
+    @GET
+    @Timed
+    @Path ("/getAllSupplierNames")
+    public Iterator<String> findAllNames () {
+        return sql.getAllSupplierNames();
     }
 
 }

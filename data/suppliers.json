@@ -56,7 +56,37 @@
     },
     {
         "supplierID" : "S1001",
-        "name" : "WeeBo Novelty"
+        "name" : "WeeBo Novelty",
+        "phone" : [
+            {
+                "type" : "office",
+                "countryCode" : "011",
+                "number" : "345-3456-3457"
+            }
+        ],
+        "address" : [
+            {
+                "type" : "office",
+                "street" : "99 Fiji Express",
+                "city" : "LaDong",
+                "code" : "F9448HG5",
+                "country" : "HongKong"
+            }
+        ],
+        "internet" : [
+            {
+                "type" : "web",
+                "address" : "www.weebo.com"
+            },
+            {
+                "type" : "email_company",
+                "address" : "sales@weebo.com"
+            },
+            {
+                "type" : "chat",
+                "address" : "weebo"
+            }
+        ]
     },
     {
         "supplierID" : "S1002",

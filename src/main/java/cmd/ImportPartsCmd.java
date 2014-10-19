@@ -16,7 +16,7 @@ public class ImportPartsCmd extends BaseCmd {
     private String supplierID;
 
     public ImportPartsCmd() {
-        super("catalog", "importParts", "started");
+        super();
     }
 
     public URI getInputFilePath() {

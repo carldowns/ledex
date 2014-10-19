@@ -75,8 +75,8 @@ public class CatApplication extends Application<CatConfiguration> {
         final SupplierSQL sql = dbi.onDemand(SupplierSQL.class);
         env.jersey().register(new SupplierResource(sql));
 
-        final SupplierDAO dao2 = new SupplierDAO(dbi);
-        env.jersey().register(new SupplierResource2(dao2));
+        //final SupplierDAO dao2 = new SupplierDAO(dbi);
+        //env.jersey().register(new SupplierResource2(dao2));
 
         env.admin().addTask(new GenericTask(sql));
     }

@@ -16,7 +16,7 @@ public class ExampleCmd extends BaseCmd {
     private String supplierID;
 
     public ExampleCmd() {
-        super("type", "action", "initial state");
+        super();
     }
 
     /**

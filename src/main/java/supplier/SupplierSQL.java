@@ -79,13 +79,17 @@ public interface SupplierSQL {
     @SqlUpdate("insert into supplierDoc (supplierID, doc) values (:supplierID, :doc)")
     void insertSupplierDoc(@Bind("supplierID") String supplierID, @Bind("doc") String doc);
 
-    @SqlQuery("select * from supplierDoc where supplierId = :supplierId")
+    @SqlQuery("select * from supplierDoc where supplierID = :supplierID and ts=(select max(ts) from supplierDoc where supplierID = :supplierID)")
     @Mapper(SupplierDocMapper.class)
-    SupplierDoc getSupplierDoc(@Bind("supplierId") String supplierId);
+    SupplierDoc getLatestSupplierDoc(@Bind("supplierID") String supplierId);
 
     @SqlQuery("select * from supplierDoc")
     @Mapper(SupplierDocMapper.class)
     List<SupplierDoc> getAllSupplierDocs();
 
+
+    /**
+     * this close method is necessary for JDBI Sql Object to close a connection properly
+     */
     public void close ();
 }

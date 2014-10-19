@@ -10,17 +10,17 @@ import java.net.URI;
 public class ExportSuppliersCmd extends BaseCmd {
 
     @JsonProperty
-    private URI outputFilePath;
+    private String outputFilePath;
 
     public ExportSuppliersCmd() {
-        super("supplier", "exportSuppliers", "started");
+        super();
     }
 
-    public URI getOutputFilePath() {
+    public String getOutputFilePath() {
         return outputFilePath;
     }
 
-    public void setOutputFilePath(URI outputFilePath) {
+    public void setOutputFilePath(String outputFilePath) {
         this.outputFilePath = outputFilePath;
     }
 }

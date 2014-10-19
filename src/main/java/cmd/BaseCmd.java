@@ -1,5 +1,6 @@
 package cmd;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.DateTime;
 
@@ -21,25 +22,21 @@ import java.util.LinkedHashMap;
  *
  * Created by carl_downs on 10/12/14.
  */
+
+@JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public abstract class BaseCmd {
 
     /**
-     * Governs the type of class that is expected to handle this command
+     * type of command
      */
     @JsonProperty
     private final String type;
 
     /**
-     * Action to be taken.  Contract with the handler
-     */
-    @JsonProperty
-    private final String action;
-
-    /**
      * state of the command.  Not overly structured yet.
      */
     @JsonProperty
-    private String state;
+    private CmdState state;
 
     /**
      * log for the command.  User classes can add information in here
@@ -47,18 +44,21 @@ public abstract class BaseCmd {
      * Steps are keyed by timestamp.
      */
     @JsonProperty
-    private LinkedHashMap<String,String> steps = new LinkedHashMap<>();
+    private LinkedHashMap<String,String> log = new LinkedHashMap<>();
 
 
     /////////////////////////////////
     // Constructors
     /////////////////////////////////
 
-    public BaseCmd(String type, String action, String initialState) {
-        this.type = type;
-        this.action = action;
+    public BaseCmd(CmdState initialState) {
+        this.type = this.getClass().getSimpleName();
         this.state = initialState;
-        log ("created with state " + state);
+    }
+
+    public BaseCmd() {
+        this.type = this.getClass().getSimpleName();
+        this.state = CmdState.started;
     }
 
     /////////////////////////////////
@@ -74,13 +74,6 @@ public abstract class BaseCmd {
         return type;
     }
 
-    /**
-     * what is the action we are trying to accomplish?
-     * @return
-     */
-    public String getAction() {
-        return action;
-    }
 
     /////////////////////////////////
     // Methods
@@ -90,7 +83,7 @@ public abstract class BaseCmd {
      * what is the state of this command?
      * @return
      */
-    public String getState() {
+    public CmdState getState() {
         return state;
     }
 
@@ -98,16 +91,38 @@ public abstract class BaseCmd {
      * record that the state of the command has changed
      * @param state
      */
-    public void setState(String state) {
+    public void setState(CmdState state) {
         this.state = state;
     }
+
+    public void showCompleted() {
+        state = CmdState.completed;
+    }
+
+    public void showFailed() {
+        state = CmdState.failed;
+    }
+
+    /////////////////////////////////
+    // Logging
+    /////////////////////////////////
 
     /**
      * log a step taken in the execution of this command.
      * @param step
      */
     public void log (String step) {
-        DateTime dt = new DateTime();
-        steps.put(dt.toString(), step);
+        log.put(DateTime.now().toString(), step);
+    }
+
+    /////////////////////////////////
+    // state types
+    /////////////////////////////////
+
+    public static enum CmdState {
+        started,
+        waiting,
+        completed,
+        failed
     }
 }

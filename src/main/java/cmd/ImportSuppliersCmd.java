@@ -10,17 +10,17 @@ import java.net.URI;
 public class ImportSuppliersCmd extends BaseCmd {
 
     @JsonProperty
-    private URI inputFilePath;
+    private String inputFilePath;
 
     public ImportSuppliersCmd() {
-        super("supplier", "importSuppliers", "started");
+        super();
     }
 
-    public URI getInputFilePath() {
+    public String getInputFilePath() {
         return inputFilePath;
     }
 
-    public void setInputFilePath(URI inputFilePath) {
+    public void setInputFilePath(String inputFilePath) {
         this.inputFilePath = inputFilePath;
     }
 }
