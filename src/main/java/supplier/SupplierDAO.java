@@ -13,9 +13,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * This is hanging out as an example class.  Not using it at the present.
  * Created by carl_downs on 10/12/14.
  */
-public class SupplierDAO {
+class SupplierDAO {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(SupplierDAO.class);
     DBI dbi;
@@ -65,11 +66,11 @@ public class SupplierDAO {
         Handle h = null;
         try {
             h = dbi.open();
-            h.registerMapper(new SupplierMapper());// TRY IT HERE... YES use mapTo()  THIS WORKS !!!!!!!!!!!!!!!!!!
+            h.registerMapper(new SupplierMapper());// TRY IT HERE... THIS WORKS !!!!!!!!!!!!!!!!!!
 
             Query<Map<String,Object>> q =
                     h.createQuery("select * from supplier");
-            Query<Supplier> q2 = q.mapTo(Supplier.class);
+            Query<Supplier> q2 = q.mapTo(Supplier.class);// must use mapTo()  THIS WORKS !!!!!!!!!!!!!!!!!!
             List<Supplier> l = q2.list();
             return q2.iterator();
 

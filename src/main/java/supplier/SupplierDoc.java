@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 public class SupplierDoc {
     private String id;
-    private String doc;
+    private String json;
     private Timestamp ts;
 
     public SupplierDoc() {
@@ -17,7 +17,7 @@ public class SupplierDoc {
 
     public SupplierDoc(String id, String doc, Timestamp ts) {
         this.id = id;
-        this.doc = doc;
+        this.json = doc;
         this.ts = ts;
     }
     
@@ -27,8 +27,8 @@ public class SupplierDoc {
     }
 
     @JsonProperty
-    public String getDoc() {
-        return doc;
+    public String getJson() {
+        return json;
     }
     
     @JsonProperty

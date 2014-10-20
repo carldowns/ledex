@@ -65,9 +65,9 @@ public class SupplierMgr {
             cmd.showCompleted();
 
         } catch (Exception e) {
-            String msg = "unable to import suppliers";
-            logger.error(msg, e);
-            cmd.log(msg);
+            logger.error(e.getMessage());
+            cmd.log(e.getMessage());
+            cmd.log("unable to import suppliers");
             cmd.showFailed();
         }
     }
@@ -78,22 +78,22 @@ public class SupplierMgr {
 
             File file = new File(uri);
             if (file.isDirectory()) {
-                cmd.log("URI is a directory.  specify a directory and file to create");
-                cmd.showFailed();
-                return;
+                throw new AppRuntimeException
+                        ("URI is a directory.  specify a directory and file to create");
             }
 
             if (file.isFile() || file.exists()) {
-                cmd.log("file exists.  specify a new file in an existing directory.");
-                cmd.showFailed();
-                return;
+                throw new AppRuntimeException
+                        ("file exists.  specify a new file in an existing directory.");
             }
 
             List<Supplier> suppliers = new ArrayList<>();
             for (SupplierDoc doc : sql.getAllSupplierDocs()) {
-                String json = doc.getDoc();
-                if (StringUtil.isBlank(json))
-                    throw new AppRuntimeException("document missing for supplier " + doc.getId());
+                String json = doc.getJson();
+                if (StringUtil.isBlank(json)) {
+                    throw new AppRuntimeException
+                            ("json missing for supplier " + doc.getId());
+                }
 
                 Supplier supplier = mapper.readValue(json, Supplier.class);
                 suppliers.add(supplier);
@@ -109,6 +109,7 @@ public class SupplierMgr {
         } catch (Exception e) {
             logger.error(e.getMessage());
             cmd.log(e.getMessage());
+            cmd.log("unable to export suppliers");
             cmd.showFailed();
         }
     }
@@ -132,7 +133,7 @@ public class SupplierMgr {
             if (doc == null)
                 throw new AppRuntimeException("supplier not found");
 
-            Supplier supplier = mapper.readValue(doc.getDoc(), Supplier.class);
+            Supplier supplier = mapper.readValue(doc.getJson(), Supplier.class);
             cmd.setSupplier(supplier);
             cmd.showCompleted();
 
