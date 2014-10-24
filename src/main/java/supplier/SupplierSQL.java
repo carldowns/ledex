@@ -47,6 +47,9 @@ public interface SupplierSQL {
     @SqlUpdate ("insert into supplier (supplierID, name) values (:supplierID, :name)")
     void insertSupplier (@Bind("supplierID") String supplierID, @Bind("name") String name);
 
+    @SqlUpdate ("update supplier set name = :name where supplierID = :supplierID")
+    void updateSupplier (@Bind("supplierID") String supplierID, @Bind("name") String name);
+
     @SqlQuery("select name from supplier")
     Iterator<String> getAllSupplierNames();
 
@@ -79,14 +82,32 @@ public interface SupplierSQL {
     @SqlUpdate("drop table SupplierDoc")
     void dropSupplierDocTable();
 
-    @SqlUpdate("insert into supplierDoc (supplierID, doc) values (:supplierID, :doc)")
-    void insertSupplierDoc(@Bind("supplierID") String supplierID, @Bind("doc") String doc);
+    @SqlUpdate("insert into supplierDoc (supplierID, supplierDocID, current, doc) values (:supplierID, :supplierDocID, :current, :doc)")
+    void insertSupplierDoc(@Bind("supplierID") String supplierID, @Bind("supplierDocID") String supplierDocID, @Bind("current") boolean current, @Bind("doc") String doc);
 
-    @SqlQuery("select * from supplierDoc where supplierID = :supplierID and ts=(select max(ts) from supplierDoc where supplierID = :supplierID)")
+    @SqlUpdate("delete from supplierDoc where supplierID = :supplierID and supplierDocID = :supplierDocID")
+    void deleteSupplierDoc(@Bind("supplierID") String supplierID, @Bind("supplierDocID") String supplierDocID );
+
+    @SqlUpdate("update supplierDoc set current = false where supplierID = :supplierID and supplierDocID != :supplierDocID")
+    void demoteOthers (@Bind("supplierID") String supplierID, @Bind("supplierDocID") String supplierDocID);
+
+    @SqlUpdate("update supplierDoc set current = true where supplierID = :supplierID and supplierDocID = :supplierDocID")
+    void promoteToCurrent(@Bind("supplierID") String supplierID, @Bind("supplierDocID") String supplierDocID);
+
+    @SqlQuery("select count(*) from supplierDoc where supplierID = :supplierID and supplierDocID = :supplierDocID")
+    Integer isSupplierDocPresent (@Bind("supplierID") String supplierID, @Bind("supplierDocID") String supplierDocID);
+
+    @SqlQuery("select count(*) from supplierDoc where supplierID = :supplierID and supplierDocID = :supplierDocID and current = false")
+    Integer isSupplierDocArchived (@Bind("supplierID") String supplierID, @Bind("supplierDocID") String supplierDocID);
+
+    @SqlQuery("select count(*) from supplierDoc where supplierID = :supplierID and supplierDocID = :supplierDocID and current = true")
+    Integer isSupplierDocCurrent (@Bind("supplierID") String supplierID, @Bind("supplierDocID") String supplierDocID);
+
+    @SqlQuery("select * from supplierDoc where supplierID = :supplierID and current = true")
     @Mapper(SupplierDocMapper.class)
-    SupplierDoc getLatestSupplierDoc(@Bind("supplierID") String supplierId);
+    SupplierDoc getCurrentSupplierDoc(@Bind("supplierID") String supplierId);
 
-    @SqlQuery("select * from supplierDoc")
+    @SqlQuery("select * from supplierDoc where current = true")
     @Mapper(SupplierDocMapper.class)
     List<SupplierDoc> getAllSupplierDocs();
 

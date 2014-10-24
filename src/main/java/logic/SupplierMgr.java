@@ -4,6 +4,7 @@ import ch.qos.logback.classic.Logger;
 import cmd.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import org.apache.commons.codec.binary.Hex;
 import org.eclipse.jetty.util.StringUtil;
 import org.slf4j.LoggerFactory;
 import supplier.Supplier;
@@ -14,8 +15,11 @@ import util.FileUtil;
 
 import java.io.File;
 import java.net.URI;
+import java.security.MessageDigest;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Supplier CRUD
@@ -46,24 +50,52 @@ public class SupplierMgr {
             URI uri = new URI(cmd.getInputFilePath());
             List<Supplier> suppliers = new FileUtil().importSuppliers(uri);
             for (Supplier s : suppliers) {
+                // back to json
+                // generate a message digest based on the document content
+                // this becomes our document ID
+
+                // TODO: validate the supplier record
+                String json = mapper.writeValueAsString(s);
+                byte[] messageDigest = MessageDigest.getInstance("MD5").digest(json.getBytes());
+                String docID = new String (Hex.encodeHex(messageDigest));
+
+                // if not in the front table, consider it new and add
                 Supplier found = sql.getSupplierByID(s.getId());
-
-                // the supplier index holds the name and ID
-                // of a record exists for the supplier, accept it.
-                // if not, create one
-
-                // if there is an extended object, persist the Json
-                // in the supplier doc table.
-
-                if (found != null) {
-                    cmd.log("supplier " + s.getName() + " exists, left undisturbed");
+                if (found == null) {
+                    sql.insertSupplier(s.getId(), s.getName());
+                    sql.insertSupplierDoc(s.getId(), docID, true, json);
+                    cmd.log("supplier " + s.getName() + " added");
                     continue;
                 }
 
-                String json = mapper.writeValueAsString(s);
-                sql.insertSupplier(s.getId(), s.getName());
-                sql.insertSupplierDoc(s.getId(), json);
-                cmd.log("supplier " + s.getName() + " added");
+                // if doc is not present, then add it
+                Integer presentCount = sql.isSupplierDocPresent(s.getId(), docID);
+                if (presentCount == 0) {
+                    sql.insertSupplierDoc(s.getId(), docID, true, json);
+                    sql.demoteOthers(s.getId(), docID);
+                    sql.updateSupplier(s.getId(), s.getName());
+                    cmd.log("supplier " + s.getName() + " updated");
+                    continue;
+                }
+
+                // if it is the current doc for the supplier, no-op
+                Integer currentCount = sql.isSupplierDocCurrent(s.getId(), docID);
+                if (currentCount == 1) {
+                    cmd.log("supplier " + s.getName() + " no change");
+                    continue;
+                }
+
+                // if doc is present but not current, then we have a reversion
+                // to a previous state.  Make that doc the current doc
+                if (presentCount == 1) {
+                    sql.promoteToCurrent(s.getId(), docID);
+                    sql.demoteOthers(s.getId(), docID);
+                    sql.updateSupplier(s.getId(), s.getName());
+                    cmd.log("supplier " + s.getName() + " reverted to previous state");
+                    continue;
+                }
+
+                throw new AppRuntimeException("unknown state for document:  " + json);
             }
 
             cmd.showCompleted();
@@ -141,7 +173,7 @@ public class SupplierMgr {
      */
     public void getSupplier(GetSupplierCmd cmd) {
         try {
-            SupplierDoc doc = sql.getLatestSupplierDoc(cmd.getSupplierID());
+            SupplierDoc doc = sql.getCurrentSupplierDoc(cmd.getSupplierID());
             if (doc == null)
                 throw new AppRuntimeException("supplier not found");
 

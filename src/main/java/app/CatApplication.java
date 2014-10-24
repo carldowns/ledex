@@ -8,7 +8,7 @@ import io.dropwizard.setup.Environment;
 //import com.example.helloworld.health.TemplateHealthCheck;
 
 import org.skife.jdbi.v2.DBI;
-import supplier.SupplierDAO;
+//import supplier.SupplierDAO;
 import supplier.SupplierSQL;
 import task.GenericTask;
 

@@ -10,11 +10,14 @@ create table Supplier (
   PRIMARY KEY(supplierID)
 );
 
+CREATE INDEX SupplierName ON Supplier (lower(name));
+
 create table SupplierDoc (
   supplierDocID text NOT NULL,
   supplierID text REFERENCES Supplier,
-  active boolean NOT NULL,
+  current boolean NOT NULL,
   doc text NOT NULL,
+  --md5 text not null,
   ts timestamp with time zone NOT NULL DEFAULT now(),
   PRIMARY KEY(supplierDocID)
 );
@@ -39,18 +42,17 @@ create table Part (
   PRIMARY KEY (partID)
 );
 
+CREATE UNIQUE INDEX PartName ON Part COLUMN name;
+
 create table PartDoc (
   partID text REFERENCES Part,
-  batchDocID text REFERENCES BatchDoc,
+  --batchDocID text REFERENCES BatchDoc,
+  current boolean NOT NULL,
   doc text,
   ts timestamp with time zone NOT NULL DEFAULT now()
 );
 
-create table PartByTypeIndex (
-  partID text REFERENCES Part,
-  function text,
-  type text
-);
+
 
 -----------------------------
 -- Assembly 

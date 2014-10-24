@@ -58,7 +58,6 @@ public class Supplier {
         this.name = name;
     }
 
-
     //////////////////////////
     // Json Inner Classes
     //////////////////////////

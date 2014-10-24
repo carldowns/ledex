@@ -11,9 +11,9 @@ create table Supplier (
   doc text NOT NULL, -- supplier doc in Json format
   docID text NOT NULL, -- UUID for the doc, written in the doc as well, tracks a version of the supplier detail
   current boolean NOT NULL DEFAULT TRUE, -- indicates which doc is active for the supplier (if multiple versions present)
-  hash number NOT NULL, -- doc checksum enables avoidance of unnecessary writes
+  hash text NOT NULL, -- doc checksum enables avoidance of unnecessary writes
   ts timestamp NOT NULL DEFAULT now(),
-  PRIMARY KEY(supplierID, supplierUID)
+  PRIMARY KEY(supplierID, docID)
 );
 
 -----------------------------
@@ -25,7 +25,7 @@ create table Batch (
   batchID text NOT NULL,
   name text NOT NULL,
   ts timestamp NOT NULL DEFAULT now(),
-  PRIMARY KEY(supplierID, batchUID)
+  PRIMARY KEY(supplierID, batchID)
 );
 
 -----------------------------
@@ -42,9 +42,9 @@ create table Part (
   doc text NOT NULL, -- part doc in Json format
   docID text NOT NULL, -- UUID for the doc, written in the doc as well, tracks a version of the part detail
   current boolean NOT NULL DEFAULT TRUE,
-  hash number NOT NULL,
+  hash text NOT NULL,
   ts timestamp  NOT NULL DEFAULT now()
-  PRIMARY KEY (partID, partUID)
+  PRIMARY KEY (partID, docID)
 );
 
 -- index by name

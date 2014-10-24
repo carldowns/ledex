@@ -1,12 +1,12 @@
 [
     {
         "supplierID" : "S1000",
-        "name" : "Nan King Golden Corral",
+        "name" : "Nan-King Golden Rod Corona",
         "phone" : [
             {
                 "type" : "office",
                 "countryCode" : "01",
-                "number" : "444-345-3456"
+                "number" : "444-345-3459"
             }
         ],
         "address" : [
@@ -56,7 +56,7 @@
     },
     {
         "supplierID" : "S1001",
-        "name" : "WeeBo Novelty",
+        "name" : "WeeBoo Novelty",
         "phone" : [
             {
                 "type" : "office",
@@ -98,6 +98,13 @@
     },
     {
         "supplierID" : "S1004",
-        "name" : "Shining Top LED"
+        "name" : "Shining Top LED",
+        "phone" : [
+            {
+                "type" : "office",
+                "countryCode" : "011",
+                "number" : "222-3333-4445"
+            }
+        ]
     }
 ]
