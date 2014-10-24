@@ -72,9 +72,12 @@ public interface SupplierSQL {
             + "model text,"
             + "ts timestamp with time zone NOT NULL DEFAULT now()"
             + ");";
-    
+
     @SqlUpdate(CREATE_TABLE_SUPPLIER_DOC)
     void createSupplierDocTable();
+
+    @SqlUpdate("drop table SupplierDoc")
+    void dropSupplierDocTable();
 
     @SqlUpdate("insert into supplierDoc (supplierID, doc) values (:supplierID, :doc)")
     void insertSupplierDoc(@Bind("supplierID") String supplierID, @Bind("doc") String doc);

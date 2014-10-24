@@ -1,31 +1,26 @@
 package app;
 
-import java.net.URI;
-import java.util.Iterator;
+import cmd.ExportSuppliersCmd;
+import cmd.GetSupplierCmd;
+import cmd.ImportSuppliersCmd;
+import com.codahale.metrics.annotation.Timed;
+import logic.SupplierMgr;
+import supplier.SupplierSQL;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import java.util.Iterator;
 
-import cmd.ExportSuppliersCmd;
-import cmd.GetSupplierCmd;
-import cmd.ImportSuppliersCmd;
-import logic.SupplierMgr;
-import supplier.Supplier;
-import supplier.SupplierSQL;
-import supplier.SupplierDoc;
-import com.codahale.metrics.annotation.Timed;
-
-@Path("/supplier")
+@Path("/part")
 @Produces(MediaType.APPLICATION_JSON)
-public class SupplierResource {
+public class PartResource {
 
-    private SupplierSQL sql;
     private SupplierMgr mgr;
 
-    public SupplierResource(SupplierSQL sql) {
-        this.sql = sql;
+    public PartResource(SupplierSQL sql) {
         this.mgr = new SupplierMgr(sql);
     }
 
@@ -67,11 +62,11 @@ public class SupplierResource {
     // Direct SQL Methods
     ////////////////////////////
 
-    @GET
-    @Timed
-    @Path ("/getAllSupplierNames")
-    public Iterator<String> findAllNames () {
-        return sql.getAllSupplierNames();
-    }
+//    @GET
+//    @Timed
+//    @Path ("/getAllSupplierNames")
+//    public Iterator<String> findAllNames () {
+//        return sql.getAllSupplierNames();
+//    }
 
 }

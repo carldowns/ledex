@@ -15,12 +15,11 @@ import java.util.LinkedHashMap;
  * background or foreground activities.  Mainly however their purpose at least initially is
  * to track carefully what has taken place in the system for debugging purposes.
  *
- * Each command is build to encapsulate an action, the state of the action as it progresses
- * and any data members needed to carry out the action.  Data members are added in the
+ * Each command is build to encapsulate the type of command, the state of the action as it progresses
+ * and any input data members needed to carry out the action.  Data members are added in the
  * derivatives with the proviso that the resulting concrete commands must be Json-serializable.
- * That way, Commands can be persisted in a command log for later evaluation.
  *
- * Created by carl_downs on 10/12/14.
+ * Json is required because we can pass them back directly to the REST client.
  */
 
 @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
