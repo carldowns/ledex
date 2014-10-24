@@ -50,11 +50,12 @@ public class SupplierMgr {
             URI uri = new URI(cmd.getInputFilePath());
             List<Supplier> suppliers = new FileUtil().importSuppliers(uri);
             for (Supplier s : suppliers) {
+                // TODO do all of this in a transaction
+                // TODO: validate each supplier record
+
                 // back to json
                 // generate a message digest based on the document content
                 // this becomes our document ID
-
-                // TODO: validate the supplier record
                 String json = mapper.writeValueAsString(s);
                 byte[] messageDigest = MessageDigest.getInstance("MD5").digest(json.getBytes());
                 String docID = new String (Hex.encodeHex(messageDigest));
@@ -88,6 +89,7 @@ public class SupplierMgr {
                 // if doc is present but not current, then we have a reversion
                 // to a previous state.  Make that doc the current doc
                 if (presentCount == 1) {
+                    // TODO build a stored procedure or combined method to promote / demote
                     sql.promoteToCurrent(s.getId(), docID);
                     sql.demoteOthers(s.getId(), docID);
                     sql.updateSupplier(s.getId(), s.getName());
