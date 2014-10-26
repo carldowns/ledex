@@ -18,7 +18,7 @@ create table SupplierDoc (
   current boolean NOT NULL,
   doc text NOT NULL,
   --md5 text not null,
-  ts timestamp with time zone NOT NULL DEFAULT now(),
+  ts timestamp NOT NULL DEFAULT now(),
   PRIMARY KEY(supplierDocID)
 );
 
@@ -26,7 +26,7 @@ create table BatchDoc (
   batchDocID text,
   supplierID text REFERENCES Supplier,
   doc text,
-  ts timestamp with time zone NOT NULL DEFAULT now(),
+  ts timestamp NOT NULL DEFAULT now(),
   PRIMARY KEY(batchDocID)
 );
 
@@ -34,25 +34,27 @@ create table BatchDoc (
 -- Part
 -----------------------------
 
-create table Part (
+create table PartRec (
   partID text,
   supplierID text REFERENCES Supplier,
   name text,
-  fcn text,
+  function text,
   PRIMARY KEY (partID)
 );
 
-CREATE UNIQUE INDEX PartName ON Part COLUMN name;
+--CREATE UNIQUE INDEX PartName ON PartRec COLUMN name;
 
 create table PartDoc (
-  partID text REFERENCES Part,
+  partDocID text NOT NULL,
+  partID text REFERENCES PartRec,
   --batchDocID text REFERENCES BatchDoc,
   current boolean NOT NULL,
   doc text,
-  ts timestamp with time zone NOT NULL DEFAULT now()
+  ts timestamp NOT NULL DEFAULT now(),
+  PRIMARY KEY(partDocID)
 );
 
-
+-- select name, function, d.partid, partdocid, current, ts from partrec r, partdoc d where r.partid = d.partid;
 
 -----------------------------
 -- Assembly 

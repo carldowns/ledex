@@ -17,9 +17,7 @@ import java.io.File;
 import java.net.URI;
 import java.security.MessageDigest;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * Supplier CRUD
@@ -60,7 +58,7 @@ public class SupplierMgr {
                 byte[] messageDigest = MessageDigest.getInstance("MD5").digest(json.getBytes());
                 String docID = new String (Hex.encodeHex(messageDigest));
 
-                // if not in the front table, consider it new and add
+                // if not in the core table, consider it new and add
                 Supplier found = sql.getSupplierByID(s.getId());
                 if (found == null) {
                     sql.insertSupplier(s.getId(), s.getName());
@@ -89,11 +87,11 @@ public class SupplierMgr {
                 // if doc is present but not current, then we have a reversion
                 // to a previous state.  Make that doc the current doc
                 if (presentCount == 1) {
-                    // TODO build a stored procedure or combined method to promote / demote
+                    // TODO build a stored procedure or combined method to manage current T/F state
                     sql.promoteToCurrent(s.getId(), docID);
                     sql.demoteOthers(s.getId(), docID);
                     sql.updateSupplier(s.getId(), s.getName());
-                    cmd.log("supplier " + s.getName() + " reverted to previous state");
+                    cmd.log("supplier " + s.getName() + " reverted to previous change");
                     continue;
                 }
 
@@ -131,10 +129,10 @@ public class SupplierMgr {
 
             List<Supplier> suppliers = new ArrayList<>();
             for (SupplierDoc doc : sql.getAllSupplierDocs()) {
-                String json = doc.getJson();
+                String json = doc.getDoc();
                 if (StringUtil.isBlank(json)) {
                     throw new AppRuntimeException
-                            ("json missing for supplier " + doc.getId());
+                            ("json missing for supplier " + doc.getSupplierID());
                 }
 
                 Supplier supplier = mapper.readValue(json, Supplier.class);
@@ -179,7 +177,7 @@ public class SupplierMgr {
             if (doc == null)
                 throw new AppRuntimeException("supplier not found");
 
-            Supplier supplier = mapper.readValue(doc.getJson(), Supplier.class);
+            Supplier supplier = mapper.readValue(doc.getDoc(), Supplier.class);
             cmd.setSupplier(supplier);
             cmd.showCompleted();
 

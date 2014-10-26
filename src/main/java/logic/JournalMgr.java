@@ -1,12 +1,15 @@
 package logic;
 
 /**
- * Created by carl_downs on 10/11/14.
+ * Manages all progressive activities as a series of commands.  Also tracks any mutative
+ * activity in the system, who did it and related to what.
+ *
+ * This is the primary change management system.
  */
-public class JobMgr {
+public class JournalMgr {
 
     /////////////////////////
-    // Job CRUD
+    // Journal CRUD
     /////////////////////////
 
     /////////////////////////

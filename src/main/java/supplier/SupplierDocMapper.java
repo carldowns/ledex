@@ -9,6 +9,6 @@ public class SupplierDocMapper implements ResultSetMapper<SupplierDoc> {
 
     public SupplierDoc map(int index, ResultSet r, StatementContext ctx)
             throws SQLException {
-        return new SupplierDoc(r.getString("supplierID"), r.getString("doc"), r.getTimestamp("ts"));
+        return new SupplierDoc(r.getString("supplierID"), r.getString("docID"), r.getString("doc"), r.getTimestamp("ts"));
     }
 }

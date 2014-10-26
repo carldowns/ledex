@@ -10,17 +10,17 @@ import java.net.URI;
 public class ExportPartsCmd extends BaseCmd {
 
     @JsonProperty
-    private URI outputFilePath;
+    private String outputFilePath;
 
     public ExportPartsCmd() {
         super();
     }
 
-    public URI getOutputFilePath() {
+    public String getOutputFilePath() {
         return outputFilePath;
     }
 
-    public void setOutputFilePath(URI outputFilePath) {
+    public void setOutputFilePath(String outputFilePath) {
         this.outputFilePath = outputFilePath;
     }
 }

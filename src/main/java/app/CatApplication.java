@@ -9,6 +9,7 @@ import io.dropwizard.setup.Environment;
 
 import org.skife.jdbi.v2.DBI;
 //import supplier.SupplierDAO;
+import part.PartSQL;
 import supplier.SupplierSQL;
 import task.GenericTask;
 
@@ -72,13 +73,16 @@ public class CatApplication extends Application<CatConfiguration> {
         final DBIFactory factory = new DBIFactory();
         final DBI dbi = factory.build(env, config.getDataSourceFactory(), "postgresql");
 
-        final SupplierSQL sql = dbi.onDemand(SupplierSQL.class);
-        env.jersey().register(new SupplierResource(sql));
+        final SupplierSQL supplierSQL = dbi.onDemand(SupplierSQL.class);
+        env.jersey().register(new SupplierResource(supplierSQL));
+
+        final PartSQL partSQL = dbi.onDemand(PartSQL.class);
+        env.jersey().register(new PartResource(partSQL));
 
         //final SupplierDAO dao2 = new SupplierDAO(dbi);
         //env.jersey().register(new SupplierResource2(dao2));
 
-        env.admin().addTask(new GenericTask(sql));
+        env.admin().addTask(new GenericTask(supplierSQL));
     }
     
     /**

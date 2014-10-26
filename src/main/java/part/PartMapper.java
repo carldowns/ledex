@@ -7,12 +7,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * Used by JDBI to map SQL Object result set objects to POJOs
  */
-public class PartMapper implements ResultSetMapper<Part> {
+public class PartMapper implements ResultSetMapper<PartRec> {
 
-    public Part map(int index, ResultSet r, StatementContext ctx)
+    public PartRec map(int index, ResultSet r, StatementContext ctx)
             throws SQLException {
-        return new Part(r.getString("partID"), r.getString("name"));
+        return new PartRec(r.getString("partID"), r.getString("supplierID"), r.getString("name"), r.getString("function"));
     }
 }

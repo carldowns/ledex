@@ -11,9 +11,6 @@ import util.UnitConverter;
  */
 public class PartMetricIncrement {
 
-    /**
-     * 
-     */
     @JsonProperty("name")
     String name;
     

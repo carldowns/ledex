@@ -5,33 +5,38 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.sql.Timestamp;
 
 /**
- * @author carl_downs
- *
  */
 public class PartDoc {
-    private String id;
-    private String json;
+    private String partID;
+    private String partDocID;
+    private String doc;
     private Timestamp ts;
 
     public PartDoc() {
     }
 
-    public PartDoc(String id, String doc, Timestamp ts) {
-        this.id = id;
-        this.json = doc;
+    public PartDoc(String partID, String partDocID, String doc, Timestamp ts) {
+        this.partID = partID;
+        this.partDocID = partDocID;
+        this.doc = doc;
         this.ts = ts;
     }
     
     @JsonProperty
-    public String getId() {
-        return id;
+    public String getPartID() {
+        return partID;
     }
 
     @JsonProperty
-    public String getJson() {
-        return json;
+    public String getDoc() {
+        return doc;
     }
-    
+
+    @JsonProperty
+    public String getPartDocID() {
+        return partDocID;
+    }
+
     @JsonProperty
     public Timestamp getTimestamp() {
         return ts;

@@ -6,46 +6,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Unit representation:  we have chosen to support in-place specification of the 
+ * Unit representation:  we have chosen to support in-place specification of the
  * currency, weights and measure units defining a part.  That means a specifier
  * can be tagged onto the end of the declaration itself.  We will convert from that as needed.
- * So a weight can be "5KG", "12LBS", "12 lbs", "5000 G", etc. 
- * @see UnitConverterOLD 
- * 
- * @author carl_downs
- *
+ * So a weight can be "5KG", "12LBS", "12 lbs", "5000 G", etc.
  */
 public class Part implements Cloneable {
 
-    /**
-     * Part name
-     */
+    @JsonProperty ("partID")
+    String partID;
+
+    @JsonProperty ("supplierID")
+    String supplierID;
+
     @JsonProperty ("name")
     String name;
-    
-    /**
-     * function in the set
-     */
+
     @JsonProperty ("function")
     FunctionType function;
-    
-    /**
-     * properties
-     */
+
     @JsonProperty ("properties")
     List<PartProperty> properties = new ArrayList<PartProperty>();
-    
-    /**
-     * quantity pricing
-     */
+
     @JsonProperty ("costs")
     List<PartCost> costs = new ArrayList<PartCost>();
-    
-    /**
-     * part dimensions, baseline.  These are a fixed set of values but can be 
-     * modified incrementally 
-     * @see PartMetricIncrement
-     */
+
     @JsonProperty ("metrics")
     PartMetric metrics;
 
@@ -72,6 +57,26 @@ public class Part implements Cloneable {
         this.function = FunctionType.valueOf(functionName);
     }
 
+    /////////////////////////////
+    // Part Identity
+    /////////////////////////////
+
+
+    public String getPartID() {
+        return partID;
+    }
+
+    public void setPartID(String partID) {
+        this.partID = partID;
+    }
+
+    public String getSupplierID() {
+        return supplierID;
+    }
+
+    public void setSupplierID(String supplierID) {
+        this.supplierID = supplierID;
+    }
 
     /////////////////////////
     // Methods
@@ -81,7 +86,7 @@ public class Part implements Cloneable {
        this.metrics = metrics;
        return this;    
     }
-    
+
     public Part addProperty(PartProperty property) {
         properties.add (property);
         return this;

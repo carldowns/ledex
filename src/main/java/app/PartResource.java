@@ -1,16 +1,13 @@
 package app;
 
-import cmd.ExportSuppliersCmd;
-import cmd.GetSupplierCmd;
-import cmd.ImportSuppliersCmd;
+import cmd.*;
 import com.codahale.metrics.annotation.Timed;
+import logic.CatalogMgr;
 import logic.SupplierMgr;
+import part.PartSQL;
 import supplier.SupplierSQL;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Iterator;
 
@@ -18,55 +15,44 @@ import java.util.Iterator;
 @Produces(MediaType.APPLICATION_JSON)
 public class PartResource {
 
-    private SupplierMgr mgr;
+    private CatalogMgr mgr;
 
-    public PartResource(SupplierSQL sql) {
-        this.mgr = new SupplierMgr(sql);
+    public PartResource(PartSQL sql) {
+        this.mgr = new CatalogMgr(sql);
     }
 
     //////////////////////////////
     // Command / Manager Methods
     //////////////////////////////
 
+    // @PUT  TODO: REST contract
     @GET
-    @Path ("/importSuppliers")
+    @Path ("/import")
     @Timed
-    public ImportSuppliersCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
-        ImportSuppliersCmd cmd = new ImportSuppliersCmd();
+    public ImportPartsCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
+        ImportPartsCmd cmd = new ImportPartsCmd();
         cmd.setInputFilePath(pathURI);
-        mgr.importSuppliers(cmd);
+        mgr.importParts(cmd);
         return cmd;
     }
 
     @GET
-    @Path ("/exportSuppliers")
+    @Path ("/export")
     @Timed
-    public ExportSuppliersCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
-        ExportSuppliersCmd cmd = new ExportSuppliersCmd();
+    public ExportPartsCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
+        ExportPartsCmd cmd = new ExportPartsCmd();
         cmd.setOutputFilePath(pathURI);
-        mgr.exportSuppliers(cmd);
+        mgr.exportParts(cmd);
         return cmd;
     }
 
     @GET
-    @Path ("/getSupplier")
+    @Path ("/get")
     @Timed
-    public GetSupplierCmd getSupplier (@QueryParam("supplierID") String id ) {
-        GetSupplierCmd cmd = new GetSupplierCmd();
-        cmd.setSupplierID(id);
-        mgr.getSupplier(cmd);
+    public GetPartCmd getSupplier (@QueryParam("partID") String partID ) {
+        GetPartCmd cmd = new GetPartCmd();
+        cmd.setPartID(partID);
+        mgr.getPart(cmd);
         return cmd;
     }
-
-    ////////////////////////////
-    // Direct SQL Methods
-    ////////////////////////////
-
-//    @GET
-//    @Timed
-//    @Path ("/getAllSupplierNames")
-//    public Iterator<String> findAllNames () {
-//        return sql.getAllSupplierNames();
-//    }
-
 }
