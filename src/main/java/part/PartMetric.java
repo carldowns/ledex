@@ -1,4 +1,4 @@
-package model;
+package part;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import util.UnitConverter;

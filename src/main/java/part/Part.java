@@ -1,6 +1,7 @@
-package model;
+package part;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import model.FunctionType;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,64 +1,52 @@
-package model;
+package part;
 
 import java.io.*;
+import java.util.List;
 
+import com.google.common.collect.Lists;
+import model.Assembly;
 import org.junit.Assert;
 import org.junit.Test;
+import part.*;
 import rule.RuleEngine;
 import util.GsonUtil;
 
-public class AssemblyTest {
+public class PartTest {
 
-    /**
-     * Key rules to implement:
-     * 
-     * voltage compatibility check voltage drop check plug compatibility check
-     * amp sufficiency check Lifespan estimation check wiring / connectivity
-     * check
-     */
-
-    /**
-     * Verify that parts match the set voltage
-     */
-
-    /**
-     * Verify that all of the parts do not draw more than the maximum amperage
-     * supplied by the power source
-     */
-
-    /**
-     * Verify that a set contains no conflicting rules
-     */
-
-    /**
-     * Verify that a set contains a complete set of rules
-     */
-
-    /**
-     * Verify that the connectors are all compatible
-     */
-
-    /**
-     * Verify the the
-     */
+//
+//    @Test
+//    public void test() throws Exception {
+//
+//        Assembly asm = new Assembly("ADI Jim Bean 3 Bottle Set");
+//        asm.add(getPart1());
+//        asm.add(getPart2());
+//
+//        File file = File.createTempFile("assembly", ".json");
+//        file.deleteOnExit();
+//
+//        GsonUtil.toJsonFile(asm, file.toURI());
+//        Assembly asmReadIn = GsonUtil.fromJson(file.toURI());
+//
+//        RuleEngine e = new RuleEngine(asm);
+//        Assert.assertTrue(e.isValid());
+//        Assert.assertEquals(0, e.getIssues().size());
+//
+//    }
 
     @Test
-    public void test() throws Exception {
-        
-        Assembly asm = new Assembly("ADI Jim Bean 3 Bottle Set");
-        asm.add(getPart1());
-        asm.add(getPart2());
+    public void test2() throws Exception {
 
-        File file = File.createTempFile("assembly", ".json");
-        file.deleteOnExit();
 
-        GsonUtil.toJsonFile(asm, file.toURI());
-        Assembly asmReadIn = GsonUtil.fromJson(file.toURI());
-        
-        RuleEngine e = new RuleEngine(asm);
-        Assert.assertTrue(e.isValid());
-        Assert.assertEquals(0, e.getIssues().size());
+        List<Part> parts = Lists.newArrayList();
+        parts.add(getPart1());
+        parts.add(getPart2());
 
+//        File file = File.createTempFile("parts", ".json");
+//        file.deleteOnExit();
+//
+//        GsonUtil<List<Part>> util = new GsonUtil<>();
+//        util.toJsonFile(parts, file.toURI());
+//        List<Part> results = util.fromJson(file.toURI());
     }
 
     private Part getPart1() {
@@ -75,7 +63,7 @@ public class AssemblyTest {
         p.setMetrics(dims);
         
         PartCost cost100 = new PartCost (100, "$4.00");
-        cost100.add (new PartCostIncrement ("POWER_CORD", "0.05 USD"));
+        cost100.add (new PartCostIncrement("POWER_CORD", "0.05 USD"));
         
         PartCost cost250 = new PartCost (250, "3.50 USD");
         cost250.add (new PartCostIncrement ("POWER_CORD", "0.04 USD"));

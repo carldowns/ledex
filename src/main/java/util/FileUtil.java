@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import model.Assembly;
-import model.Part;
+import part.Part;
 import supplier.Supplier;
 
 import java.io.File;

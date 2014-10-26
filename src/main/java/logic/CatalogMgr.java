@@ -5,7 +5,7 @@ import cmd.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.collect.Lists;
-import model.Part;
+import part.Part;
 import org.apache.commons.codec.binary.Hex;
 import org.eclipse.jetty.util.StringUtil;
 import org.slf4j.LoggerFactory;

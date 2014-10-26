@@ -1,4 +1,4 @@
-package dao;
+package app;
 
 import org.junit.Before;
 import org.junit.Test;

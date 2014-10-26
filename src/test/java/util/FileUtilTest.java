@@ -1,7 +1,7 @@
 package util;
 
 import model.Assembly;
-import model.Part;
+import part.Part;
 import org.junit.Test;
 import supplier.Supplier;
 

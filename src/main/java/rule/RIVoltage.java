@@ -2,7 +2,7 @@ package rule;
 
 import java.util.List;
 import model.Assembly;
-import model.Part;
+import part.Part;
 import rule.RuleEngine.RuleIssue;
 
 
