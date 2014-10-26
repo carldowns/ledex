@@ -1,6 +1,5 @@
 package app;
 
-import java.net.URI;
 import java.util.Iterator;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -12,9 +11,7 @@ import cmd.ExportSuppliersCmd;
 import cmd.GetSupplierCmd;
 import cmd.ImportSuppliersCmd;
 import logic.SupplierMgr;
-import supplier.Supplier;
 import supplier.SupplierSQL;
-import supplier.SupplierDoc;
 import com.codahale.metrics.annotation.Timed;
 
 @Path("/supplier")

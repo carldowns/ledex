@@ -2,7 +2,6 @@ package cmd;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import model.Part;
-import supplier.Supplier;
 
 /**
  *

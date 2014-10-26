@@ -22,6 +22,8 @@ create table SupplierDoc (
   PRIMARY KEY(supplierDocID)
 );
 
+-- select r.supplierid, name, supplierdocid, current, ts from supplier r, supplierdoc d where r.supplierid = d.supplierid order by r.supplierid;
+
 create table BatchDoc (
   batchDocID text,
   supplierID text REFERENCES Supplier,
@@ -55,6 +57,7 @@ create table PartDoc (
 );
 
 -- select name, function, d.partid, partdocid, current, ts from partrec r, partdoc d where r.partid = d.partid;
+-- select name, function, supplierid, d.partid, partdocid, current, ts from partrec r, partdoc d where r.partid = d.partid order by supplierid;
 
 -----------------------------
 -- Assembly 

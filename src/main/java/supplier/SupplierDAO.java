@@ -51,7 +51,7 @@ class SupplierDAO {
         }
     }
 
-    public Iterator<Supplier> getAllSuppliers() {
+    public Iterator<SupplierRec> getAllSuppliers() {
         SupplierSQL sql = null;
         try {
             sql = dbi.open(SupplierSQL.class);

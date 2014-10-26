@@ -9,30 +9,13 @@ import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
 
 /**
- * CREATE EXTENSION "uuid-ossp”;
- * needed to use the uuid for a column:
- * "entryID UUID NOT NULL DEFAULT uuid_generate_v4(),"
- * @author carl_downs
- *
  */
 public interface SupplierSQL {
 
     //////////////////////////////
-    // Supplier
+    // SupplierRec
     //////////////////////////////
-    
-    /**
-     *  
-     */   
-    static String CREATE_TABLE_SUPPLIER = ""
-            + "create table supplier ( "
-            + "supplierID text, "
-            + "name text, "
-            + "PRIMARY KEY(supplierID) "
-            + ");";
 
-    @SqlUpdate(CREATE_TABLE_SUPPLIER)
-    void createSupplierTable();
 
 //    @SqlUpdate("insert into supplier (supplierID, name) values (:supplierID, :name)")
 //    void insertPerson(@Bind("supplierID") String supplierID, @Bind("name") String name);
@@ -41,46 +24,30 @@ public interface SupplierSQL {
 //    List<String> findNamesBetween(@Bind("from") int from, @Bind("to") int to);
 
     @SqlQuery("select * from supplier where supplierID = :supplierID")
-    @Mapper(SupplierMapper.class)
-    Supplier getSupplierByID(@Bind("supplierID") String supplierID);
+    @Mapper(SupplierRecMapper.class)
+    SupplierRec getSupplierRecByID(@Bind("supplierID") String supplierID);
 
     @SqlUpdate ("insert into supplier (supplierID, name) values (:supplierID, :name)")
-    void insertSupplier (@Bind("supplierID") String supplierID, @Bind("name") String name);
+    void insertSupplierRec(@Bind("supplierID") String supplierID, @Bind("name") String name);
 
     @SqlUpdate ("update supplier set name = :name where supplierID = :supplierID")
-    void updateSupplier (@Bind("supplierID") String supplierID, @Bind("name") String name);
+    void updateSupplierRec(@Bind("supplierID") String supplierID, @Bind("name") String name);
 
     @SqlQuery("select name from supplier")
     Iterator<String> getAllSupplierNames();
 
     @SqlQuery("select * from supplier")
-    @Mapper(SupplierMapper.class)
-    Iterator<Supplier> getAllSuppliers();
+    @Mapper(SupplierRecMapper.class)
+    Iterator<SupplierRec> getAllSuppliers();
 
     @SqlQuery("select * from supplier")
-    @Mapper(SupplierMapper.class)
-    List<Supplier> getSuppliersList();
+    @Mapper(SupplierRecMapper.class)
+    List<SupplierRec> getSuppliersList();
 
 
     //////////////////////////////
     // SupplierDoc
     //////////////////////////////
-
-    /**
-     * SupplierDoc
-     */   
-    static String CREATE_TABLE_SUPPLIER_DOC = ""
-            + "create table SupplierDoc ("
-            + "supplierID text REFERENCES Supplier,"
-            + "model text,"
-            + "ts timestamp with time zone NOT NULL DEFAULT now()"
-            + ");";
-
-    @SqlUpdate(CREATE_TABLE_SUPPLIER_DOC)
-    void createSupplierDocTable();
-
-    @SqlUpdate("drop table SupplierDoc")
-    void dropSupplierDocTable();
 
     @SqlUpdate("insert into supplierDoc (supplierID, supplierDocID, current, doc) values (:supplierID, :supplierDocID, :current, :doc)")
     void insertSupplierDoc(@Bind("supplierID") String supplierID, @Bind("supplierDocID") String supplierDocID, @Bind("current") boolean current, @Bind("doc") String doc);

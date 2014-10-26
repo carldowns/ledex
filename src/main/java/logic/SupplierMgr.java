@@ -9,6 +9,7 @@ import org.eclipse.jetty.util.StringUtil;
 import org.slf4j.LoggerFactory;
 import supplier.Supplier;
 import supplier.SupplierDoc;
+import supplier.SupplierRec;
 import supplier.SupplierSQL;
 import util.AppRuntimeException;
 import util.FileUtil;
@@ -47,40 +48,40 @@ public class SupplierMgr {
         try {
             URI uri = new URI(cmd.getInputFilePath());
             List<Supplier> suppliers = new FileUtil().importSuppliers(uri);
-            for (Supplier s : suppliers) {
+            for (Supplier supplier : suppliers) {
                 // TODO do all of this in a transaction
                 // TODO: validate each supplier record
 
                 // back to json
                 // generate a message digest based on the document content
                 // this becomes our document ID
-                String json = mapper.writeValueAsString(s);
+                String json = mapper.writeValueAsString(supplier);
                 byte[] messageDigest = MessageDigest.getInstance("MD5").digest(json.getBytes());
                 String docID = new String (Hex.encodeHex(messageDigest));
 
                 // if not in the core table, consider it new and add
-                Supplier found = sql.getSupplierByID(s.getId());
+                SupplierRec found = sql.getSupplierRecByID(supplier.getSupplierID());
                 if (found == null) {
-                    sql.insertSupplier(s.getId(), s.getName());
-                    sql.insertSupplierDoc(s.getId(), docID, true, json);
-                    cmd.log("supplier " + s.getName() + " added");
+                    sql.insertSupplierRec(supplier.getSupplierID(), supplier.getName());
+                    sql.insertSupplierDoc(supplier.getSupplierID(), docID, true, json);
+                    cmd.log("supplier " + supplier.getName() + " added");
                     continue;
                 }
 
                 // if doc is not present, then add it
-                Integer presentCount = sql.isSupplierDocPresent(s.getId(), docID);
+                Integer presentCount = sql.isSupplierDocPresent(supplier.getSupplierID(), docID);
                 if (presentCount == 0) {
-                    sql.insertSupplierDoc(s.getId(), docID, true, json);
-                    sql.demoteOthers(s.getId(), docID);
-                    sql.updateSupplier(s.getId(), s.getName());
-                    cmd.log("supplier " + s.getName() + " updated");
+                    sql.insertSupplierDoc(supplier.getSupplierID(), docID, true, json);
+                    sql.demoteOthers(supplier.getSupplierID(), docID);
+                    sql.updateSupplierRec(supplier.getSupplierID(), supplier.getName());
+                    cmd.log("supplier " + supplier.getName() + " updated");
                     continue;
                 }
 
                 // if it is the current doc for the supplier, no-op
-                Integer currentCount = sql.isSupplierDocCurrent(s.getId(), docID);
+                Integer currentCount = sql.isSupplierDocCurrent(supplier.getSupplierID(), docID);
                 if (currentCount == 1) {
-                    cmd.log("supplier " + s.getName() + " no change");
+                    cmd.log("supplier " + supplier.getName() + " no change");
                     continue;
                 }
 
@@ -88,10 +89,10 @@ public class SupplierMgr {
                 // to a previous state.  Make that doc the current doc
                 if (presentCount == 1) {
                     // TODO build a stored procedure or combined method to manage current T/F state
-                    sql.promoteToCurrent(s.getId(), docID);
-                    sql.demoteOthers(s.getId(), docID);
-                    sql.updateSupplier(s.getId(), s.getName());
-                    cmd.log("supplier " + s.getName() + " reverted to previous change");
+                    sql.promoteToCurrent(supplier.getSupplierID(), docID);
+                    sql.demoteOthers(supplier.getSupplierID(), docID);
+                    sql.updateSupplierRec(supplier.getSupplierID(), supplier.getName());
+                    cmd.log("supplier " + supplier.getName() + " reverted to previous change");
                     continue;
                 }
 
@@ -177,8 +178,8 @@ public class SupplierMgr {
             if (doc == null)
                 throw new AppRuntimeException("supplier not found");
 
-            Supplier supplier = mapper.readValue(doc.getDoc(), Supplier.class);
-            cmd.setSupplier(supplier);
+            Supplier supplierRec = mapper.readValue(doc.getDoc(), Supplier.class);
+            cmd.setSupplierRec(supplierRec);
             cmd.showCompleted();
 
         } catch (AppRuntimeException e) {

@@ -4,10 +4,6 @@ import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
-import supplier.Supplier;
-import supplier.SupplierDoc;
-import supplier.SupplierDocMapper;
-import supplier.SupplierMapper;
 
 import java.util.Iterator;
 import java.util.List;
@@ -22,7 +18,7 @@ public interface PartSQL {
 
 
     @SqlQuery("select * from PartRec where partID = :partID")
-    @Mapper(PartMapper.class)
+    @Mapper(PartRecMapper.class)
     PartRec getPartRecByID(@Bind("partID") String partID);
 
     @SqlUpdate ("insert into PartRec (partID, supplierID, name, function) values (:partID, :supplierID, :name, :function)")
@@ -32,11 +28,11 @@ public interface PartSQL {
     Iterator<String> getAllPartRecNames();
 
     @SqlQuery("select * from PartRec")
-    @Mapper(PartMapper.class)
+    @Mapper(PartRecMapper.class)
     Iterator<PartRec> getAllPartRecs();
 
     @SqlQuery("select * from PartRec")
-    @Mapper(PartMapper.class)
+    @Mapper(PartRecMapper.class)
     List<PartRec> getPartRecsList();
 
     @SqlUpdate ("update supplier set name = :name where partID = :partID")

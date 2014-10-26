@@ -8,6 +8,7 @@ import org.junit.*;
 import static org.fest.assertions.api.Assertions.assertThat;
 
 import supplier.Supplier;
+import supplier.SupplierRec;
 import supplier.SupplierSQL;
 
 import static org.mockito.Mockito.*;
@@ -23,11 +24,11 @@ public class SupplierSourceTest {
             .addResource(new SupplierResource(DAO))
             .build();
 
-    private Supplier supplier;
+    private SupplierRec supplierRec;
 
     @Before
     public void setup() {
-        supplier = new Supplier("S100", "China FooBar Electric");
+        supplierRec = new SupplierRec("S100", "China FooBar Electric");
     }
 
     @After
@@ -39,13 +40,13 @@ public class SupplierSourceTest {
     @Ignore
     public void getSupplier() {
 
-        when(DAO.getSupplierByID("S100")).thenReturn(supplier);
+        when(DAO.getSupplierRecByID("S100")).thenReturn(supplierRec);
 
         // TODO: fix this interface to match the Cmd pattern
-        Supplier found = resources.client().resource("/supplier/find?supplierID=S100").get(Supplier.class);
-        assertThat(found.getId()).isEqualTo(supplier.getId());
+        SupplierRec found = resources.client().resource("/supplier/find?supplierID=S100").get(SupplierRec.class);
+        assertThat(found.getSupplierID()).isEqualTo(supplierRec.getSupplierID());
 
-        verify(DAO).getSupplierByID("S100");
+        verify(DAO).getSupplierRecByID("S100");
     }
 
 }

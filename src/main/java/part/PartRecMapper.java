@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 /**
  */
-public class PartMapper implements ResultSetMapper<PartRec> {
+public class PartRecMapper implements ResultSetMapper<PartRec> {
 
     public PartRec map(int index, ResultSet r, StatementContext ctx)
             throws SQLException {

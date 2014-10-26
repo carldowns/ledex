@@ -15,7 +15,7 @@ import java.util.Map;
 public class Supplier {
 
     @JsonProperty ("supplierID")
-    private String id;
+    private String supplierID;
 
     @JsonProperty ("name")
     private String name;
@@ -36,17 +36,17 @@ public class Supplier {
     }
 
     public Supplier(String id, String name) {
-        this.id = id;
+        this.supplierID = id;
         this.name = name;
     }
 
-    public String getId() {
-        return id;
+    public String getSupplierID() {
+        return supplierID;
     }
 
-    public void setId(String id)
+    public void setSupplierID(String id)
     {
-        this.id = id;
+        this.supplierID = id;
     }
 
     public String getName() {

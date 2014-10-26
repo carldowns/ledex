@@ -16,9 +16,9 @@ public class SupplierDoc {
     public SupplierDoc() {
     }
 
-    public SupplierDoc(String supplierID, String docID, String doc, Timestamp ts) {
+    public SupplierDoc(String supplierID, String supplierDocID, String doc, Timestamp ts) {
         this.supplierID = supplierID;
-        this.supplierDocID = docID;
+        this.supplierDocID = supplierDocID;
         this.doc = doc;
         this.ts = ts;
     }

@@ -4,7 +4,6 @@ import model.Assembly;
 import model.Part;
 import org.junit.Test;
 import supplier.Supplier;
-import util.FileUtil;
 
 import java.net.URL;
 import java.util.List;

@@ -10,7 +10,6 @@ import supplier.Supplier;
 
 import java.io.File;
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,8 +126,8 @@ public class FileUtil {
 
             // and then each time, advance to opening START_OBJECT
             while (jp.nextToken() == JsonToken.START_OBJECT) {
-                Supplier supplier = mapper.readValue(jp, Supplier.class);
-                list.add(supplier);
+                Supplier supplierRec = mapper.readValue(jp, Supplier.class);
+                list.add(supplierRec);
             }
             return list;
         }
