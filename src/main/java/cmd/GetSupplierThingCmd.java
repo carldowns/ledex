@@ -3,12 +3,10 @@ package cmd;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import supplier.Supplier;
 
-import java.net.URI;
-
 /**
  *
  */
-public class GetSupplierCmd extends BaseCmd {
+public class GetSupplierThingCmd extends BaseCmd {
 
     @JsonProperty
     private String supplierID;
@@ -16,7 +14,7 @@ public class GetSupplierCmd extends BaseCmd {
     @JsonProperty
     private Supplier supplier;
 
-    public GetSupplierCmd() {
+    public GetSupplierThingCmd() {
         super();
     }
 

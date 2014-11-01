@@ -172,7 +172,7 @@ public class SupplierMgr {
      * returns Supplier JSON document as POJO
      * @param cmd
      */
-    public void getSupplier(GetSupplierCmd cmd) {
+    public void getSupplier(GetSupplierThingCmd cmd) {
         try {
             SupplierDoc doc = sql.getCurrentSupplierDoc(cmd.getSupplierID());
             if (doc == null)

@@ -8,7 +8,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import cmd.ExportSuppliersCmd;
-import cmd.GetSupplierCmd;
+import cmd.GetSupplierThingCmd;
 import cmd.ImportSuppliersCmd;
 import mgr.SupplierMgr;
 import supplier.SupplierSQL;
@@ -53,8 +53,8 @@ public class SupplierResource {
     @GET
     @Path ("/get")
     @Timed
-    public GetSupplierCmd getSupplier (@QueryParam("supplierID") String id ) {
-        GetSupplierCmd cmd = new GetSupplierCmd();
+    public GetSupplierThingCmd getSupplier (@QueryParam("supplierID") String id ) {
+        GetSupplierThingCmd cmd = new GetSupplierThingCmd();
         cmd.setSupplierID(id);
         mgr.getSupplier(cmd);
         return cmd;
