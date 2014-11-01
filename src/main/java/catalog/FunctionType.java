@@ -1,7 +1,6 @@
-package model;
+package catalog;
 
 /**
-* Created by carl_downs on 10/5/14.
 */
 public enum FunctionType {
     POWER,
@@ -15,4 +14,5 @@ public enum FunctionType {
     CASE,
     CELL,
     CUSTOM,
+    UNKNOWN
 }

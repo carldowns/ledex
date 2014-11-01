@@ -1,4 +1,4 @@
-package logic;
+package mgr;
 
 import ch.qos.logback.classic.Logger;
 import cmd.*;

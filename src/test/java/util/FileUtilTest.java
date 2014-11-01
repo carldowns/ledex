@@ -1,6 +1,5 @@
 package util;
 
-import model.Assembly;
 import part.Part;
 import org.junit.Test;
 import supplier.Supplier;
@@ -14,29 +13,29 @@ import java.util.List;
  */
 public class FileUtilTest {
 
-    @Test
-    public void readAssemblyFile () throws Exception{
-
-        URL url = getClass().getResource("/data/assembly.json");
-        System.out.println ("URL " + url);
-
-        FileUtil mgr = new FileUtil();
-        Assembly asm = mgr.importAssembly(url.toURI());
-        System.out.println ("assembly " + asm);
-
-    }
-
-    @Test
-    public void readAssembliesFile () throws Exception{
-
-        URL url = getClass().getResource("/data/assemblies.json");
-        System.out.println ("URL " + url);
-
-        FileUtil mgr = new FileUtil();
-        List<Assembly> asms = mgr.importAssemblies(url.toURI());
-        System.out.println ("assemblies " + asms);
-
-    }
+//    @Test
+//    public void readAssemblyFile () throws Exception{
+//
+//        URL url = getClass().getResource("/data/assembly.json");
+//        System.out.println ("URL " + url);
+//
+//        FileUtil mgr = new FileUtil();
+//        Assembly asm = mgr.importAssembly(url.toURI());
+//        System.out.println ("assembly " + asm);
+//
+//    }
+//
+//    @Test
+//    public void readAssembliesFile () throws Exception{
+//
+//        URL url = getClass().getResource("/data/assemblies.json");
+//        System.out.println ("URL " + url);
+//
+//        FileUtil mgr = new FileUtil();
+//        List<Assembly> asms = mgr.importAssemblies(url.toURI());
+//        System.out.println ("assemblies " + asms);
+//
+//    }
 
     @Test
     public void readPartFile () throws Exception{

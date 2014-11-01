@@ -1,7 +1,7 @@
 package part;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import model.FunctionType;
+import catalog.FunctionType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  * can be tagged onto the end of the declaration itself.  We will convert from that as needed.
  * So a weight can be "5KG", "12LBS", "12 lbs", "5000 G", etc.
  */
-public class Part implements Cloneable {
+public class Part {
 
     @JsonProperty ("partID")
     String partID;
@@ -148,12 +148,15 @@ public class Part implements Cloneable {
     }
 
     @Override
-    public Part clone () {
-        throw new UnsupportedOperationException ();    
-    }
-
-    @Override
-    public String toString () {
-        return "name:" + name + " function:" + function;
+    public String toString() {
+        return "Part{" +
+                "partID='" + partID + '\'' +
+                ", supplierID='" + supplierID + '\'' +
+                ", name='" + name + '\'' +
+                ", function=" + function +
+//                ", properties=" + properties +
+//                ", costs=" + costs +
+//                ", metrics=" + metrics +
+                '}';
     }
 }

@@ -1,15 +1,9 @@
 package part;
 
-import java.io.*;
 import java.util.List;
 
 import com.google.common.collect.Lists;
-import model.Assembly;
-import org.junit.Assert;
 import org.junit.Test;
-import part.*;
-import rule.RuleEngine;
-import util.GsonUtil;
 
 public class PartTest {
 

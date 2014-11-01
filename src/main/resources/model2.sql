@@ -17,20 +17,23 @@ create table SupplierDoc (
   supplierID text REFERENCES Supplier,
   current boolean NOT NULL,
   doc text NOT NULL,
-  --md5 text not null,
   ts timestamp NOT NULL DEFAULT now(),
   PRIMARY KEY(supplierDocID)
 );
 
 -- select r.supplierid, name, supplierdocid, current, ts from supplier r, supplierdoc d where r.supplierid = d.supplierid order by r.supplierid;
 
-create table BatchDoc (
-  batchDocID text,
-  supplierID text REFERENCES Supplier,
-  doc text,
-  ts timestamp NOT NULL DEFAULT now(),
-  PRIMARY KEY(batchDocID)
-);
+-----------------------------
+-- Batches
+-----------------------------
+
+--create table BatchDoc (
+--  batchDocID text,
+--  supplierID text REFERENCES Supplier,
+--  doc text,
+--  ts timestamp NOT NULL DEFAULT now(),
+--  PRIMARY KEY(batchDocID)
+--);
 
 -----------------------------
 -- Part
@@ -44,7 +47,8 @@ create table PartRec (
   PRIMARY KEY (partID)
 );
 
---CREATE UNIQUE INDEX PartName ON PartRec COLUMN name;
+CREATE INDEX PartRec_Name_Idx ON PartRec (name);
+CREATE INDEX PartRec_Function_Idx ON PartRec (function);
 
 create table PartDoc (
   partDocID text NOT NULL,
@@ -60,43 +64,52 @@ create table PartDoc (
 -- select name, function, supplierid, d.partid, partdocid, current, ts from partrec r, partdoc d where r.partid = d.partid order by supplierid;
 
 -----------------------------
--- Assembly 
+-- Assembly & Product
 -----------------------------
 
-create table Assembly (
-  asmID text,
-  custID text REFERENCES customer,
+create table AssemblyRec (
+  assemblyID text,
   name text,
-  createdOn timestamp with time zone NOT NULL DEFAULT now(),
-  PRIMARY KEY (asmID)
+  PRIMARY KEY (assemblyID)
 );
-
--- may need this
---create table AssemblyPart (
---  asmID text REFERENCES Assembly,
---  partID text REFERENCES Part,
---  PRIMARY KEY (asmID, partID)
---);
-
 
 create table AssemblyDoc (
-  asmID text REFERENCES Assembly,
+  assemblyDocID text NOT NULL,
+  assemblyID text REFERENCES AssemblyRec,
+  current boolean NOT NULL,
   doc text,
-  ts timestamp with time zone NOT NULL DEFAULT now(),
+  ts timestamp NOT NULL DEFAULT now(),
+  PRIMARY KEY(assemblyDocID)
 );
+
+create table ProductPart (
+  productID text, -- ties the product set rows together
+  partID text REFERENCES PartRec, -- part of the product set
+  partDocID text REFERENCES PartDoc, -- specific part definition
+  assemblyID text REFERENCES AssemblyRec, -- combiner rule that resulted in this product set
+  assemblyDocID text REFERENCES AssemblyDoc, -- specific combiner definition
+  function text, -- function of the given part
+  PRIMARY KEY (productID, partID)
+);
+
+CREATE INDEX ProductPart_Part_Idx ON ProductPart (partID);
+CREATE INDEX ProductPart_PartDoc_Idx ON ProductPart (partDocID);
+CREATE INDEX ProductPart_Function_Idx ON ProductPart (function);
+CREATE INDEX ProductPart_Assembly_Idx ON ProductPart (assemblyID);
+CREATE INDEX ProductPart_AssemblyDoc_Idx ON ProductPart (assemblyDocID);
 
 -----------------------------
 -- Customer
 -----------------------------
 
-create table Customer (
-  custID text,
+create table CustomerRec (
+  customerID text,
   name text,
   PRIMARY KEY(supplierID)
 );
 
 create table CustomerDoc (
-  custID text REFERENCES Customer,
+  customerID text REFERENCES CustomerRec,
   doc text,
   ts timestamp with time zone NOT NULL DEFAULT now(),
 );
@@ -105,14 +118,14 @@ create table CustomerDoc (
 -- Quote
 -----------------------------
 
-create table Quote (
+create table QuoteRec (
   quoteID text,
-  custID text REFERENCES Customer,
+  customerID text REFERENCES Customer,
   PRIMARY KEY (quoteID)
 );
 
 create table QuoterDoc (
-  quoteID text REFERENCES Quote,
+  quoteID text REFERENCES QuoteRec,
   doc text,
   ts timestamp with time zone NOT NULL DEFAULT now(),
 );
@@ -121,10 +134,10 @@ create table QuoterDoc (
 -- Order
 -----------------------------
 
-create table Order (
+create table OrderRec (
   orderID text,
-  quoteID text REFERENCES Quote,
-  custID text REFERENCES Customer,
+  quoteID text REFERENCES OrderRec,
+  customerID text REFERENCES CustomerRec,
   PRIMARY KEY (orderID)
 );
 
@@ -135,19 +148,18 @@ create table OrderDoc (
 );
 
 -----------------------------
--- Job
+-- Journal
 -----------------------------
 
-create table Job (
-  projectID text,
-  quoteID text REFERENCES Quote,
-  custID text REFERENCES Customer,
-  PRIMARY KEY (jobID)
-);
-
-create table JobDoc (
-  job text REFERENCES Job,
+create table JournalRec (
+  journalID text,
+  quoteID text REFERENCES QuoteRec,
+  customerID text REFERENCES CustomerRec,
+  orderID text REFERENCES OrderRec,
+  type text,
+  state text,
   doc text,
   ts timestamp with time zone NOT NULL DEFAULT now(),
+  PRIMARY KEY (journalID)
 );
 

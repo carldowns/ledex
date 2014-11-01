@@ -1,5 +1,6 @@
-package logic;
+package mgr;
 
+import catalog.*;
 import ch.qos.logback.classic.Logger;
 import cmd.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -12,24 +13,29 @@ import org.slf4j.LoggerFactory;
 import part.PartDoc;
 import part.PartRec;
 import part.PartSQL;
+import product.Product;
 import util.AppRuntimeException;
 import util.FileUtil;
 
 import java.io.File;
 import java.net.URI;
 import java.security.MessageDigest;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  */
 public class CatalogMgr {
 
-    private PartSQL sql;
+    private PartSQL partSQL;
+    private AssemblySQL assemblySQL;
+
     private static final Logger logger = (Logger) LoggerFactory.getLogger(CatalogMgr.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public CatalogMgr(PartSQL sql) {
-        this.sql = sql;
+        this.partSQL = sql;
     }
 
     /////////////////////////////
@@ -58,26 +64,26 @@ public class CatalogMgr {
                 String docID = new String (Hex.encodeHex(messageDigest));
 
                 // if not in the core table, consider it new and add
-                PartRec found = sql.getPartRecByID(part.getPartID());
+                PartRec found = partSQL.getPartRecByID(part.getPartID());
                 if (found == null) {
-                    sql.insertPartRec(part.getPartID(), part.getSupplierID(), part.getName(), part.getFunction());
-                    sql.insertPartDoc(part.getPartID(), docID, true, json);
+                    partSQL.insertPartRec(part.getPartID(), part.getSupplierID(), part.getName(), part.getFunction());
+                    partSQL.insertPartDoc(part.getPartID(), docID, true, json);
                     cmd.log("part " + part.getName() + " added");
                     continue;
                 }
 
                 // if doc is not present, then add it
-                Integer presentCount = sql.isPartDocPresent(part.getPartID(), docID);
+                Integer presentCount = partSQL.isPartDocPresent(part.getPartID(), docID);
                 if (presentCount == 0) {
-                    sql.insertPartDoc(part.getPartID(), docID, true, json);
-                    sql.demoteOthers(part.getPartID(), docID);
-                    sql.updatePartRec(part.getPartID(), part.getName());
+                    partSQL.insertPartDoc(part.getPartID(), docID, true, json);
+                    partSQL.demoteOthers(part.getPartID(), docID);
+                    partSQL.updatePartRec(part.getPartID(), part.getName());
                     cmd.log("part " + part.getName() + " updated");
                     continue;
                 }
 
                 // if it is the current doc for the supplier, no-op
-                Integer currentCount = sql.isPartDocCurrent(part.getPartID(), docID);
+                Integer currentCount = partSQL.isPartDocCurrent(part.getPartID(), docID);
                 if (currentCount == 1) {
                     cmd.log("part " + part.getName() + " no change");
                     continue;
@@ -87,9 +93,9 @@ public class CatalogMgr {
                 // to a previous state.  Make that doc the current doc
                 if (presentCount == 1) {
                     // TODO build a stored procedure or combined method to manage current T/F state
-                    sql.promoteToCurrent(part.getPartID(), docID);
-                    sql.demoteOthers(part.getPartID(), docID);
-                    sql.updatePartRec(part.getPartID(), part.getName());
+                    partSQL.promoteToCurrent(part.getPartID(), docID);
+                    partSQL.demoteOthers(part.getPartID(), docID);
+                    partSQL.updatePartRec(part.getPartID(), part.getName());
                     cmd.log("part " + part.getName() + " reverted to previous change");
                     continue;
                 }
@@ -127,7 +133,7 @@ public class CatalogMgr {
             }
 
             List<Part> parts = Lists.newArrayList();
-            for (PartDoc doc : sql.getAllCurrentPartDocs()) {
+            for (PartDoc doc : partSQL.getAllCurrentPartDocs()) {
                 String json = doc.getDoc();
                 if (StringUtil.isBlank(json)) {
                     throw new AppRuntimeException
@@ -162,7 +168,7 @@ public class CatalogMgr {
      */
     public void getPart(GetPartCmd cmd) {
         try {
-            PartDoc doc = sql.getCurrentPartDoc(cmd.getPartID());
+            PartDoc doc = partSQL.getCurrentPartDoc(cmd.getPartID());
             if (doc == null)
                 throw new AppRuntimeException("supplier not found");
 
@@ -182,10 +188,42 @@ public class CatalogMgr {
         }
     }
 
-
     /////////////////////////
     // Assembly CRUD
     /////////////////////////
+
+    public Iterator<AssemblyRec> getAllAssemblyRecs() {
+        return assemblySQL.getAllAssemblyRecs();
+    }
+
+    public List<Assembly> getAllAssemblies() throws Exception {
+        List<Assembly> assemblies = Lists.newArrayList();
+        for (AssemblyDoc doc : assemblySQL.getAllCurrentAssemblyDocs()) {
+            String json = doc.getDoc();
+            if (StringUtil.isBlank(json)) {
+                throw new AppRuntimeException
+                        ("json missing for part " + doc.getAssemblyID());
+            }
+
+            Assembly assembly = mapper.readValue(json, Assembly.class);
+            assemblies.add(assembly);
+        }
+
+        return assemblies;
+    }
+
+
+    public Iterator<PartRec> getAllPartRecs() {
+        return partSQL.getAllPartRecs();
+    }
+
+    /////////////////////////
+    // Catalog Generation
+    /////////////////////////
+
+    public void updateProduct (Assembly assembly, Product product) {
+
+    }
 
     /////////////////////////
     // Catalog Listing

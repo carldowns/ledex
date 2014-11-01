@@ -1,4 +1,4 @@
-package logic;
+package mgr;
 
 /**
  * Manages all progressive activities as a series of commands.  Also tracks any mutative

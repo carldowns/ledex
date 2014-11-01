@@ -1,41 +1,53 @@
-package logic;
+package mgr;
 
 /**
  * Created by carl_downs on 10/9/14.
  *
- * Order CRUD
- * Creates an Order from a Quote
- * Computes shipping costs for an Assembly
- * Handles notifications for the Order
- *
+ * Quote CRUD
+ * Prices an Assembly
+ * Creates a Quote from a Priced Assembly
+ * Computes shipping costs
+ * Handles notifications for the Quote
  */
-public class OrderMgr {
+public class QuoteMgr {
 
     /////////////////////////
     // Order CRUD
     /////////////////////////
 
     /////////////////////////
+    // Assembly
     /////////////////////////
 
     /////////////////////////
+    // Calculation
     /////////////////////////
 
     /////////////////////////
+    // Shipping
     /////////////////////////
 
     /////////////////////////
+    // Profit
     /////////////////////////
 
     /////////////////////////
+    // Expiration
     /////////////////////////
 
     /////////////////////////
+    // Terms
     /////////////////////////
 
     /////////////////////////
+    // Logistics
     /////////////////////////
 
     /////////////////////////
+    // Scheduling
+    /////////////////////////
+
+    /////////////////////////
+    // Supplier Notification
     /////////////////////////
 }

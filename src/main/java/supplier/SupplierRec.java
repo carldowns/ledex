@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 /**
+ * represents a row of the SupplierRec table
  */
 @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public class SupplierRec {

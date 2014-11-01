@@ -41,5 +41,13 @@ public class PartDoc {
     public Timestamp getTimestamp() {
         return ts;
     }
-    
+
+    @Override
+    public String toString() {
+        return "PartDoc{" +
+                "partDocID='" + partDocID + '\'' +
+                ", partID='" + partID + '\'' +
+                ", ts=" + ts +
+                '}';
+    }
 }

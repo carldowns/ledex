@@ -1,12 +1,14 @@
 package part;
 
+import catalog.Function;
+import catalog.FunctionType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 /**
- * represents the partrec table in the database
+ * represents a row of the PartRec table in the database
  */
 @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public class PartRec {
@@ -57,5 +59,26 @@ public class PartRec {
         this.name = name;
     }
 
+    public String getFunctionName() {
+        return function;
+    }
 
+    public void setFunctionName(String function) {
+        this.function = function;
+    }
+
+    public FunctionType getFunctionType () {
+        return FunctionType.valueOf(function);
+    }
+
+
+    @Override
+    public String toString() {
+        return "PartRec{" +
+                "partID='" + partID + '\'' +
+                ", supplierID='" + supplierID + '\'' +
+                ", name='" + name + '\'' +
+                ", function='" + function + '\'' +
+                '}';
+    }
 }

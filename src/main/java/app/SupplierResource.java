@@ -10,7 +10,7 @@ import javax.ws.rs.core.MediaType;
 import cmd.ExportSuppliersCmd;
 import cmd.GetSupplierCmd;
 import cmd.ImportSuppliersCmd;
-import logic.SupplierMgr;
+import mgr.SupplierMgr;
 import supplier.SupplierSQL;
 import com.codahale.metrics.annotation.Timed;
 

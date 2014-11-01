@@ -1,10 +1,10 @@
 package util;
 
+import product.Product;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import model.Assembly;
 import part.Part;
 import supplier.Supplier;
 
@@ -28,11 +28,11 @@ public class FileUtil {
      * @param fileURI
      * @return
      */
-    public Assembly importAssembly (URI fileURI) {
+    public Product importAssembly (URI fileURI) {
 
 
         try {
-            Assembly asm = mapper.readValue(new File(fileURI), Assembly.class);
+            Product asm = mapper.readValue(new File(fileURI), Product.class);
             return asm;
         }
         catch (Throwable t) {
@@ -45,11 +45,11 @@ public class FileUtil {
      * @param fileURI
      * @return
      */
-    public List<Assembly> importAssemblies (URI fileURI) {
+    public List<Product> importAssemblies (URI fileURI) {
 
 
         try {
-            List<Assembly> list = new ArrayList<>();
+            List<Product> list = new ArrayList<>();
             JsonFactory f = new JsonFactory();
             JsonParser jp = f.createParser(new File(fileURI));
 
@@ -58,7 +58,7 @@ public class FileUtil {
 
             // and then each time, advance to opening START_OBJECT
             while (jp.nextToken() == JsonToken.START_OBJECT) {
-                Assembly assembly = mapper.readValue(jp, Assembly.class);
+                Product assembly = mapper.readValue(jp, Product.class);
                 list.add(assembly);
             }
             return list;
