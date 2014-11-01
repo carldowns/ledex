@@ -5,6 +5,7 @@ import ch.qos.logback.classic.Logger;
 import cmd.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import part.Part;
 import org.apache.commons.codec.binary.Hex;
@@ -168,11 +169,7 @@ public class CatalogMgr {
      */
     public void getPart(GetPartCmd cmd) {
         try {
-            PartDoc doc = partSQL.getCurrentPartDoc(cmd.getPartID());
-            if (doc == null)
-                throw new AppRuntimeException("supplier not found");
-
-            Part part = mapper.readValue(doc.getDoc(), Part.class);
+            Part part = getPart (cmd.getPartID());
             cmd.setPart(part);
             cmd.showCompleted();
 
@@ -185,6 +182,25 @@ public class CatalogMgr {
             logger.error(msg, e);
             cmd.log(msg);
             cmd.showFailed();
+        }
+    }
+
+    /**
+     * @param cmd
+     */
+    public Part getPart(String partID) {
+        try {
+            // TODO Guava or some other type of caching yo
+            PartDoc doc = partSQL.getCurrentPartDoc(partID);
+            if (doc == null)
+                throw new AppRuntimeException("supplier not found");
+
+            Part part = mapper.readValue(doc.getDoc(), Part.class);
+            return part;
+
+        } catch (Exception e) {
+            logger.error("unable to retrieve part {}", partID, e);
+            throw Throwables.propagate(e);
         }
     }
 

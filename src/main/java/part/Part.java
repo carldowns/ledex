@@ -2,6 +2,7 @@ package part;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import catalog.FunctionType;
+import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,7 +118,16 @@ public class Part {
         return properties;
     }
 
-    
+    public List<PartProperty> getPropertiesFor (PartPropertyType type) {
+        List<PartProperty> results = Lists.newArrayList();
+        for (PartProperty pp : properties) {
+            if (pp.getType().equals(type)) {
+                results.add(pp);
+            }
+        }
+        return results;
+    }
+
     public void setProperties(List<PartProperty> properties) {
         this.properties = properties;
     }

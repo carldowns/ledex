@@ -23,6 +23,10 @@ public class Rule {
         properties.put(key, value);
     }
 
+    String getProperty (String key) {
+        return properties.get(key);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

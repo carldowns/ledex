@@ -10,5 +10,5 @@ import java.util.Map;
  */
 public interface IRuleInterpreter {
 
-    public Map<RuleViolation, AssemblyMgr.CandidatePart> evaluate (Assembly assembly, AssemblyMgr.CandidateProduct candidate);
+    public AssemblyMgr.CandidateProblem evaluate (Assembly assembly, AssemblyMgr.CandidateProduct candidate);
 }

@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class RICircuitRouteCompliance implements IRuleInterpreter {
 
-    public Map<RuleViolation, AssemblyMgr.CandidatePart> evaluate (Assembly assembly, AssemblyMgr.CandidateProduct candidate) {
+    public AssemblyMgr.CandidateProblem evaluate (Assembly assembly, AssemblyMgr.CandidateProduct candidate) {
         return null;
     }
 

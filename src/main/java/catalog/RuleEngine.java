@@ -20,16 +20,19 @@ public class RuleEngine {
         interpreters.add(new RIConnectorCompatibility());
     }
     
-    public Map<RuleViolation,AssemblyMgr.CandidatePart> evaluate (Assembly assembly, AssemblyMgr.CandidateProduct candidate) {
-        Map<RuleViolation,AssemblyMgr.CandidatePart> combined = Maps.newHashMap();
+    public AssemblyMgr.CandidateProblem evaluate (Assembly assembly, AssemblyMgr.CandidateProduct candidate) {
+        AssemblyMgr.CandidateProblem report = null;
 
         for (IRuleInterpreter ri : interpreters) {
-            Map<RuleViolation,AssemblyMgr.CandidatePart> violations = ri.evaluate(assembly, candidate);
-            if (violations != null) {
-                combined.putAll(violations);
+            AssemblyMgr.CandidateProblem problem = ri.evaluate(assembly, candidate);
+            if (problem != null) {
+                if (report == null) {
+                    report = new AssemblyMgr.CandidateProblem();
+                }
+                report.addProblems(problem);
             }
         }
 
-        return combined;
+        return report;
     }
 }

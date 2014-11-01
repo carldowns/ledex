@@ -75,7 +75,7 @@ public class UnitConverter {
         FT, // feet
 
         // power
-        MA, // milliamps
+        MA, // milli amps
         VDC, // Volts DC
         VAC, // Volts AC
     }
@@ -154,6 +154,13 @@ public class UnitConverter {
         return input;
     }
 
+    public static String assertVoltageType(String input) {
+        if (StringUtil.isNotBlank(input))
+            new UnitConverter(input).getVoltageType().validate();
+
+        return input;
+    }
+
     // //////////////////////
     // constructors
     // //////////////////////
@@ -224,13 +231,34 @@ public class UnitConverter {
         throw new IllegalArgumentException("unknown measurement type: " + input);
     }
 
-    /**
-     * returns a 'currency' type for the intrinsic value.
-     * 
-     * @throws IllegalArgumentException
-     *             if value not a measure type
-     * @return
-     */
+    public UnitTypeValue getVoltageType() {
+        if (utv != null)
+            return utv;
+
+        int index = -1;
+
+        index = input.indexOf(VOLT_DC);
+        if (index != -1) {
+            String s = input.substring(0, index).trim();
+            return utv = new UnitTypeValue(UnitType.VDC, s);
+        }
+
+        index = input.indexOf(VOLT_AC);
+        if (index != -1) {
+            String s = input.substring(0, index).trim();
+            return utv = new UnitTypeValue(UnitType.VAC, s);
+        }
+
+        throw new IllegalArgumentException("unknown voltage type: " + input);
+    }
+
+        /**
+         * returns a 'currency' type for the intrinsic value.
+         *
+         * @throws IllegalArgumentException
+         *             if value not a measure type
+         * @return
+         */
     public UnitTypeValue getCurrencyType() {
         if (utv != null)
             return utv;
@@ -509,6 +537,10 @@ public class UnitConverter {
 
         throw new UnsupportedOperationException(input);
     }
+
+    //////////////////////
+    // Power conversions
+    //////////////////////
 
     /**
      * converts the unit value and multiplier to BigDecimals, multiplies them,

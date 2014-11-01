@@ -46,6 +46,14 @@ public class Assembly {
         this.functions = functions;
     }
 
+    public Function getFunction (FunctionType type) {
+        for (Function f : functions) {
+            if (f.type.equals(type))
+                return f;
+        }
+        throw new RuntimeException ("unable to find type " + type);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

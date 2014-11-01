@@ -81,14 +81,14 @@ public class AssemblyMgr {
             builder.addCandidate(parts.next());
         }
 
+        RuleEngine engine = new RuleEngine();
         List<CandidateProduct> products = Lists.newArrayList();
         while (!builder.isAllPermutationsReported()) {
 
-            RuleEngine engine = new RuleEngine();
             CandidateProduct candidate = builder.nextCandidate();
-            Map<RuleViolation,CandidatePart> problems = engine.evaluate(assembly, candidate);
-            if (!problems.isEmpty()) {
-                builder.eliminateParts(problems);
+            CandidateProblem report = engine.evaluate(assembly, candidate);
+            if (report.hasProblems()) {
+                builder.eliminateParts(report);
                 continue;
             }
 
@@ -103,6 +103,14 @@ public class AssemblyMgr {
 
         public void put (FunctionType f, CandidatePart p) {
             candidateParts.put(f, p);
+        }
+
+        public Map<FunctionType, CandidatePart> getCandidateParts() {
+            return candidateParts;
+        }
+
+        public void setCandidateParts(Map<FunctionType, CandidatePart> candidateParts) {
+            this.candidateParts = candidateParts;
         }
     }
 
@@ -136,8 +144,8 @@ public class AssemblyMgr {
             return candidate;
         }
 
-        void eliminateParts (Map<RuleViolation,CandidatePart> problems) {
-            for (CandidatePart candidatePart : problems.values()) {
+        void eliminateParts (CandidateProblem problems) {
+            for (CandidatePart candidatePart : problems.problems.values()) {
                 candidatePart.setViable(false);
             }
         }
@@ -245,11 +253,11 @@ public class AssemblyMgr {
             this.viable = viable;
         }
 
-        boolean isViable() {
+        public boolean isViable() {
             return viable;
         }
 
-        PartRec getPart() {
+        public PartRec getPart() {
             return part;
         }
 
@@ -258,4 +266,36 @@ public class AssemblyMgr {
             return part.toString();
         }
     }
+
+    /**
+     *
+     */
+    public static class CandidateProblem {
+        Map<RuleViolation,CandidatePart> problems;
+
+        public CandidateProblem () {
+        }
+
+        public CandidateProblem (RuleViolation violation, CandidatePart candidatePart) {
+            addProblem (violation, candidatePart);
+        }
+
+        public boolean hasProblems () {
+            return !problems.isEmpty();
+        }
+
+        public void addProblems (CandidateProblem p) {
+            problems.putAll(p.problems);
+        }
+
+        public void addProblem (RuleViolation violation, CandidatePart candidatePart) {
+            if (problems == null) {
+                problems = Maps.newHashMap();
+            }
+
+            problems.put(violation, candidatePart);
+        }
+    }
+
+
 }
