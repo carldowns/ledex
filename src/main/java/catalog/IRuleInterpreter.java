@@ -1,7 +1,7 @@
 package catalog;
 
 
-import mgr.AssemblyMgr;
+import mgr.AssemblyMgr.*;
 
 import java.util.Map;
 
@@ -10,5 +10,5 @@ import java.util.Map;
  */
 public interface IRuleInterpreter {
 
-    public AssemblyMgr.CandidateProblem evaluate (Assembly assembly, AssemblyMgr.CandidateProduct candidate);
+    public CandidateProblem evaluate (Assembly assembly, CandidateProduct candidate);
 }

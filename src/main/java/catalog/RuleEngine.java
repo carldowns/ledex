@@ -1,7 +1,7 @@
 package catalog;
 
 import com.google.common.collect.Maps;
-import mgr.AssemblyMgr;
+import mgr.AssemblyMgr.*;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -20,15 +20,12 @@ public class RuleEngine {
         interpreters.add(new RIConnectorCompatibility());
     }
     
-    public AssemblyMgr.CandidateProblem evaluate (Assembly assembly, AssemblyMgr.CandidateProduct candidate) {
-        AssemblyMgr.CandidateProblem report = null;
+    public CandidateProblem evaluate (Assembly assembly, CandidateProduct candidate) {
+        CandidateProblem report = new CandidateProblem();
 
         for (IRuleInterpreter ri : interpreters) {
-            AssemblyMgr.CandidateProblem problem = ri.evaluate(assembly, candidate);
+            CandidateProblem problem = ri.evaluate(assembly, candidate);
             if (problem != null) {
-                if (report == null) {
-                    report = new AssemblyMgr.CandidateProblem();
-                }
                 report.addProblems(problem);
             }
         }

@@ -281,7 +281,7 @@ public class AssemblyMgr {
         }
 
         public boolean hasProblems () {
-            return !problems.isEmpty();
+            return problems != null;
         }
 
         public void addProblems (CandidateProblem p) {

@@ -1,7 +1,7 @@
 package catalog;
 
 import com.google.common.collect.Maps;
-import mgr.AssemblyMgr;
+import mgr.AssemblyMgr.*;
 import mgr.CatalogMgr;
 import part.Part;
 import part.PartProperty;
@@ -19,7 +19,7 @@ public class RIVoltage implements IRuleInterpreter {
     /**
      * verifies that all electrical parts are operating within at the prescribed voltage
      */
-    public AssemblyMgr.CandidateProblem evaluate (Assembly assembly, AssemblyMgr.CandidateProduct candidate) {
+    public CandidateProblem evaluate (Assembly assembly, CandidateProduct candidate) {
 
         // get the rules associated with the 'power' function.
         // if there are none, there is no restriction, so return null (everything is allowed)
@@ -55,13 +55,13 @@ public class RIVoltage implements IRuleInterpreter {
         return null;
     }
 
-    private AssemblyMgr.CandidateProblem requireMatchVoltage (AssemblyMgr.CandidateProduct candidate, String voltage) {
+    private CandidateProblem requireMatchVoltage (CandidateProduct candidate, String voltage) {
 
         for (FunctionType type : candidate.getCandidateParts().keySet()) {
             if (FunctionType.POWER.equals (type)) {
 
                 // fetch part of function:power
-                AssemblyMgr.CandidatePart candidatePart = candidate.getCandidateParts().get(type);
+                CandidatePart candidatePart = candidate.getCandidateParts().get(type);
                 PartRec rec = candidatePart.getPart();
                 Part part = mgr.getPart(rec.getPartId());
 
@@ -81,8 +81,8 @@ public class RIVoltage implements IRuleInterpreter {
     }
 
     // TODO: move to an abstract base so all the interpreters can use it
-    private AssemblyMgr.CandidateProblem reportProblem (AssemblyMgr.CandidatePart candidate, String message) {
-        AssemblyMgr.CandidateProblem problem = new AssemblyMgr.CandidateProblem(new RuleViolation(message), candidate);
+    private CandidateProblem reportProblem (CandidatePart candidate, String message) {
+        CandidateProblem problem = new CandidateProblem(new RuleViolation(message), candidate);
         return problem;
     }
 }
