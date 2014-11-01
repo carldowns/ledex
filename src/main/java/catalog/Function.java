@@ -1,10 +1,6 @@
 package catalog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.Lists;
 
 
 public class Function {
@@ -12,13 +8,18 @@ public class Function {
     @JsonProperty ("type")
     FunctionType type = FunctionType.UNKNOWN;
 
-    @JsonProperty ("rules")
-    List<Rule> rules = Lists.newArrayList();
-
     public Function() {}
 
     public Function(String functionTypeName) {
         type = FunctionType.valueOf(functionTypeName);
+    }
+
+    public FunctionType getType() {
+        return type;
+    }
+
+    public void setType(FunctionType type) {
+        this.type = type;
     }
 
     @Override
@@ -28,7 +29,6 @@ public class Function {
 
         Function function = (Function) o;
 
-        if (!rules.equals(function.rules)) return false;
         if (type != function.type) return false;
 
         return true;
@@ -36,16 +36,13 @@ public class Function {
 
     @Override
     public int hashCode() {
-        int result = type.hashCode();
-        result = 31 * result + rules.hashCode();
-        return result;
+        return type != null ? type.hashCode() : 0;
     }
 
     @Override
     public String toString() {
         return "Function{" +
                 "type=" + type +
-                ", rules=" + rules +
                 '}';
     }
 }

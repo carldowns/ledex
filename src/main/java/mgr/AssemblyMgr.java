@@ -218,7 +218,7 @@ public class AssemblyMgr {
         }
 
         void addPart (PartRec part) {
-            checkArgument(part.getFunctionName().equals(functionType.toString()), "function mismatch %s", functionType);
+            checkArgument(part.getFunctionType() == functionType, "function mismatch %s", functionType);
             cells.add(new CandidatePart(part));
         }
 

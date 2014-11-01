@@ -1,29 +1,26 @@
 package catalog;
 
-import com.google.common.collect.Maps;
 import mgr.AssemblyMgr.*;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 
 public class RuleEngine {
 
-    ArrayList<IRuleInterpreter> interpreters = new ArrayList<IRuleInterpreter>();
+    ArrayList<RuleInterpreter> interpreters = new ArrayList<RuleInterpreter>();
 
     // static initializer
     {
-        interpreters.add(new RIAmperage());
-        interpreters.add(new RIVoltage());
-        interpreters.add(new RIFunctionCompliance());
-        interpreters.add(new RIPartCompatibility());
-        interpreters.add(new RIConnectorCompatibility());
+        interpreters.add(new RIPower());
+        interpreters.add(new RICircuit());
+        interpreters.add(new RIConnector());
+        interpreters.add(new RISupplier());
     }
     
     public CandidateProblem evaluate (Assembly assembly, CandidateProduct candidate) {
         CandidateProblem report = new CandidateProblem();
 
-        for (IRuleInterpreter ri : interpreters) {
+        for (RuleInterpreter ri : interpreters) {
             CandidateProblem problem = ri.evaluate(assembly, candidate);
             if (problem != null) {
                 report.addProblems(problem);

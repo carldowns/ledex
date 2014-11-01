@@ -118,7 +118,7 @@ public class Part {
         return properties;
     }
 
-    public List<PartProperty> getPropertiesFor (PartPropertyType type) {
+    public List<PartProperty> getPropertiesOfType(PartPropertyType type) {
         List<PartProperty> results = Lists.newArrayList();
         for (PartProperty pp : properties) {
             if (pp.getType().equals(type)) {

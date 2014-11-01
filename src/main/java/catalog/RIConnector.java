@@ -2,10 +2,8 @@ package catalog;
 
 import mgr.AssemblyMgr.*;
 
-import java.util.Map;
 
-
-public class RIConnectorCompatibility implements IRuleInterpreter {
+public class RIConnector implements RuleInterpreter {
     /**
      * verifies that all electrical parts are plug / connector compatible
      */

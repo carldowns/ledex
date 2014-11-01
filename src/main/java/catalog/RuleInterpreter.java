@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * implementations of this interface verify that a given ProductCandidate
  */
-public interface IRuleInterpreter {
+public interface RuleInterpreter {
 
     public CandidateProblem evaluate (Assembly assembly, CandidateProduct candidate);
 }

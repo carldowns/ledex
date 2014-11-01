@@ -28,7 +28,7 @@ public class FileUtilTest {
 //    @Test
 //    public void readAssembliesFile () throws Exception{
 //
-//        URL url = getClass().getResource("/data/assemblies.json");
+//        URL url = getClass().getResource("/data/assemblies.old.json");
 //        System.out.println ("URL " + url);
 //
 //        FileUtil mgr = new FileUtil();

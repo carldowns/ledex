@@ -1,8 +1,10 @@
-package mgr;
+package catalog;
 
 import catalog.Assembly;
 import catalog.Function;
 import com.google.common.collect.Lists;
+import mgr.AssemblyMgr;
+import mgr.CatalogMgr;
 import org.junit.Test;
 import part.PartRec;
 

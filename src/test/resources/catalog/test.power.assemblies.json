@@ -1,0 +1,18 @@
+[
+    {
+        "assemblyID": "LIGHT-SET-001",
+        "description": "Standard LED light set",
+        "functions": ["LIGHT", "POWER"],
+        "rules": [
+            {
+                "type": "VOLTAGE_COMPATIBLE"
+            },
+            {
+                "type": "AMPERAGE_COMPATIBLE"
+            },
+            {
+                "type": "CONNECTOR_TYPE_COMPATIBLE"
+            }
+        ]
+    }
+]

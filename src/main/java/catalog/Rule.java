@@ -1,7 +1,9 @@
 package catalog;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.Maps;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,23 +11,45 @@ import java.util.Map;
 public class Rule {
 
     @JsonProperty("type")
-    String type;
+    private final RuleType type;
 
-    @JsonProperty ("properties")
-    Map<String, String> properties = new HashMap<>();
+    @Nullable
+    @JsonProperty("properties")
+    private final Map<String, String> properties = Maps.newHashMap();
 
-    Rule(String type, String key, String value) {
-        this.type = type;
+    ///////////////////
+    // Construct
+    ///////////////////
+
+
+    Rule(String type) {
+        this.type = RuleType.valueOf(type);
+    }
+
+    ///////////////////
+    // Helpers
+    ///////////////////
+
+    public RuleType getType() {
+        return type;
+    }
+
+    void addProperty(String key, String value) {
         properties.put(key, value);
     }
-    
-    void addProperty (String key, String value) {
-        properties.put(key, value);
-    }
 
-    String getProperty (String key) {
+    String getProperty(String key) {
         return properties.get(key);
     }
+
+    @Nullable
+    public Map<String, String> getProperties() {
+        return properties;
+    }
+
+    ///////////////////
+    // Overrides
+    ///////////////////
 
     @Override
     public boolean equals(Object o) {
@@ -51,7 +75,7 @@ public class Rule {
     public String toString() {
         return "Rule{" +
                 "type='" + type + '\'' +
-                ", properties=" + properties +
+                (properties != null ? ", properties=" + properties : "") +
                 '}';
     }
 }

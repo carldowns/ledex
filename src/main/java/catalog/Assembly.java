@@ -26,6 +26,10 @@ public class Assembly {
     @JsonProperty ("functions")
     List<Function> functions;
 
+    @JsonProperty ("rules")
+    List<Rule> rules = Lists.newArrayList();
+
+
     public String getAssemblyID() {
         return assemblyID;
     }
@@ -33,6 +37,10 @@ public class Assembly {
     public void setAssemblyID(String assemblyID) {
         this.assemblyID = assemblyID;
     }
+
+    ///////////////////////
+    // Function Methods
+    ///////////////////////
 
     public List<FunctionType> getFunctionTypes() {
         List<FunctionType> types = Lists.newArrayList();
@@ -53,6 +61,22 @@ public class Assembly {
         }
         throw new RuntimeException ("unable to find type " + type);
     }
+
+    ///////////////////////
+    // Rules Methods
+    ///////////////////////
+
+    public List<Rule> getRules() {
+        return rules;
+    }
+
+    public void setRules(List<Rule> rules) {
+        this.rules = rules;
+    }
+
+    ///////////////////////
+    // Overrides
+    ///////////////////////
 
     @Override
     public boolean equals(Object o) {

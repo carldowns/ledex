@@ -2,15 +2,12 @@ package catalog;
 
 import mgr.AssemblyMgr.*;
 
-import java.util.Map;
+/**
+ * verifies that all parts can be connected in a circuit
+ */
+public class RICircuit implements RuleInterpreter {
 
-
-public class RISameSupplier implements IRuleInterpreter {
-    /**
-     * verifies that all parts are provided by the same supplier
-     */
     public CandidateProblem evaluate (Assembly assembly, CandidateProduct candidate) {
-
         return null;
     }
 

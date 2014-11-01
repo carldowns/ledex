@@ -1,5 +1,6 @@
 package util;
 
+import catalog.Assembly;
 import product.Product;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
@@ -21,18 +22,18 @@ import java.util.List;
  */
 public class FileUtil {
 
-    static ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
+    static ObjectMapper mapper = new ObjectMapper(); // TODO: thread-safe, share globally
 
     /**
      *
      * @param fileURI
      * @return
      */
-    public Product importAssembly (URI fileURI) {
+    public Assembly importAssembly (URI fileURI) {
 
 
         try {
-            Product asm = mapper.readValue(new File(fileURI), Product.class);
+            Assembly asm = mapper.readValue(new File(fileURI), Assembly.class);
             return asm;
         }
         catch (Throwable t) {
@@ -45,11 +46,11 @@ public class FileUtil {
      * @param fileURI
      * @return
      */
-    public List<Product> importAssemblies (URI fileURI) {
+    public List<Assembly> importAssemblies (URI fileURI) {
 
 
         try {
-            List<Product> list = new ArrayList<>();
+            List<Assembly> list = new ArrayList<>();
             JsonFactory f = new JsonFactory();
             JsonParser jp = f.createParser(new File(fileURI));
 
@@ -58,7 +59,7 @@ public class FileUtil {
 
             // and then each time, advance to opening START_OBJECT
             while (jp.nextToken() == JsonToken.START_OBJECT) {
-                Product assembly = mapper.readValue(jp, Product.class);
+                Assembly assembly = mapper.readValue(jp, Assembly.class);
                 list.add(assembly);
             }
             return list;
