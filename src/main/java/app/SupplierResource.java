@@ -31,7 +31,7 @@ public class SupplierResource {
     //////////////////////////////
 
     @GET
-    @Path ("/importSuppliers")
+    @Path ("/import")
     @Timed
     public ImportSuppliersCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
         ImportSuppliersCmd cmd = new ImportSuppliersCmd();
@@ -41,7 +41,7 @@ public class SupplierResource {
     }
 
     @GET
-    @Path ("/exportSuppliers")
+    @Path ("/export")
     @Timed
     public ExportSuppliersCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
         ExportSuppliersCmd cmd = new ExportSuppliersCmd();
@@ -51,7 +51,7 @@ public class SupplierResource {
     }
 
     @GET
-    @Path ("/getSupplier")
+    @Path ("/get")
     @Timed
     public GetSupplierCmd getSupplier (@QueryParam("supplierID") String id ) {
         GetSupplierCmd cmd = new GetSupplierCmd();
@@ -66,7 +66,7 @@ public class SupplierResource {
 
     @GET
     @Timed
-    @Path ("/getAllSupplierNames")
+    @Path ("/names")
     public Iterator<String> findAllNames () {
         return sql.getAllSupplierNames();
     }

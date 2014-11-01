@@ -178,8 +178,8 @@ public class SupplierMgr {
             if (doc == null)
                 throw new AppRuntimeException("supplier not found");
 
-            Supplier supplierRec = mapper.readValue(doc.getDoc(), Supplier.class);
-            cmd.setSupplierRec(supplierRec);
+            Supplier supplier = mapper.readValue(doc.getDoc(), Supplier.class);
+            cmd.setSupplier(supplier);
             cmd.showCompleted();
 
         } catch (AppRuntimeException e) {
