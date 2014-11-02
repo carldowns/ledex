@@ -6,6 +6,13 @@ import java.util.List;
 
 /**
  * represents a set of ProductPart table rows.
+ *
+ * <p>The combined set of ProductPart rows for a given productID makes up a product definition in the catalog.
+ * When configured into a ProductItem, all variables are expressed to quantify a concrete product that can be
+ * cost-analysed, priced, and quoted and ordered</p>
+ *
+ *
+ *
  */
 public class Product {
 

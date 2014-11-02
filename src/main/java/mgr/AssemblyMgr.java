@@ -36,29 +36,32 @@ public class AssemblyMgr {
             for (Assembly assembly : catalogMgr.getAllAssemblies()) {
                 List<CandidateProduct> products = buildProductCandidates(assembly);
 
+                // FIXME come up with something better for product ID assignment
+                int productIDSuffix = 100;
                 for (CandidateProduct candidate : products) {
                     Product product = new Product();
 
-                    int count = 100;
                     for (Map.Entry<FunctionType, CandidatePart> set : candidate.candidateParts.entrySet()) {
                         FunctionType function = set.getKey();
 
                         CandidatePart candidatePart = set.getValue();
                         Part part = candidatePart.getPart();
 
-                        // FIXME come up with something better for product ID assignment
                         ProductPart productPart = new ProductPart();
-                        productPart.setProductID(assembly.getAssemblyID() + "." + count++);
+                        productPart.setProductID(assembly.getAssemblyID() + "." + productIDSuffix);
                         productPart.setAssemblyID(assembly.getAssemblyID());
                         productPart.setAssemblyDocID(assembly.getAssemblyDocID());
                         productPart.setPartID(part.getPartID());
                         productPart.setPartDocID(part.getPartDocID());
                         productPart.setFunction(function);
+                        productPart.setLinkable(part.isLinkable());
 
                         product.addPart(productPart);
                     }
                     catalogMgr.updateProduct(assembly, product);
                 }
+                productIDSuffix++;
+
             }
         } catch (Exception e) {
             logger.error("unable to build catalog", e);

@@ -89,6 +89,7 @@ create table ProductPart (
   assemblyID text REFERENCES AssemblyRec, -- combiner rule that resulted in this product set
   assemblyDocID text REFERENCES AssemblyDoc, -- specific combiner definition
   function text, -- function of the given part
+  linkable boolean, -- linkable parts support multiples of same part in a configured set
   PRIMARY KEY (productID, partID)
 );
 

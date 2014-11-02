@@ -15,28 +15,28 @@ import java.util.List;
  */
 public class Part {
 
-    @JsonProperty ("partID")
+    @JsonProperty("partID")
     String partID;
 
     // not persisted
     String partDocID;
 
-    @JsonProperty ("supplierID")
+    @JsonProperty("supplierID")
     String supplierID;
 
-    @JsonProperty ("name")
+    @JsonProperty("name")
     String name;
 
-    @JsonProperty ("function")
+    @JsonProperty("function")
     FunctionType function;
 
-    @JsonProperty ("properties")
+    @JsonProperty("properties")
     List<PartProperty> properties = new ArrayList<PartProperty>();
 
-    @JsonProperty ("costs")
+    @JsonProperty("costs")
     List<PartCost> costs = new ArrayList<PartCost>();
 
-    @JsonProperty ("metrics")
+    @JsonProperty("metrics")
     PartMetric metrics;
 
     /////////////////////////
@@ -46,18 +46,19 @@ public class Part {
     /**
      * default constructor for Jackson
      */
-    public Part () {
+    public Part() {
     }
 
     /**
      * copy constructor
+     *
      * @param source
      */
-    public Part (Part source) {
-       throw new UnsupportedOperationException ();    
+    public Part(Part source) {
+        throw new UnsupportedOperationException();
     }
-    
-    public Part (String partName, String functionName) {
+
+    public Part(String partName, String functionName) {
         this.name = partName;
         this.function = FunctionType.valueOf(functionName);
     }
@@ -91,43 +92,41 @@ public class Part {
         this.supplierID = supplierID;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     /////////////////////////
-    // Methods
+    // Function
     /////////////////////////
 
-    public Part setMetrics(PartMetric metrics) {
-       this.metrics = metrics;
-       return this;    
-    }
-
-    public Part addProperty(PartProperty property) {
-        properties.add (property);
-        return this;
-    }
-
-    public Part addCost(PartCost price) {
-        costs.add (price);
-        return this;
-    }
-
-    public String getName () {
-        return name;       
-    }
-    
-    
     public String getFunctionName() {
         return function.name();
     }
 
-    public FunctionType getFunctionType () {
+    public FunctionType getFunctionType() {
         return function;
     }
-    
+
     public void setFunction(String function) {
         this.function = FunctionType.valueOf(function);
     }
 
-    
+
+    /////////////////////////
+    // Property
+    /////////////////////////
+
+
+    public Part addProperty(PartProperty property) {
+        properties.add(property);
+        return this;
+    }
+
     public List<PartProperty> getProperties() {
         return properties;
     }
@@ -146,30 +145,53 @@ public class Part {
         this.properties = properties;
     }
 
-    
+    public boolean isLinkable () {
+        for (PartProperty pp : properties) {
+            if (pp.getType() == PartPropertyType.LINKABLE)
+                return true;
+        }
+        return false;
+    }
+
+    /////////////////////////
+    // Cost
+    /////////////////////////
+
+
+    public Part addCost(PartCost price) {
+        costs.add(price);
+        return this;
+    }
+
     public List<PartCost> getCosts() {
         return costs;
     }
 
-    
     public void setCosts(List<PartCost> costs) {
         this.costs = costs;
     }
 
-    
+
+    /////////////////////////
+    // Metric
+    /////////////////////////
+
+    public Part setMetrics(PartMetric metrics) {
+        this.metrics = metrics;
+        return this;
+    }
+
     public PartMetric getMetric() {
         return metrics;
     }
 
-    
     public void setMetric(PartMetric metric) {
         this.metrics = metric;
     }
 
-    
-    public void setName(String name) {
-        this.name = name;
-    }
+    /////////////////////////
+    // Overrides
+    /////////////////////////
 
     @Override
     public String toString() {

@@ -5,7 +5,18 @@ import catalog.Function;
 import catalog.FunctionType;
 
 /**
- * represents a row of the ProductPart table
+ * Represents a row of the ProductPart table.
+ *
+ * <h3>Linkable Declaration</h3>
+ *
+ * <p>Linkable parts have the ability to be daisy-chained together.  This makes it possible to configure any number
+ * of the part within a given ProductItem subject to other Rule restrictions.</p>
+ *
+ * <p>As an example, Users can configure a Light Set to have 2,3,4,5 etc., pcs of a given light strip part
+ * provided the part is declared as linkable.</p>
+ *
+ * <p>If multiple Parts for a given Function are Linkable, they can be mixed and matched in multiples.</p>
+ *
  */
 public class ProductPart {
 
@@ -17,6 +28,8 @@ public class ProductPart {
 
     private String assemblyID;
     private String assemblyDocID;
+
+    private Boolean linkable;
 
     public String getProductID() {
         return productID;
@@ -64,5 +77,13 @@ public class ProductPart {
 
     public void setAssemblyDocID(String assemblyDocID) {
         this.assemblyDocID = assemblyDocID;
+    }
+
+    public Boolean getLinkable() {
+        return linkable;
+    }
+
+    public void setLinkable(Boolean linkable) {
+        this.linkable = linkable;
     }
 }
