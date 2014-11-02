@@ -23,12 +23,18 @@ public class Assembly {
     @JsonProperty("assemblyID")
     String assemblyID;
 
+    // not persisted
+    String assemblyDocID;
+
     @JsonProperty ("functions")
     List<Function> functions;
 
     @JsonProperty ("rules")
     List<Rule> rules = Lists.newArrayList();
 
+    ///////////////////////
+    // Identify Methods
+    ///////////////////////
 
     public String getAssemblyID() {
         return assemblyID;
@@ -36,6 +42,14 @@ public class Assembly {
 
     public void setAssemblyID(String assemblyID) {
         this.assemblyID = assemblyID;
+    }
+
+    public String getAssemblyDocID() {
+        return assemblyDocID;
+    }
+
+    public void setAssemblyDocID(String assemblyDocID) {
+        this.assemblyDocID = assemblyDocID;
     }
 
     ///////////////////////

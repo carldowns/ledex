@@ -189,6 +189,7 @@ public class CatalogMgr {
                 throw new AppRuntimeException("part not found " + partID);
 
             Part part = mapper.readValue(doc.getDoc(), Part.class);
+            part.setPartDocID(doc.getPartDocID());
             return part;
 
         } catch (Exception e) {
@@ -209,10 +210,15 @@ public class CatalogMgr {
             }
 
             Part part = mapper.readValue(json, Part.class);
+            part.setPartDocID(doc.getPartDocID());
             parts.add(part);
         }
 
         return parts;
+    }
+
+    public String getPartDocID (String partID) {
+        return partSQL.getPartDocID (partID);
     }
 
     /////////////////////////
@@ -233,15 +239,15 @@ public class CatalogMgr {
             }
 
             Assembly assembly = mapper.readValue(json, Assembly.class);
+            assembly.setAssemblyDocID(doc.getAssemblyDocID());
             assemblies.add(assembly);
         }
 
         return assemblies;
     }
 
-
-    public Iterator<PartRec> getAllPartRecs() {
-        return partSQL.getAllPartRecs();
+    public String getAssemblyDocID (String assemblyID) {
+        return assemblySQL.getAssemblyDocID (assemblyID);
     }
 
     /////////////////////////

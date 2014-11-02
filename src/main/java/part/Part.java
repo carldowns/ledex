@@ -18,6 +18,9 @@ public class Part {
     @JsonProperty ("partID")
     String partID;
 
+    // not persisted
+    String partDocID;
+
     @JsonProperty ("supplierID")
     String supplierID;
 
@@ -70,6 +73,14 @@ public class Part {
 
     public void setPartID(String partID) {
         this.partID = partID;
+    }
+
+    public String getPartDocID() {
+        return partDocID;
+    }
+
+    public void setPartDocID(String partDocID) {
+        this.partDocID = partDocID;
     }
 
     public String getSupplierID() {

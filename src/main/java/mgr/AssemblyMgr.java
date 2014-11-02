@@ -2,7 +2,9 @@ package mgr;
 
 import catalog.*;
 import ch.qos.logback.classic.Logger;
+
 import static com.google.common.base.Preconditions.*;
+
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.slf4j.LoggerFactory;
@@ -21,14 +23,14 @@ public class AssemblyMgr {
     CatalogMgr catalogMgr;
     private static final Logger logger = (Logger) LoggerFactory.getLogger(AssemblyMgr.class);
 
-    public AssemblyMgr (CatalogMgr catalogMgr) {
+    public AssemblyMgr(CatalogMgr catalogMgr) {
         this.catalogMgr = catalogMgr;
     }
 
     /**
      * updates products in the catalog based on active Assembly rules.
      */
-    public void buildCatalog () {
+    public void buildCatalog() {
 
         try {
             for (Assembly assembly : catalogMgr.getAllAssemblies()) {
@@ -37,32 +39,28 @@ public class AssemblyMgr {
                 for (CandidateProduct candidate : products) {
                     Product product = new Product();
 
-                    for (Map.Entry<FunctionType,CandidatePart> set : candidate.candidateParts.entrySet()) {
+                    int count = 100;
+                    for (Map.Entry<FunctionType, CandidatePart> set : candidate.candidateParts.entrySet()) {
                         FunctionType function = set.getKey();
 
                         CandidatePart candidatePart = set.getValue();
                         Part part = candidatePart.getPart();
 
-                        checkArgument(function == part.getFunctionType(), "function mismatch %s", function);
-
+                        // FIXME come up with something better for product ID assignment
                         ProductPart productPart = new ProductPart();
-
-                        productPart.setProductID(null);
-                        productPart.setFunction(function);
-
+                        productPart.setProductID(assembly.getAssemblyID() + "." + count++);
                         productPart.setAssemblyID(assembly.getAssemblyID());
-                        productPart.setAssemblyDocID(null);
-
+                        productPart.setAssemblyDocID(assembly.getAssemblyDocID());
                         productPart.setPartID(part.getPartID());
-                        productPart.setPartDocID(null);
+                        productPart.setPartDocID(part.getPartDocID());
+                        productPart.setFunction(function);
 
                         product.addPart(productPart);
                     }
                     catalogMgr.updateProduct(assembly, product);
                 }
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("unable to build catalog", e);
         }
     }
@@ -109,9 +107,9 @@ public class AssemblyMgr {
     }
 
     public static class CandidateProduct {
-        Map<FunctionType,CandidatePart> candidateParts = Maps.newHashMap();
+        Map<FunctionType, CandidatePart> candidateParts = Maps.newHashMap();
 
-        public void put (FunctionType f, CandidatePart p) {
+        public void put(FunctionType f, CandidatePart p) {
             candidateParts.put(f, p);
         }
 
@@ -123,7 +121,7 @@ public class AssemblyMgr {
             this.candidateParts = candidateParts;
         }
 
-        public List<String> getPartIDs () {
+        public List<String> getPartIDs() {
             List<String> result = Lists.newArrayList();
             for (CandidatePart cp : candidateParts.values()) {
                 result.add(cp.getPart().getPartID());
@@ -139,19 +137,19 @@ public class AssemblyMgr {
         CandidateTable table = new CandidateTable();
         boolean allPermutationsReported = false;
 
-        void setFunctions (List<FunctionType> functions) {
+        void setFunctions(List<FunctionType> functions) {
             table.setFunctions(functions);
         }
 
-        void addCandidate (Part part) {
-            table.addCandidate (part);
+        void addCandidate(Part part) {
+            table.addCandidate(part);
         }
 
-        boolean isAllPermutationsReported () {
+        boolean isAllPermutationsReported() {
             return allPermutationsReported;
         }
 
-        CandidateProduct nextCandidate () {
+        CandidateProduct nextCandidate() {
 
             if (isAllPermutationsReported()) {
                 return null;
@@ -179,24 +177,24 @@ public class AssemblyMgr {
      */
     public static class CandidateTable {
         // indices indicate the 'next' combination to return
-        LinkedHashMap<FunctionType,Integer> indices = Maps.newLinkedHashMap();
+        LinkedHashMap<FunctionType, Integer> indices = Maps.newLinkedHashMap();
 
         // linkage preserves order-of-insertion support
-        LinkedHashMap<FunctionType,CandidateColumn> columns = Maps.newLinkedHashMap();
+        LinkedHashMap<FunctionType, CandidateColumn> columns = Maps.newLinkedHashMap();
 
-        void setFunctions (List<FunctionType> functions) {
+        void setFunctions(List<FunctionType> functions) {
             for (FunctionType functionType : functions) {
                 columns.put(functionType, new CandidateColumn(functionType));
                 indices.put(functionType, 0);
             }
         }
 
-        void addCandidate (Part part) {
+        void addCandidate(Part part) {
             CandidateColumn column = columns.get(part.getFunctionType());
             column.addPart(part);
         }
 
-        boolean nextCandidate (CandidateProduct candidate) {
+        boolean nextCandidate(CandidateProduct candidate) {
             for (CandidateColumn column : columns.values()) {
                 column.nextCandidate(candidate, indices);
             }
@@ -236,11 +234,11 @@ public class AssemblyMgr {
         FunctionType functionType;
         List<CandidatePart> cells = Lists.newArrayList();
 
-        CandidateColumn (FunctionType functionType) {
+        CandidateColumn(FunctionType functionType) {
             this.functionType = functionType;
         }
 
-        void addPart (Part part) {
+        void addPart(Part part) {
             checkArgument(part.getFunctionType() == functionType, "function mismatch %s", functionType);
             cells.add(new CandidatePart(part));
         }
@@ -254,7 +252,7 @@ public class AssemblyMgr {
             return -1;
         }
 
-        void nextCandidate (CandidateProduct candidate, Map<FunctionType,Integer> indices) {
+        void nextCandidate(CandidateProduct candidate, Map<FunctionType, Integer> indices) {
             CandidatePart cp = cells.get(indices.get(functionType));
             candidate.put(functionType, cp);
         }
@@ -285,7 +283,7 @@ public class AssemblyMgr {
         }
 
         @Override
-        public String toString () {
+        public String toString() {
             return part.toString();
         }
     }
@@ -294,20 +292,20 @@ public class AssemblyMgr {
      *
      */
     public static class CandidateProblem {
-        Map<RuleViolation,CandidatePart> problems = Maps.newHashMap();
+        Map<RuleViolation, CandidatePart> problems = Maps.newHashMap();
 
-        public CandidateProblem () {
+        public CandidateProblem() {
         }
 
-        public CandidateProblem (RuleViolation violation, CandidatePart candidatePart) {
-            addProblem (violation, candidatePart);
+        public CandidateProblem(RuleViolation violation, CandidatePart candidatePart) {
+            addProblem(violation, candidatePart);
         }
 
-        public boolean hasProblems () {
+        public boolean hasProblems() {
             return !problems.isEmpty();
         }
 
-        public void addProblems (CandidateProblem cp) {
+        public void addProblems(CandidateProblem cp) {
             if (cp == null) {
                 return;
             }
@@ -315,7 +313,7 @@ public class AssemblyMgr {
             problems.putAll(cp.problems);
         }
 
-        public void addProblem (RuleViolation violation, CandidatePart candidatePart) {
+        public void addProblem(RuleViolation violation, CandidatePart candidatePart) {
             problems.put(violation, candidatePart);
         }
     }

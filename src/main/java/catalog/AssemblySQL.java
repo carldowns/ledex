@@ -33,6 +33,10 @@ public interface AssemblySQL {
     @Mapper(AssemblyDocMapper.class)
     List<AssemblyDoc> getAllCurrentAssemblyDocs();
 
+    @SqlQuery("select assemblyDocID from partDoc where assemblyID = :assemblyID and current = true")
+    String getAssemblyDocID(String assemblyID);
+
+
     /**
      * this close method is necessary for JDBI Sql Object to close a connection properly
      */
