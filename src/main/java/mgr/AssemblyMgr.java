@@ -6,11 +6,10 @@ import static com.google.common.base.Preconditions.*;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.slf4j.LoggerFactory;
-import part.PartRec;
+import part.Part;
 import product.Product;
 import product.ProductPart;
 
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +25,9 @@ public class AssemblyMgr {
         this.catalogMgr = catalogMgr;
     }
 
+    /**
+     * updates products in the catalog based on active Assembly rules.
+     */
     public void buildCatalog () {
 
         try {
@@ -37,22 +39,24 @@ public class AssemblyMgr {
 
                     for (Map.Entry<FunctionType,CandidatePart> set : candidate.candidateParts.entrySet()) {
                         FunctionType function = set.getKey();
-                        CandidatePart part = set.getValue();
 
-                        checkArgument(function.equals(part.getPart().getFunctionName()), "function mismatch %s", function);
+                        CandidatePart candidatePart = set.getValue();
+                        Part part = candidatePart.getPart();
 
-                        ProductPart pPart = new ProductPart();
+                        checkArgument(function == part.getFunctionType(), "function mismatch %s", function);
 
-                        pPart.setProductID(null);
-                        pPart.setFunction(function);
+                        ProductPart productPart = new ProductPart();
 
-                        pPart.setAssemblyID(assembly.getAssemblyID());
-                        pPart.setAssemblyDocID(null);
+                        productPart.setProductID(null);
+                        productPart.setFunction(function);
 
-                        pPart.setPartID(part.getPart().getPartId());
-                        pPart.setPartDocID(null);
+                        productPart.setAssemblyID(assembly.getAssemblyID());
+                        productPart.setAssemblyDocID(null);
 
-                        product.addPart(pPart);
+                        productPart.setPartID(part.getPartID());
+                        productPart.setPartDocID(null);
+
+                        product.addPart(productPart);
                     }
                     catalogMgr.updateProduct(assembly, product);
                 }
@@ -63,7 +67,15 @@ public class AssemblyMgr {
         }
     }
 
-    public List<CandidateProduct> buildProductCandidates(Assembly assembly) {
+    /**
+     * returns a list of candidate products considered valid and compatible based on the rules
+     * expressed in the given Assembly.  The candidate products are ready to be added to the catalog.
+     *
+     * @param assembly
+     * @return
+     * @throws Exception
+     */
+    public List<CandidateProduct> buildProductCandidates(Assembly assembly) throws Exception {
 
         // build all candidate combinations (all permutations)
         // pass initial compatibility checks
@@ -73,12 +85,9 @@ public class AssemblyMgr {
         CandidateBuilder builder = new CandidateBuilder();
         builder.setFunctions(assembly.getFunctionTypes());
 
-        // TODO: change to Part object,
         // TODO: get only those that match the set of Functions present in the Assembly (use IN clause)
-        Iterator<PartRec> parts = catalogMgr.getAllPartRecs();
-
-        while (parts.hasNext()) {
-            builder.addCandidate(parts.next());
+        for (Part part : catalogMgr.getAllParts()) {
+            builder.addCandidate(part);
         }
 
         RuleEngine engine = new RuleEngine();
@@ -88,7 +97,8 @@ public class AssemblyMgr {
             CandidateProduct candidate = builder.nextCandidate();
             CandidateProblem report = engine.evaluate(assembly, candidate);
             if (report.hasProblems()) {
-                builder.eliminateParts(report);
+                // hold off on eliminations
+                //builder.eliminateParts(report);
                 continue;
             }
 
@@ -112,6 +122,14 @@ public class AssemblyMgr {
         public void setCandidateParts(Map<FunctionType, CandidatePart> candidateParts) {
             this.candidateParts = candidateParts;
         }
+
+        public List<String> getPartIDs () {
+            List<String> result = Lists.newArrayList();
+            for (CandidatePart cp : candidateParts.values()) {
+                result.add(cp.getPart().getPartID());
+            }
+            return result;
+        }
     }
 
     /**
@@ -125,7 +143,7 @@ public class AssemblyMgr {
             table.setFunctions(functions);
         }
 
-        void addCandidate (PartRec part) {
+        void addCandidate (Part part) {
             table.addCandidate (part);
         }
 
@@ -144,11 +162,16 @@ public class AssemblyMgr {
             return candidate;
         }
 
-        void eliminateParts (CandidateProblem problems) {
-            for (CandidatePart candidatePart : problems.problems.values()) {
-                candidatePart.setViable(false);
-            }
-        }
+        // pre-optimization that is backfiring - we would need a rule to carefully
+        // know that it's rejection makes the part unsuitable for ANY permutation
+        // just to try and cut the number of permutations down.
+        // Let's not go there just yet
+
+//        void eliminateParts (CandidateProblem problems) {
+//            for (CandidatePart candidatePart : problems.problems.values()) {
+//                candidatePart.setViable(false);
+//            }
+//        }
     }
 
     /**
@@ -168,7 +191,7 @@ public class AssemblyMgr {
             }
         }
 
-        void addCandidate (PartRec part) {
+        void addCandidate (Part part) {
             CandidateColumn column = columns.get(part.getFunctionType());
             column.addPart(part);
         }
@@ -217,7 +240,7 @@ public class AssemblyMgr {
             this.functionType = functionType;
         }
 
-        void addPart (PartRec part) {
+        void addPart (Part part) {
             checkArgument(part.getFunctionType() == functionType, "function mismatch %s", functionType);
             cells.add(new CandidatePart(part));
         }
@@ -243,9 +266,9 @@ public class AssemblyMgr {
      */
     public static class CandidatePart {
         boolean viable = true;
-        PartRec part;
+        Part part;
 
-        CandidatePart(PartRec part) {
+        CandidatePart(Part part) {
             this.part = part;
         }
 
@@ -257,7 +280,7 @@ public class AssemblyMgr {
             return viable;
         }
 
-        public PartRec getPart() {
+        public Part getPart() {
             return part;
         }
 
@@ -271,7 +294,7 @@ public class AssemblyMgr {
      *
      */
     public static class CandidateProblem {
-        Map<RuleViolation,CandidatePart> problems;
+        Map<RuleViolation,CandidatePart> problems = Maps.newHashMap();
 
         public CandidateProblem () {
         }
@@ -281,18 +304,18 @@ public class AssemblyMgr {
         }
 
         public boolean hasProblems () {
-            return problems != null;
+            return !problems.isEmpty();
         }
 
-        public void addProblems (CandidateProblem p) {
-            problems.putAll(p.problems);
+        public void addProblems (CandidateProblem cp) {
+            if (cp == null) {
+                return;
+            }
+
+            problems.putAll(cp.problems);
         }
 
         public void addProblem (RuleViolation violation, CandidatePart candidatePart) {
-            if (problems == null) {
-                problems = Maps.newHashMap();
-            }
-
             problems.put(violation, candidatePart);
         }
     }

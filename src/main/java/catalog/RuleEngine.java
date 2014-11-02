@@ -14,16 +14,20 @@ public class RuleEngine {
         interpreters.add(new RIPower());
         interpreters.add(new RICircuit());
         interpreters.add(new RIConnector());
-        interpreters.add(new RISupplier());
     }
     
     public CandidateProblem evaluate (Assembly assembly, CandidateProduct candidate) {
         CandidateProblem report = new CandidateProblem();
 
         for (RuleInterpreter ri : interpreters) {
-            CandidateProblem problem = ri.evaluate(assembly, candidate);
-            if (problem != null) {
-                report.addProblems(problem);
+            CandidateProblem subReport = ri.evaluate(assembly, candidate);
+
+            // if we encounter a problem, no sense in continuing to
+            // evaluate against other interpreters.
+
+            if (subReport != null && subReport.hasProblems()) {
+                report.addProblems(subReport);
+                break;
             }
         }
 

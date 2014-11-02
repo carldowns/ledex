@@ -23,7 +23,6 @@ import java.net.URI;
 import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 /**
  */
@@ -67,7 +66,7 @@ public class CatalogMgr {
                 // if not in the core table, consider it new and add
                 PartRec found = partSQL.getPartRecByID(part.getPartID());
                 if (found == null) {
-                    partSQL.insertPartRec(part.getPartID(), part.getSupplierID(), part.getName(), part.getFunction());
+                    partSQL.insertPartRec(part.getPartID(), part.getSupplierID(), part.getName(), part.getFunctionName());
                     partSQL.insertPartDoc(part.getPartID(), docID, true, json);
                     cmd.log("part " + part.getName() + " added");
                     continue;
@@ -164,9 +163,6 @@ public class CatalogMgr {
     // Part CRUD
     /////////////////////////
 
-    /**
-     * @param cmd
-     */
     public void getPart(GetPartCmd cmd) {
         try {
             Part part = getPart (cmd.getPartID());
@@ -185,15 +181,12 @@ public class CatalogMgr {
         }
     }
 
-    /**
-     * @param cmd
-     */
     public Part getPart(String partID) {
         try {
             // TODO Guava or some other type of caching yo
             PartDoc doc = partSQL.getCurrentPartDoc(partID);
             if (doc == null)
-                throw new AppRuntimeException("supplier not found");
+                throw new AppRuntimeException("part not found " + partID);
 
             Part part = mapper.readValue(doc.getDoc(), Part.class);
             return part;
@@ -202,6 +195,24 @@ public class CatalogMgr {
             logger.error("unable to retrieve part {}", partID, e);
             throw Throwables.propagate(e);
         }
+    }
+
+    public List<Part> getAllParts() throws Exception {
+
+        // TODO Guava or some other type of caching yo
+        List<Part> parts = Lists.newArrayList();
+        for (PartDoc doc :  partSQL.getCurrentPartDocs()) {
+            String json = doc.getDoc();
+            if (StringUtil.isBlank(json)) {
+                throw new AppRuntimeException
+                        ("json missing for part " + doc.getPartID());
+            }
+
+            Part part = mapper.readValue(json, Part.class);
+            parts.add(part);
+        }
+
+        return parts;
     }
 
     /////////////////////////

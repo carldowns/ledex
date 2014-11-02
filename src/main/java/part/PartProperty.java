@@ -98,4 +98,14 @@ public class PartProperty {
         this.increment = increment;
     }
 
+    @Override
+    public String toString() {
+        return "PartProperty{" +
+                "type=" + type +
+                ", name='" + name + '\'' +
+                ", value='" + value + '\'' +
+                //", skuLabel='" + skuLabel + '\'' +
+                //", description='" + description + '\'' +
+                '}';
+    }
 }

@@ -34,17 +34,17 @@ public class SupplierResourceTest {
         reset(DAO);
     }
 
-    @Test
-    @Ignore
-    public void getSupplier() {
-
-        when(DAO.getSupplierRecByID("S100")).thenReturn(supplierRec);
-
-        // TODO: fix this interface to match the Cmd pattern
-        SupplierRec found = resources.client().resource("/supplier/find?supplierID=S100").get(SupplierRec.class);
-        assertThat(found.getSupplierID()).isEqualTo(supplierRec.getSupplierID());
-
-        verify(DAO).getSupplierRecByID("S100");
-    }
+    // FIXME the interface changed
+//    @Test
+//    public void getSupplier() {
+//
+//        when(DAO.getSupplierRecByID("S100")).thenReturn(supplierRec);
+//
+//        // TODO: fix this interface to match the Cmd pattern
+//        SupplierRec found = resources.client().resource("/supplier/find?supplierID=S100").get(SupplierRec.class);
+//        assertThat(found.getSupplierID()).isEqualTo(supplierRec.getSupplierID());
+//
+//        verify(DAO).getSupplierRecByID("S100");
+//    }
 
 }

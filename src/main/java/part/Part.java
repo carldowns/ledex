@@ -104,10 +104,13 @@ public class Part {
     }
     
     
-    public String getFunction() {
+    public String getFunctionName() {
         return function.name();
     }
 
+    public FunctionType getFunctionType () {
+        return function;
+    }
     
     public void setFunction(String function) {
         this.function = FunctionType.valueOf(function);

@@ -1,6 +1,6 @@
 [
     {
-        "partID": "P400-04-021-12",
+        "partID": "ADAPT-04-021-12",
         "supplierID": "S1000",
         "name": "AC Adapter",
         "function": "POWER",
@@ -32,7 +32,7 @@
         ]
      },
     {
-        "partID": "P400-04-022-4.5",
+        "partID": "ADAPT-04-022-4.5",
         "supplierID": "S1000",
         "name": "AC Adapter",
         "function": "POWER",
@@ -55,7 +55,7 @@
         ]
     },
     {
-        "partID": "P500-00-009-4.5",
+        "partID": "LIGHT-00-009-4.5",
         "supplierID": "S1000",
         "name": "4.5V Flex LED Light Strip",
         "function": "LIGHT",
@@ -98,7 +98,7 @@
         ]
     },
     {
-        "partID": "P500-00-010-12",
+        "partID": "LIGHT-00-010-12",
         "supplierID": "S1000",
         "name": "12 VDC Flex LED Light Strip",
         "function": "LIGHT",

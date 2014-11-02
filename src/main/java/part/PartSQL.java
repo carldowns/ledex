@@ -78,6 +78,10 @@ public interface PartSQL {
 
     @SqlQuery("select * from partDoc where current = true")
     @Mapper(PartDocMapper.class)
+    List<PartDoc> getCurrentPartDocs();
+
+    @SqlQuery("select * from partDoc where current = true")
+    @Mapper(PartDocMapper.class)
     List<PartDoc> getAllCurrentPartDocs();
     /**
      * this close method is necessary for JDBI Sql Object to close a connection properly

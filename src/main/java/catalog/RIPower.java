@@ -16,47 +16,54 @@ import java.util.List;
 
 public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
 
-    // FIXME @Inject
-    CatalogMgr mgr;
-
     /**
-     * evaluate voltage rules
+     * evaluate power rules if any
      */
     public CandidateProblem evaluate(Assembly assembly, CandidateProduct candidate) {
+        CandidateProblem report = new CandidateProblem();
         for (Rule rule : assembly.getRules()) {
             switch (rule.getType()) {
+
                 case AMPERAGE_COMPATIBLE:
-                    return evaluateAmperageCompatible(rule, candidate);
+                    report.addProblems(evaluateAmperageCompatible(rule, candidate));
+                    break;
+
                 case VOLTAGE_COMPATIBLE:
-                    return evaluateVoltageCompatible(rule, candidate);
+                    report.addProblems(evaluateVoltageCompatible(rule, candidate));
+                    break;
+
                 case VOLTAGE_SPECIFIC:
-                    return evaluateVoltageSpecific(rule, candidate);
+                    report.addProblems(evaluateVoltageSpecific(rule, candidate));
+                    break;
             }
         }
 
-        // confirms to all rules
-        return null;
+        return report;
     }
 
     private CandidateProblem evaluateAmperageCompatible(Rule rule, CandidateProduct candidate) {
 
-        // add up the amp load of all non power parts
+        // get power parts source amperage
+        // add up the amperage load of all non power parts
         // check to be sure power part(s) have enough amps to cover the load
 
-        int cumulativeLoadAmps = 0;
-        int powerSourceAmps = 0;
+        int cumulativeLoadMA = 0;
+        int powerSourceMA = 0;
 
         for (CandidatePart candidatePart : candidate.getCandidateParts().values()) {
-            PartRec rec = candidatePart.getPart();
-            Part part = mgr.getPart(rec.getPartId());
+
+            Part part = candidatePart.getPart();
+            if (!isAmperageRelevant(part.getFunctionType())) continue;
+
             List<PartProperty> props = part.getPropertiesOfType(PartPropertyType.AMPERAGE);
             for (PartProperty prop : props) {
-                UnitConverter.UnitTypeValue unit = new UnitConverter(prop.getValue()).getVoltageType();
+                UnitConverter.UnitTypeValue unit = new UnitConverter(prop.getValue()).getAmperageType();
 
-                switch (rec.getFunctionType()) {
+                switch (part.getFunctionType()) {
                     case POWER:
-                        Preconditions.checkArgument(powerSourceAmps == 0); // TODO: guard against two power functions for now
-                        powerSourceAmps = Integer.valueOf(unit.getValue());
+                        // FIXME: guard against two power parts for now
+                        Preconditions.checkArgument(powerSourceMA == 0, "only 1 part per POWER function is supported");
+                        powerSourceMA = Integer.valueOf(unit.toMilliAmps());
                         break;
 
                     case LIGHT:
@@ -64,16 +71,17 @@ public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
                     case SWITCH:
                     case SENSOR:
                     case LEAD:
-                        cumulativeLoadAmps += Integer.valueOf(unit.getValue());
+                        cumulativeLoadMA += Integer.valueOf(unit.toMilliAmps());
                         break;
                 }
             }
 
-            if (cumulativeLoadAmps > powerSourceAmps) {
-                return reportProblem(candidatePart,
-                        " cumulative amp load of " + cumulativeLoadAmps +
-                                " greater than amp source of " + powerSourceAmps);
-            }
+        }
+
+        if (cumulativeLoadMA > powerSourceMA) {
+            return reportProblem(null,
+                    " circuit milli-amp load of " + cumulativeLoadMA +
+                            " greater than milli-amp source of " + powerSourceMA);
         }
 
         // conforms to rule
@@ -84,10 +92,10 @@ public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
 
         String targetVoltage = null; // unassigned
         for (CandidatePart candidatePart : candidate.getCandidateParts().values()) {
-            PartRec rec = candidatePart.getPart();
-            if (!isVoltageRelevant(rec.getFunctionType())) continue;
 
-            Part part = mgr.getPart(rec.getPartId());
+            Part part = candidatePart.getPart();
+            if (!isVoltageRelevant(part.getFunctionType())) continue;
+
             List<PartProperty> props = part.getPropertiesOfType(PartPropertyType.VOLTAGE);
             for (PartProperty prop : props) {
                 UnitConverter.UnitTypeValue unit = new UnitConverter(prop.getValue()).getVoltageType();
@@ -108,18 +116,21 @@ public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
     private CandidateProblem evaluateVoltageSpecific(Rule rule, CandidateProduct candidate) {
 
         String targetVoltage = rule.getProperty(PartPropertyType.VOLTAGE.name());
-        for (CandidatePart candidatePart : candidate.getCandidateParts().values()) {
-            PartRec rec = candidatePart.getPart();
-            if (!isVoltageRelevant(rec.getFunctionType())) continue;
+        Preconditions.checkNotNull(targetVoltage, "target voltage not specified");
+        UnitConverter.UnitTypeValue targetUnit = new UnitConverter(targetVoltage).getVoltageType();
 
-            Part part = mgr.getPart(rec.getPartId());
+        for (CandidatePart candidatePart : candidate.getCandidateParts().values()) {
+
+            Part part = candidatePart.getPart();
+            if (!isVoltageRelevant(part.getFunctionType())) continue;
+
             List<PartProperty> props = part.getPropertiesOfType(PartPropertyType.VOLTAGE);
 
             for (PartProperty prop : props) {
                 UnitConverter.UnitTypeValue unit = new UnitConverter(prop.getValue()).getVoltageType();
 
                 // check to see if we have a voltage match
-                if (unit.getValue().equals(targetVoltage) == false) {
+                if (unit.getValue().equals(targetUnit.getValue()) == false) {
                     return reportProblem(candidatePart, " does not match voltage requirement of " + targetVoltage);
                 }
             }

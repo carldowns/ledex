@@ -11,7 +11,7 @@ import java.util.Map;
 public class Rule {
 
     @JsonProperty("type")
-    private final RuleType type;
+    private final RuleType type = RuleType.UNKNOWN;
 
     @Nullable
     @JsonProperty("properties")
@@ -21,9 +21,7 @@ public class Rule {
     // Construct
     ///////////////////
 
-
-    Rule(String type) {
-        this.type = RuleType.valueOf(type);
+    Rule () {
     }
 
     ///////////////////

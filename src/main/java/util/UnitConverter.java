@@ -1,6 +1,7 @@
 package util;
 
 import java.math.BigDecimal;
+
 import org.eclipse.jetty.util.StringUtil;
 
 /**
@@ -53,7 +54,7 @@ public class UnitConverter {
 
     /**
      * Unit types possible
-     * 
+     *
      * @author carl_downs
      */
     public enum UnitType {
@@ -75,6 +76,7 @@ public class UnitConverter {
         FT, // feet
 
         // power
+        A, // amps
         MA, // milli amps
         VDC, // Volts DC
         VAC, // Volts AC
@@ -82,8 +84,8 @@ public class UnitConverter {
 
     /**
      * Used to hold the value separately from the value type enum.
-     * @author carl_downs
      *
+     * @author carl_downs
      */
     public static class UnitTypeValue {
 
@@ -95,12 +97,11 @@ public class UnitConverter {
             this.value = value;
         }
 
-        public void validate () {
+        public void validate() {
             try {
-                toDecimal();                
-            }
-            catch (NumberFormatException nfe) {
-                throw new IllegalArgumentException ("value must be in decimal format: " + value);
+                toDecimal();
+            } catch (NumberFormatException nfe) {
+                throw new IllegalArgumentException("value must be in decimal format: " + value);
             }
         }
 
@@ -120,13 +121,47 @@ public class UnitConverter {
             this.value = value;
         }
 
-        public BigDecimal toDecimal () {
-            return new BigDecimal (value);
+        public BigDecimal toDecimal() {
+            return new BigDecimal(value);
         }
-        
+
         public String toString() {
             return value + " (" + type + ")";
         }
+
+        /**
+         * altered the contract here.  We need to directly off of the UnitTypeValue
+         * @param utv
+         * @return
+         */
+        public String toMilliAmps() {
+
+            if (type == UnitType.MA)
+                return value;
+
+            if (type == UnitType.A)
+                /// 1000 mA per Amp
+                return convert(1000, 0);
+
+            throw new UnsupportedOperationException("failed " + type + " conversion to milliAmps");
+        }
+
+        /**
+         * converts the unit value and multiplier to BigDecimals, multiplies them,
+         * and returns a string with the precision given.
+         *
+         * @param multiplier
+         * @param scale
+         * @return
+         */
+        private String convert(int multiplier, int scale) {
+            BigDecimal v1 = new BigDecimal(value);
+            BigDecimal v2 = new BigDecimal(multiplier);
+            BigDecimal v3 = v1.multiply(v2).setScale(scale, BigDecimal.ROUND_HALF_UP);
+
+            return v3.toString();
+        }
+
     }
 
     // //////////////////////
@@ -143,14 +178,14 @@ public class UnitConverter {
     public static String assertLengthType(String input) {
         if (StringUtil.isNotBlank(input))
             new UnitConverter(input).getLengthType().validate();
-        
+
         return input;
     }
 
     public static String assertWeightType(String input) {
         if (StringUtil.isNotBlank(input))
             new UnitConverter(input).getWeightType().validate();
-        
+
         return input;
     }
 
@@ -175,10 +210,9 @@ public class UnitConverter {
 
     /**
      * returns a 'measure' type for the intrinsic value.
-     * 
-     * @throws IllegalArgumentException
-     *             if value not a measure type
+     *
      * @return
+     * @throws IllegalArgumentException if value not a measure type
      */
     public UnitTypeValue getLengthType() {
         if (utv != null)
@@ -252,13 +286,33 @@ public class UnitConverter {
         throw new IllegalArgumentException("unknown voltage type: " + input);
     }
 
-        /**
-         * returns a 'currency' type for the intrinsic value.
-         *
-         * @throws IllegalArgumentException
-         *             if value not a measure type
-         * @return
-         */
+    public UnitTypeValue getAmperageType() {
+        if (utv != null)
+            return utv;
+
+        int index = -1;
+
+        index = input.indexOf(MILLIAMP);
+        if (index != -1) {
+            String s = input.substring(0, index).trim();
+            return utv = new UnitTypeValue(UnitType.MA, s);
+        }
+
+        index = input.indexOf(AMP);
+        if (index != -1) {
+            String s = input.substring(0, index).trim();
+            return utv = new UnitTypeValue(UnitType.A, s);
+        }
+
+        throw new IllegalArgumentException("unknown amperage type: " + input);
+    }
+
+    /**
+     * returns a 'currency' type for the intrinsic value.
+     *
+     * @return
+     * @throws IllegalArgumentException if value not a measure type
+     */
     public UnitTypeValue getCurrencyType() {
         if (utv != null)
             return utv;
@@ -288,10 +342,9 @@ public class UnitConverter {
 
     /**
      * returns a 'weight' type for the intrinsic value.
-     * 
-     * @throws IllegalArgumentException
-     *             if value not a measure type
+     *
      * @return
+     * @throws IllegalArgumentException if value not a measure type
      */
     public UnitTypeValue getWeightType() {
         if (utv != null)
@@ -545,7 +598,7 @@ public class UnitConverter {
     /**
      * converts the unit value and multiplier to BigDecimals, multiplies them,
      * and returns a string with the precision given.
-     * 
+     *
      * @param multiplier
      * @param scale
      * @return

@@ -1,0 +1,75 @@
+[
+    {
+        "partID": "ADAPT-12V-2A",
+        "supplierID": "S1000",
+        "name": "AC Adapter",
+        "function": "POWER",
+        "properties": [
+            {
+                "type": "VOLTAGE",
+                "name": "Voltage current",
+                "value": "12VDC"
+            },
+            {
+                "type": "AMPERAGE",
+                "name": "Amp output",
+                "value": "2A"
+            }
+        ]
+     },
+    {
+        "partID": "ADAPT-12V-200mA",
+        "supplierID": "S1000",
+        "name": "AC Adapter",
+        "function": "POWER",
+        "properties": [
+            {
+                "type": "VOLTAGE",
+                "name": "Voltage current",
+                "value": "12VDC"
+            },
+            {
+                "type": "AMPERAGE",
+                "name": "Amp output",
+                "value": "200mA"
+            }
+        ]
+    },
+    {
+        "partID": "LIGHT-12V-500mA",
+        "supplierID": "S1000",
+        "name": "Flex LED Light Strip",
+        "function": "LIGHT",
+        "properties": [
+            {
+                "type": "AMPERAGE",
+                "name": "Amp consumed per part",
+                "value": "500mA"
+            },
+            {
+                "type": "VOLTAGE",
+                "name": "Supported Voltage",
+                "value": "12VDC"
+            }
+        ]
+    },
+    {
+        "partID": "LIGHT-12V-1A",
+        "supplierID": "S1000",
+        "name": "Flex LED Light Strip",
+        "function": "LIGHT",
+        "properties": [
+            {
+                "type": "AMPERAGE",
+                "name": "Amp consumed per part",
+                "value": "1A"
+            },
+            {
+                "type": "VOLTAGE",
+                "name": "Supported Voltage",
+                "value": "12VDC"
+            }
+        ]
+    }
+
+]
