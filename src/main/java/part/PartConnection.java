@@ -52,6 +52,10 @@ public class PartConnection {
         return isMaleCached;
     }
 
+    public boolean isSameGender (PartConnection other) {
+        return other == null ? false : this.getGender().equals(other.getGender());
+    }
+
     public String getPinOut() {
         return pinOut;
     }

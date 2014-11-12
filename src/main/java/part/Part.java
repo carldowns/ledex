@@ -3,9 +3,11 @@ package part;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import catalog.FunctionType;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Unit representation:  we have chosen to support in-place specification of the
@@ -159,14 +161,21 @@ public class Part {
         this.properties = properties;
     }
 
+    /**
+     * interpreted as a part that has two connections of same type but opposite gender
+     * @return
+     */
     public boolean isLinkable () {
-        throw new UnsupportedOperationException("fix this");
-        // FIXME change this to return true when presence of dual connections
-//        for (PartProperty pp : properties) {
-//            if (pp.getType() == PartPropertyType.LINKABLE)
-//                return true;
-//        }
-//        return false;
+        Map<String,PartConnection> linkable = Maps.newHashMap();
+        for (PartConnection connection : connections) {
+            PartConnection match = linkable.get(connection.getType());
+            if (!connection.isSameGender(match))
+                return true;
+
+            linkable.put(connection.getType(), connection);
+        }
+
+        return false;
     }
 
     /////////////////////////
