@@ -34,7 +34,7 @@ public class AssemblyMgr {
 
         try {
             for (Assembly assembly : catalogMgr.getAllAssemblies()) {
-                List<CandidateProduct> products = buildProductCandidates(assembly);
+                List<CandidateProduct> products = assembleProductCandidates(assembly);
 
                 // FIXME come up with something better for product ID assignment
                 int productIDSuffix = 100;
@@ -76,7 +76,7 @@ public class AssemblyMgr {
      * @return
      * @throws Exception
      */
-    public List<CandidateProduct> buildProductCandidates(Assembly assembly) throws Exception {
+    public List<CandidateProduct> assembleProductCandidates(Assembly assembly) throws Exception {
 
         // build all candidate combinations (all permutations)
         // pass initial compatibility checks

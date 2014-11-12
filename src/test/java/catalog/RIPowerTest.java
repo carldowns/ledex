@@ -9,7 +9,6 @@ import part.Part;
 import util.FileUtil;
 
 import java.net.URL;
-import java.util.Collection;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
@@ -38,7 +37,7 @@ public class RIPowerTest {
         url = getClass().getResource("/catalog/test1.power.assembly.json");
         Assembly assembly = util.importAssembly(url.toURI());
 
-        List<AssemblyMgr.CandidateProduct> candidates = mgr.buildProductCandidates(assembly);
+        List<AssemblyMgr.CandidateProduct> candidates = mgr.assembleProductCandidates(assembly);
         org.junit.Assert.assertEquals(2, candidates.size());
 
         // 4 parts
@@ -76,7 +75,7 @@ public class RIPowerTest {
         url = getClass().getResource("/catalog/test2.power.assembly.json");
         Assembly assembly = util.importAssembly(url.toURI());
 
-        List<AssemblyMgr.CandidateProduct> candidates = mgr.buildProductCandidates(assembly);
+        List<AssemblyMgr.CandidateProduct> candidates = mgr.assembleProductCandidates(assembly);
         org.junit.Assert.assertEquals(2, candidates.size());
 
         CandidateProduct cp1 = candidates.get(0);

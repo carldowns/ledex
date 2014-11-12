@@ -7,9 +7,6 @@
         },
         {
             "type": "AMPERAGE_COMPATIBLE"
-        },
-        {
-            "type": "CONNECTOR_TYPE_COMPATIBLE"
         }
     ]
 }

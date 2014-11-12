@@ -72,7 +72,7 @@
               <transformers>
                 <transformer />
                 <transformer>
-                  <mainClass>hello.HelloWorldApplication</mainClass>
+                  <mainClass>app.CatApplication</mainClass>
                 </transformer>
               </transformers>
             </configuration>

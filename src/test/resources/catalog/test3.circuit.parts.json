@@ -1,0 +1,119 @@
+[
+    {
+        "partID": "ADAPT-01",
+        "supplierID": "S1000",
+        "name": "AC Adapter",
+        "function": "POWER",
+        "connections" : [
+            {
+                "type": "US_WALL_PLUG",
+                "gender" : "male",
+                "connect" : "ignore"
+            },
+            {
+                "type": "5MM_BARREL_JACK",
+                "gender" : "male"
+            }
+        ]
+    },
+    {
+        "partID": "PLUG-01",
+        "supplierID": "S1000",
+        "name": "Threaded Jack Plug",
+        "function": "PLUG",
+        "connections" : [
+            {
+                "type": "5MM_BARREL_JACK",
+                "gender" : "female",
+                "pinOut" : "center-pos"
+            },
+            {
+                "type": "JST-01",
+                "gender" : "male",
+                "pinOut" : "gnd,vcc"
+            }
+        ]
+    },
+    {
+        "partID": "LEAD-01",
+        "supplierID": "S1000",
+        "name": "Lead Wire",
+        "function": "LEAD",
+        "connections" : [
+            {
+                "type": "JST-01",
+                "gender" : "male",
+                "pinOut" : "gnd,vcc"
+            },
+            {
+                "type": "JST-01",
+                "gender" : "female",
+                "pinOut" : "vcc,gnd"
+            }
+        ]
+    },
+    {
+        "partID": "HARNESS-01",
+        "supplierID": "S1000",
+        "name": "1x3 Wiring Harness",
+        "function": "HARNESS",
+        "connections" : [
+            {
+                "type": "JST-01",
+                "gender" : "female",
+                "pinOut" : "gnd,vcc"
+            },
+            {
+                "type": "JST-01",
+                "gender" : "male",
+                "pinOut" : "vcc,gnd"
+            },
+            {
+                "type": "JST-01",
+                "gender" : "male",
+                "pinOut" : "vcc,gnd",
+                "connect" : "optional"
+            },
+            {
+                "type": "JST-01",
+                "gender" : "male",
+                "pinOut" : "vcc,gnd",
+                "connect" : "optional"
+            }
+        ]
+    },
+    {
+        "partID": "LIGHT-01",
+        "supplierID": "S1000",
+        "name": "Linkable Flex LED Light Strip",
+        "function": "LIGHT",
+        "connections" : [
+            {
+                "type": "JST-01",
+                "gender" : "female",
+                "pinOut" : "gnd,vcc",
+                "connect" : "required"
+            },
+            {
+                "type": "JST-01",
+                "gender" : "male",
+                "pinOut" : "gnd,vcc",
+                "connect" : "optional"
+            }
+        ]
+    },
+    {
+        "partID": "LIGHT-02",
+        "supplierID": "S1000",
+        "name": "Flex LED Light Strip",
+        "function": "LIGHT",
+        "connections" : [
+            {
+                "type": "JST-01",
+                "gender" : "female",
+                "pinOut" : "gnd,vcc"
+            }
+        ]
+    }
+
+]

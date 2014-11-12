@@ -30,6 +30,9 @@ public class Part {
     @JsonProperty("function")
     FunctionType function;
 
+    @JsonProperty("connections")
+    List<PartConnection> connections = new ArrayList<PartConnection>();
+
     @JsonProperty("properties")
     List<PartProperty> properties = new ArrayList<PartProperty>();
 
@@ -116,6 +119,17 @@ public class Part {
         this.function = FunctionType.valueOf(function);
     }
 
+    /////////////////////////
+    // Connections
+    /////////////////////////
+
+    public List<PartConnection> getConnections() {
+        return connections;
+    }
+
+    public void setConnections(List<PartConnection> connections) {
+        this.connections = connections;
+    }
 
     /////////////////////////
     // Property
@@ -146,11 +160,13 @@ public class Part {
     }
 
     public boolean isLinkable () {
-        for (PartProperty pp : properties) {
-            if (pp.getType() == PartPropertyType.LINKABLE)
-                return true;
-        }
-        return false;
+        throw new UnsupportedOperationException("fix this");
+        // FIXME change this to return true when presence of dual connections
+//        for (PartProperty pp : properties) {
+//            if (pp.getType() == PartPropertyType.LINKABLE)
+//                return true;
+//        }
+//        return false;
     }
 
     /////////////////////////
@@ -204,5 +220,23 @@ public class Part {
 //                ", costs=" + costs +
 //                ", metrics=" + metrics +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Part)) return false;
+
+        Part part = (Part) o;
+
+        if (!partID.equals(part.partID))
+            return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return partID.hashCode();
     }
 }

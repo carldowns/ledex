@@ -2,9 +2,11 @@ package part;
 
 public enum PartPropertyType {
 
-    LINKABLE("Multiple units can be daisy-chained together"),
+    //LINKABLE("Multiple units can be daisy-chained together"),
     VOLTAGE("Voltage rating for the circuit"),
+    VOLTAGE_INPUT("Input voltage usually applies to power sources only"),
     AMPERAGE("Amperage rating for the circuit"),
+    LEAD_LENGTH("Lead wire length"),
     LED_TYPE("LED type"), 
     LED_COLOR("LED color"), 
     LED_COLOR_TEMP("Tone or shade of white LED"), 

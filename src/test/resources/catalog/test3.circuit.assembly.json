@@ -1,6 +1,6 @@
 {
     "assemblyID": "LIGHT-SET-001",
-    "functions": ["LIGHT", "POWER", "PLUG"],
+    "functions": ["LIGHT", "POWER", "PLUG", "LEAD", "HARNESS"],
     "rules": [
         {
             "type": "CIRCUIT_COMPLETE"
