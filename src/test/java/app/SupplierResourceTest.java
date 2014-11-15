@@ -6,6 +6,7 @@ import org.junit.*;
 
 import static org.fest.assertions.api.Assertions.assertThat;
 
+import resource.SupplierResource;
 import supplier.SupplierRec;
 import supplier.SupplierSQL;
 

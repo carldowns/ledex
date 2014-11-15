@@ -1,8 +1,10 @@
 package catalog;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
@@ -23,11 +25,17 @@ public class Assembly {
     @JsonProperty("assemblyID")
     String assemblyID;
 
-    // not persisted
+    @JsonProperty("name")
+    String name;
+
+    @JsonProperty("description")
+    String description;
+
+    @JsonIgnore
     String assemblyDocID;
 
     @JsonProperty ("functions")
-    List<Function> functions;
+    List<FunctionType> functions;
 
     @JsonProperty ("rules")
     List<Rule> rules = Lists.newArrayList();
@@ -52,29 +60,26 @@ public class Assembly {
         this.assemblyDocID = assemblyDocID;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     ///////////////////////
     // Function Methods
     ///////////////////////
 
     public List<FunctionType> getFunctionTypes() {
-        List<FunctionType> types = Lists.newArrayList();
-        for (Function f : functions) {
-            types.add(f.type);
-        }
-        return types;
+        return functions;
     }
 
-    public void setFunctions(List<Function> functions) {
+    public void setFunctionTypes(List<FunctionType> functions) {
         this.functions = functions;
     }
 
-    public Function getFunction (FunctionType type) {
-        for (Function f : functions) {
-            if (f.type.equals(type))
-                return f;
-        }
-        throw new RuntimeException ("unable to find type " + type);
-    }
 
     ///////////////////////
     // Rules Methods

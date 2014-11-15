@@ -1,5 +1,6 @@
 package util;
 
+import catalog.Assembly;
 import part.Part;
 import org.junit.Test;
 import supplier.Supplier;
@@ -13,34 +14,22 @@ import java.util.List;
  */
 public class FileUtilTest {
 
-//    @Test
-//    public void readAssemblyFile () throws Exception{
-//
-//        URL url = getClass().getResource("/data/assembly.json");
-//        System.out.println ("URL " + url);
-//
-//        FileUtil mgr = new FileUtil();
-//        Assembly asm = mgr.importAssembly(url.toURI());
-//        System.out.println ("assembly " + asm);
-//
-//    }
-//
-//    @Test
-//    public void readAssembliesFile () throws Exception{
-//
-//        URL url = getClass().getResource("/data/assemblies.old.json");
-//        System.out.println ("URL " + url);
-//
-//        FileUtil mgr = new FileUtil();
-//        List<Assembly> asms = mgr.importAssemblies(url.toURI());
-//        System.out.println ("assemblies " + asms);
-//
-//    }
+    @Test
+    public void readAssembliesFile () throws Exception{
+
+        URL url = getClass().getResource("/util/assemblies.json");
+        System.out.println ("URL " + url);
+
+        FileUtil mgr = new FileUtil();
+        List<Assembly> asms = mgr.importAssemblies(url.toURI());
+        System.out.println ("assemblies " + asms);
+
+    }
 
     @Test
-    public void readPartFile () throws Exception{
+    public void readPart1File () throws Exception{
 
-        URL url = getClass().getResource("/data/part.json");
+        URL url = getClass().getResource("/util/part1.json");
         System.out.println ("URL " + url);
 
         FileUtil mgr = new FileUtil();
@@ -49,9 +38,9 @@ public class FileUtilTest {
     }
 
     @Test
-    public void readPartsFile () throws Exception{
+    public void readPart2File () throws Exception{
 
-        URL url = getClass().getResource("/data/parts.json");
+        URL url = getClass().getResource("/util/part2.json");
         System.out.println ("URL " + url);
 
         FileUtil mgr = new FileUtil();
@@ -62,7 +51,7 @@ public class FileUtilTest {
     @Test
     public void readSupplierFile () throws Exception{
 
-        URL url = getClass().getResource("/data/suppliers.json");
+        URL url = getClass().getResource("/util/suppliers.json");
         System.out.println ("URL " + url);
 
         FileUtil mgr = new FileUtil();

@@ -1,5 +1,6 @@
-package app;
+package resource;
 
+import catalog.AssemblySQL;
 import cmd.*;
 import com.codahale.metrics.annotation.Timed;
 import mgr.CatalogMgr;
@@ -14,8 +15,8 @@ public class PartResource {
 
     private CatalogMgr mgr;
 
-    public PartResource(PartSQL sql) {
-        this.mgr = new CatalogMgr(sql);
+    public PartResource(PartSQL sql, AssemblySQL assemblySQL) {
+        this.mgr = new CatalogMgr(sql, assemblySQL);
     }
 
     //////////////////////////////

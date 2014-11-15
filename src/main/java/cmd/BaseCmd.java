@@ -2,7 +2,11 @@ package cmd;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.common.collect.LinkedHashMultimap;
+import com.google.common.collect.Maps;
+import org.joda.time.Chronology;
 import org.joda.time.DateTime;
+import org.joda.time.chrono.ISOChronology;
 
 import java.util.LinkedHashMap;
 
@@ -43,7 +47,7 @@ public abstract class BaseCmd {
      * Steps are keyed by timestamp.
      */
     @JsonProperty
-    private LinkedHashMap<String,String> log = new LinkedHashMap<>();
+    private LinkedHashMap<String,String> log = Maps.newLinkedHashMap();
 
 
     /////////////////////////////////
@@ -111,7 +115,16 @@ public abstract class BaseCmd {
      * @param step
      */
     public void log (String step) {
-        log.put(DateTime.now().toString(), step);
+
+        // it's possible to log events within the same millisecond, thus we
+        // alter the key to be sure we don't lose a log entry.
+        // BTW using multi-map was not appealing ;-)
+
+        String key = DateTime.now().toString();
+        while (log.get(key) != null) {
+            key+= ".";
+        }
+        log.put(key, step);
     }
 
     /////////////////////////////////

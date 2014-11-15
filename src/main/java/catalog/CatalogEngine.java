@@ -1,12 +1,14 @@
-package mgr;
+package catalog;
 
-import catalog.*;
 import ch.qos.logback.classic.Logger;
 
 import static com.google.common.base.Preconditions.*;
 
+import cmd.BaseCmd;
+import cmd.UpdateCatalogCmd;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import mgr.CatalogMgr;
 import org.slf4j.LoggerFactory;
 import part.Part;
 import product.Product;
@@ -18,37 +20,45 @@ import java.util.Map;
 
 /**
  */
-public class AssemblyMgr {
+public class CatalogEngine {
 
     CatalogMgr catalogMgr;
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(AssemblyMgr.class);
+    private static final Logger logger = (Logger) LoggerFactory.getLogger(CatalogEngine.class);
 
-    public AssemblyMgr(CatalogMgr catalogMgr) {
+    public CatalogEngine(CatalogMgr catalogMgr) {
         this.catalogMgr = catalogMgr;
     }
 
     /**
-     * updates products in the catalog based on active Assembly rules.
+     * deletes / rebuilds all products in the catalog based on imported Assemblies and Parts
      */
-    public void buildCatalog() {
+    public void rebuildCatalog(UpdateCatalogCmd cmd) {
 
         try {
+            cmd.setState(BaseCmd.CmdState.started);
+            catalogMgr.deleteCatalog();
+
+            cmd.log("rebuilding catalog from scratch");
+            cmd.log("catalog contents deleted");
+
             for (Assembly assembly : catalogMgr.getAllAssemblies()) {
                 List<CandidateProduct> products = assembleProductCandidates(assembly);
 
-                // FIXME come up with something better for product ID assignment
-                int productIDSuffix = 100;
+                int productIDSuffix = 1000;
                 for (CandidateProduct candidate : products) {
+
                     Product product = new Product();
+                    String productID = assembly.getAssemblyID() + "-" + productIDSuffix;
+                    product.setProductID(productID);
 
                     for (Map.Entry<FunctionType, CandidatePart> set : candidate.candidateParts.entrySet()) {
-                        FunctionType function = set.getKey();
 
                         CandidatePart candidatePart = set.getValue();
+                        FunctionType function = set.getKey();
                         Part part = candidatePart.getPart();
 
                         ProductPart productPart = new ProductPart();
-                        productPart.setProductID(assembly.getAssemblyID() + "." + productIDSuffix);
+                        productPart.setProductID(productID);
                         productPart.setAssemblyID(assembly.getAssemblyID());
                         productPart.setAssemblyDocID(assembly.getAssemblyDocID());
                         productPart.setPartID(part.getPartID());
@@ -58,12 +68,17 @@ public class AssemblyMgr {
 
                         product.addPart(productPart);
                     }
-                    catalogMgr.updateProduct(assembly, product);
+                    catalogMgr.addToCatalog(product);
+                    cmd.log(product.getProductID() + " added");
+                    productIDSuffix++;
                 }
-                productIDSuffix++;
 
             }
-        } catch (Exception e) {
+            cmd.setState(BaseCmd.CmdState.completed);
+        }
+        catch (Exception e) {
+            cmd.log(e.toString());
+            cmd.setState(BaseCmd.CmdState.failed);
             logger.error("unable to build catalog", e);
         }
     }
@@ -87,7 +102,7 @@ public class AssemblyMgr {
         builder.setFunctions(assembly.getFunctionTypes());
 
         // TODO: get only those that match the set of Functions present in the Assembly (use IN clause)
-        for (Part part : catalogMgr.getAllParts()) {
+        for (Part part : catalogMgr.getAllParts(/*assembly.getFunctionTypes()*/)) {
             builder.addCandidate(part);
         }
 
@@ -194,7 +209,11 @@ public class AssemblyMgr {
 
         void addCandidate(Part part) {
             CandidateColumn column = columns.get(part.getFunctionType());
-            column.addPart(part);
+
+            // only add part if its function is specified in the assembly
+            if (column != null) {
+                column.addPart(part);
+            }
         }
 
         boolean nextCandidate(CandidateProduct candidate) {

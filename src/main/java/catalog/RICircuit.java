@@ -3,9 +3,9 @@ package catalog;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import mgr.AssemblyMgr.CandidatePart;
-import mgr.AssemblyMgr.CandidateProblem;
-import mgr.AssemblyMgr.CandidateProduct;
+import catalog.CatalogEngine.CandidatePart;
+import catalog.CatalogEngine.CandidateProblem;
+import catalog.CatalogEngine.CandidateProduct;
 import part.Part;
 import part.PartConnection;
 

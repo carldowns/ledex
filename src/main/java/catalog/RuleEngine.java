@@ -2,7 +2,7 @@ package catalog;
 
 import ch.qos.logback.classic.Logger;
 import com.google.common.collect.Lists;
-import mgr.AssemblyMgr.*;
+import catalog.CatalogEngine.*;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;

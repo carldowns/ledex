@@ -1,4 +1,4 @@
-package app;
+package resource;
 
 import java.util.Iterator;
 import javax.ws.rs.GET;
@@ -8,7 +8,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import cmd.ExportSuppliersCmd;
-import cmd.GetSupplierThingCmd;
+import cmd.GetSupplierCmd;
 import cmd.ImportSuppliersCmd;
 import mgr.SupplierMgr;
 import supplier.SupplierSQL;
@@ -53,8 +53,8 @@ public class SupplierResource {
     @GET
     @Path ("/get")
     @Timed
-    public GetSupplierThingCmd getSupplier (@QueryParam("supplierID") String id ) {
-        GetSupplierThingCmd cmd = new GetSupplierThingCmd();
+    public GetSupplierCmd getSupplier (@QueryParam("supplierID") String id ) {
+        GetSupplierCmd cmd = new GetSupplierCmd();
         cmd.setSupplierID(id);
         mgr.getSupplier(cmd);
         return cmd;

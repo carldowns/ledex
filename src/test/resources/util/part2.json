@@ -1,6 +1,4 @@
-{
-  "name": "ADI Jim Bean 3 Bottle Set",
-  "parts": [
+[
     {
       "name": "AC Adapter",
       "function": "POWER",
@@ -206,5 +204,4 @@
         }
       ]
     }
-  ]
-}
+]

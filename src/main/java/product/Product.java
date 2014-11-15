@@ -1,5 +1,6 @@
 package product;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -16,7 +17,10 @@ import java.util.List;
  */
 public class Product {
 
+    @JsonProperty
     private String productID;
+
+    @JsonProperty
     private List<ProductPart> pParts = Lists.newArrayList();
 
     public String getProductID() {
@@ -37,5 +41,13 @@ public class Product {
 
     public void setParts(List<ProductPart> pParts) {
         this.pParts = pParts;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productID='" + productID + '\'' +
+                ", pParts=" + pParts +
+                '}';
     }
 }

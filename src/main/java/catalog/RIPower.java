@@ -1,14 +1,12 @@
 package catalog;
 
 import com.google.common.base.Preconditions;
-import mgr.AssemblyMgr.CandidatePart;
-import mgr.AssemblyMgr.CandidateProblem;
-import mgr.AssemblyMgr.CandidateProduct;
-import mgr.CatalogMgr;
+import catalog.CatalogEngine.CandidatePart;
+import catalog.CatalogEngine.CandidateProblem;
+import catalog.CatalogEngine.CandidateProduct;
 import part.Part;
 import part.PartProperty;
 import part.PartPropertyType;
-import part.PartRec;
 import util.UnitConverter;
 
 import java.util.List;

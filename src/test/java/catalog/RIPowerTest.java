@@ -1,8 +1,7 @@
 package catalog;
 
 
-import mgr.AssemblyMgr;
-import static mgr.AssemblyMgr.CandidateProduct;
+import static catalog.CatalogEngine.CandidateProduct;
 import mgr.CatalogMgr;
 import org.junit.Test;
 import part.Part;
@@ -23,7 +22,7 @@ public class RIPowerTest {
     public void testPower1 () throws Exception {
 
         CatalogMgr catalogMgr = mock(CatalogMgr.class);
-        AssemblyMgr mgr = new AssemblyMgr(catalogMgr);
+        CatalogEngine mgr = new CatalogEngine(catalogMgr);
         FileUtil util = new FileUtil();
 
         URL url = getClass().getResource("/catalog/test1.power.parts.json");
@@ -37,7 +36,7 @@ public class RIPowerTest {
         url = getClass().getResource("/catalog/test1.power.assembly.json");
         Assembly assembly = util.importAssembly(url.toURI());
 
-        List<AssemblyMgr.CandidateProduct> candidates = mgr.assembleProductCandidates(assembly);
+        List<CatalogEngine.CandidateProduct> candidates = mgr.assembleProductCandidates(assembly);
         org.junit.Assert.assertEquals(2, candidates.size());
 
         // 4 parts
@@ -61,7 +60,7 @@ public class RIPowerTest {
     public void testPower2 () throws Exception {
 
         CatalogMgr catalogMgr = mock(CatalogMgr.class);
-        AssemblyMgr mgr = new AssemblyMgr(catalogMgr);
+        CatalogEngine mgr = new CatalogEngine(catalogMgr);
         FileUtil util = new FileUtil();
 
         URL url = getClass().getResource("/catalog/test2.power.parts.json");
@@ -75,7 +74,7 @@ public class RIPowerTest {
         url = getClass().getResource("/catalog/test2.power.assembly.json");
         Assembly assembly = util.importAssembly(url.toURI());
 
-        List<AssemblyMgr.CandidateProduct> candidates = mgr.assembleProductCandidates(assembly);
+        List<CatalogEngine.CandidateProduct> candidates = mgr.assembleProductCandidates(assembly);
         org.junit.Assert.assertEquals(2, candidates.size());
 
         CandidateProduct cp1 = candidates.get(0);

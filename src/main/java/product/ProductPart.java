@@ -1,7 +1,6 @@
 package product;
 
 
-import catalog.Function;
 import catalog.FunctionType;
 
 /**
@@ -85,5 +84,18 @@ public class ProductPart {
 
     public void setLinkable(Boolean linkable) {
         this.linkable = linkable;
+    }
+
+    @Override
+    public String toString() {
+        return "ProductPart{" +
+                "productID='" + productID + '\'' +
+                ", partID='" + partID + '\'' +
+                ", partDocID='" + partDocID + '\'' +
+                ", function=" + function +
+                ", assemblyID='" + assemblyID + '\'' +
+                ", assemblyDocID='" + assemblyDocID + '\'' +
+                ", linkable=" + linkable +
+                '}';
     }
 }

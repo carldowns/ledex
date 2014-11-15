@@ -1,5 +1,6 @@
 package part;
 
+import catalog.FunctionType;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
@@ -35,7 +36,7 @@ public interface PartSQL {
     @Mapper(PartRecMapper.class)
     List<PartRec> getPartRecsList();
 
-    @SqlUpdate ("update supplier set name = :name where partID = :partID")
+    @SqlUpdate ("update partRec set name = :name where partID = :partID")
     void updatePartRec (@Bind("partID") String partID, @Bind("name") String name);
 
     //////////////////////////////
@@ -79,6 +80,10 @@ public interface PartSQL {
     @SqlQuery("select * from partDoc where current = true")
     @Mapper(PartDocMapper.class)
     List<PartDoc> getCurrentPartDocs();
+
+    @SqlQuery("select * from partDoc where current = true and function In [:functions]")
+    @Mapper(PartDocMapper.class)
+    List<PartDoc> getCurrentPartDocs(@Bind("functions") List<FunctionType> functions);
 
     @SqlQuery("select * from partDoc where current = true")
     @Mapper(PartDocMapper.class)

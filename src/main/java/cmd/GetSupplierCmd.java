@@ -6,7 +6,7 @@ import supplier.Supplier;
 /**
  *
  */
-public class GetSupplierThingCmd extends BaseCmd {
+public class GetSupplierCmd extends BaseCmd {
 
     @JsonProperty
     private String supplierID;
@@ -14,7 +14,7 @@ public class GetSupplierThingCmd extends BaseCmd {
     @JsonProperty
     private Supplier supplier;
 
-    public GetSupplierThingCmd() {
+    public GetSupplierCmd() {
         super();
     }
 

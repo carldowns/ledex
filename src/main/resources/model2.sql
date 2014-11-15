@@ -62,6 +62,7 @@ create table PartDoc (
 
 -- select name, function, d.partid, partdocid, current, ts from partrec r, partdoc d where r.partid = d.partid;
 -- select name, function, supplierid, d.partid, partdocid, current, ts from partrec r, partdoc d where r.partid = d.partid order by supplierid;
+-- select r.partid, name, partdocID, current ts from partrec r, partdoc d where r.partid = d.partid order by partid;
 
 -----------------------------
 -- Assembly & Product

@@ -1,5 +1,7 @@
 package part;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.annotation.Nullable;
@@ -7,6 +9,8 @@ import javax.annotation.Nullable;
 /**
  *
  */
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class PartConnection {
 
     @JsonProperty("type")
@@ -15,7 +19,7 @@ public class PartConnection {
     @JsonProperty("gender")
     String gender;
 
-    @Nullable
+    @JsonIgnore
     private Boolean isMaleCached = null;
 
     @JsonProperty("pinOut")

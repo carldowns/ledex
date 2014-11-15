@@ -1,6 +1,17 @@
 {
     "name": "AC Adapter",
     "function": "POWER",
+    "connections" : [
+        {
+            "type": "US_WALL_PLUG",
+            "gender" : "male",
+            "connect" : "ignore"
+        },
+        {
+            "type": "BARREL-01",
+            "gender" : "male"
+        }
+    ],
     "properties" : [
         {
             "type": "VOLTAGE",

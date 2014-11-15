@@ -1,5 +1,7 @@
 package part;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import catalog.FunctionType;
 import com.google.common.collect.Lists;
@@ -15,12 +17,14 @@ import java.util.Map;
  * can be tagged onto the end of the declaration itself.  We will convert from that as needed.
  * So a weight can be "5KG", "12LBS", "12 lbs", "5000 G", etc.
  */
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Part {
 
     @JsonProperty("partID")
     String partID;
 
-    // not persisted
+    @JsonIgnore
     String partDocID;
 
     @JsonProperty("supplierID")
@@ -162,14 +166,14 @@ public class Part {
     }
 
     /**
-     * interpreted as a part that has two connections of same type but opposite gender
-     * @return
+     * part has two connections of same type but opposite gender
      */
+
     public boolean isLinkable () {
         Map<String,PartConnection> linkable = Maps.newHashMap();
         for (PartConnection connection : connections) {
             PartConnection match = linkable.get(connection.getType());
-            if (!connection.isSameGender(match))
+            if (match != null && !connection.isSameGender(match))
                 return true;
 
             linkable.put(connection.getType(), connection);

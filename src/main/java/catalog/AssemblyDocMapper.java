@@ -12,6 +12,6 @@ public class AssemblyDocMapper implements ResultSetMapper<AssemblyDoc> {
 
     public AssemblyDoc map(int index, ResultSet r, StatementContext ctx)
             throws SQLException {
-        return new AssemblyDoc(r.getString("partID"), r.getString("partDocID"), r.getString("doc"), r.getTimestamp("ts"));
+        return new AssemblyDoc(r.getString("assemblyID"), r.getString("assemblyDocID"), r.getString("doc"), r.getTimestamp("ts"));
     }
 }
