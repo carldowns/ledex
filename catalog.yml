@@ -1,9 +1,6 @@
 template: Hello, %s!
 defaultName: Catalog
 
-importDirectory: /Users/carl_downs/work/dev/ledex/data/import
-exportDirectory: /Users/carl_downs/work/dev/ledex/data/export
-
 database:
   # the name of your JDBC driver
   driverClass: org.postgresql.Driver
