@@ -1,0 +1,9 @@
+{
+    "assemblyID": "LIGHT-SET-001",
+    "functions": ["LIGHT", "POWER", "PLUG", "LEAD"],
+    "rules": [
+        {
+            "type": "CIRCUIT_COMPLETE"
+        }
+    ]
+}

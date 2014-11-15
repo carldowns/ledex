@@ -1,0 +1,51 @@
+[
+    {
+        "partID": "ADAPT-01",
+        "supplierID": "S1000",
+        "name": "AC Adapter",
+        "function": "POWER"
+    },
+    {
+        "partID": "ADAPT-02",
+        "supplierID": "S1000",
+        "name": "AC Adapter",
+        "function": "POWER"
+    },
+    {
+        "partID": "LEAD-01",
+        "supplierID": "S1000",
+        "name": "Lead Wire",
+        "function": "LEAD"
+    },
+    {
+        "partID": "LEAD-02",
+        "supplierID": "S1000",
+        "name": "Lead Wire",
+        "function": "LEAD"
+    },
+    {
+        "partID": "LIGHT-01",
+        "supplierID": "S1000",
+        "name": "Flex LED Light Strip",
+        "function": "LIGHT"
+    },
+    {
+        "partID": "LIGHT-02",
+        "supplierID": "S1000",
+        "name": "Flex LED Light Strip",
+        "function": "LIGHT"
+    },
+    {
+        "partID": "PLUG-01",
+        "supplierID": "S1000",
+        "name": "A cool plug",
+        "function": "PLUG"
+    },
+    {
+        "partID": "PLUG-02",
+        "supplierID": "S1000",
+        "name": "A cool plug",
+        "function": "PLUG"
+    }
+
+]

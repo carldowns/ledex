@@ -5,7 +5,7 @@ import com.codahale.metrics.annotation.Metered;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.collect.ImmutableMultimap;
 import io.dropwizard.servlets.tasks.Task;
-import supplier.SupplierDAO;
+import supplier.SupplierSQL;
 
 import java.io.PrintWriter;
 
@@ -14,9 +14,9 @@ import java.io.PrintWriter;
  */
 public class GenericTask extends Task {
 
-    SupplierDAO dao;
+    SupplierSQL dao;
 
-    public GenericTask(SupplierDAO dao) {
+    public GenericTask(SupplierSQL dao) {
         super("doit");
         this.dao = dao;
     }

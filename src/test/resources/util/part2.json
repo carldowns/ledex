@@ -1,0 +1,207 @@
+[
+    {
+      "name": "AC Adapter",
+      "function": "POWER",
+      "properties": [
+        {
+          "type": "VOLTAGE",
+          "name": "Voltage current",
+          "value": "12VDC"
+        },
+        {
+          "type": "AMPERAGE",
+          "name": "Amp output",
+          "value": "100mA"
+        },
+        {
+          "type": "SWITCH",
+          "name": "Inline On/Off switch",
+          "value": "yes"
+        },
+        {
+          "type": "POWER_CORD",
+          "name": "Cord length",
+          "increment": {
+            "incMin": "24in",
+            "incMax": "72in",
+            "incDiv": "1in"
+          }
+        }
+      ],
+      "costs": [
+        {
+          "qty": 100,
+          "baseCost": "$4.00",
+          "increments": [
+            {
+              "type": "POWER_CORD",
+              "addCost": "0.05 USD"
+            }
+          ]
+        },
+        {
+          "qty": 250,
+          "baseCost": "3.50 USD",
+          "increments": [
+            {
+              "type": "POWER_CORD",
+              "addCost": "0.04 USD"
+            }
+          ]
+        },
+        {
+          "qty": 500,
+          "baseCost": "3.25 USD",
+          "increments": [
+            {
+              "type": "POWER_CORD",
+              "addCost": "00.03 USD"
+            }
+          ]
+        }
+      ],
+      "metrics": {
+        "weight": "5g",
+        "height": "2mm",
+        "length": "10mm",
+        "width": "10mm",
+        "increments": [
+          {
+            "name": "CORD",
+            "addWeight": "1kg",
+            "addHeight": "5cm",
+            "addLength": "6cm",
+            "addWidth": "1cm"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Flex LED Light Strip",
+      "function": "LIGHT",
+      "properties": [
+        {
+          "type": "LED_TYPE",
+          "name": "Type of LED",
+          "value": "3528"
+        },
+        {
+          "type": "LED_COLOR",
+          "name": "LED Color",
+          "value": "White"
+        },
+        {
+          "type": "LED_COLOR_TEMP",
+          "name": "Cool white",
+          "value": "6000k"
+        },
+        {
+          "type": "LED_BEAM_ANGLE",
+          "name": "LED beam angle",
+          "value": "180 degrees"
+        },
+        {
+          "type": "VOLTAGE",
+          "name": "Supported Voltage",
+          "value": "4.5VDC"
+        },
+        {
+          "type": "CONNECTION_PLUG_TYPE",
+          "name": "Connection Plug Type",
+          "value": "J17"
+        },
+        {
+          "type": "STRIP_LENGTH",
+          "name": "Strip Length",
+          "increment": {
+            "incMin": "5mm",
+            "incMax": "72mm",
+            "incDiv": "5mm"
+          }
+        },
+        {
+          "type": "STRIP_INPUT_LEAD_LENGTH",
+          "name": "Strip Input Lead Length",
+          "increment": {
+            "incMin": "2in",
+            "incMax": "24in",
+            "incDiv": "1in"
+          }
+        },
+        {
+          "type": "STRIP_OUTPUT_LEAD_LENGTH",
+          "name": "Strip Output Lead Length",
+          "increment": {
+            "incMin": "2in",
+            "incMax": "3in",
+            "incDiv": "1in"
+          }
+        }
+      ],
+      "costs": [
+        {
+          "qty": 100,
+          "baseCost": "4.55 USD",
+          "increments": [
+            {
+              "type": "STRIP_LENGTH",
+              "name": "Strip Length",
+              "addCost": "0.05 USD"
+            },
+            {
+              "type": "STRIP_INPUT_LEAD_LENGTH",
+              "name": "Strip Input Lead Length",
+              "addCost": "0.01 USD"
+            },
+            {
+              "type": "STRIP_OUTPUT_LEAD_LENGTH",
+              "name": "Strip Output Lead Length",
+              "addCost": "0.01 USD"
+            }
+          ]
+        },
+        {
+          "qty": 250,
+          "baseCost": "4.50 USD",
+          "increments": [
+            {
+              "type": "STRIP_LENGTH",
+              "name": "STRIP_LENGTH",
+              "addCost": "0.04 USD"
+            },
+            {
+              "type": "STRIP_INPUT_LEAD_LENGTH",
+              "name": "Strip Input Lead Length",
+              "addCost": "0.01 USD"
+            },
+            {
+              "type": "STRIP_OUTPUT_LEAD_LENGTH",
+              "name": "Strip Output Lead Length",
+              "addCost": "0.01 USD"
+            }
+          ]
+        },
+        {
+          "qty": 500,
+          "baseCost": "4.25 USD",
+          "increments": [
+            {
+              "type": "STRIP_LENGTH",
+              "name": "STRIP_LENGTH",
+              "addCost": "0.03 USD"
+            },
+            {
+              "type": "STRIP_INPUT_LEAD_LENGTH",
+              "name": "Strip Input Lead Length",
+              "addCost": "0.01 USD"
+            },
+            {
+              "type": "STRIP_OUTPUT_LEAD_LENGTH",
+              "name": "Strip Output Lead Length",
+              "addCost": "0.01 USD"
+            }
+          ]
+        }
+      ]
+    }
+]

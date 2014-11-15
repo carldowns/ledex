@@ -1,0 +1,88 @@
+{
+    "name": "AC Adapter",
+    "function": "POWER",
+    "connections" : [
+        {
+            "type": "US_WALL_PLUG",
+            "gender" : "male",
+            "connect" : "ignore"
+        },
+        {
+            "type": "BARREL-01",
+            "gender" : "male"
+        }
+    ],
+    "properties" : [
+        {
+            "type": "VOLTAGE",
+            "name": "Voltage current",
+            "value": "12VDC"
+        },
+        {
+            "type": "AMPERAGE",
+            "name": "Amp output",
+            "value": "100mA"
+        },
+        {
+            "type": "SWITCH",
+            "name": "Inline On/Off switch",
+            "value": "yes"
+        },
+        {
+            "type": "POWER_CORD",
+            "name": "Cord length",
+            "increment": {
+                "incMin": "24in",
+                "incMax": "72in",
+                "incDiv": "1in"
+            }
+        }
+    ],
+    "costs": [
+        {
+            "qty": 100,
+            "baseCost": "$4.00",
+            "increments": [
+                {
+                    "type": "POWER_CORD",
+                    "addCost": "0.05 USD"
+                }
+            ]
+        },
+        {
+            "qty": 250,
+            "baseCost": "3.50 USD",
+            "increments": [
+                {
+                    "type": "POWER_CORD",
+                    "addCost": "0.04 USD"
+                }
+            ]
+        },
+        {
+            "qty": 500,
+            "baseCost": "3.25 USD",
+            "increments": [
+                {
+                    "type": "POWER_CORD",
+                    "addCost": "00.03 USD"
+                }
+            ]
+        }
+    ],
+    "metrics": {
+        "weight": "5g",
+        "height": "2mm",
+        "length": "10mm",
+        "width": "10mm",
+        "increments": [
+            {
+                "name": "CORD",
+                "addWeight": "1kg",
+                "addHeight": "5cm",
+                "addLength": "6cm",
+                "addWidth": "1cm"
+            }
+        ]
+    }
+}

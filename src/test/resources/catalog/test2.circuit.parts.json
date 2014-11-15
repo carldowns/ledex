@@ -1,0 +1,140 @@
+[
+    {
+        "partID": "ADAPT1",
+        "supplierID": "S1000",
+        "name": "AC Adapter",
+        "function": "POWER",
+        "connections" : [
+            {
+                "type": "US_WALL_PLUG",
+                "gender" : "male",
+                "connect" : "ignore"
+            },
+            {
+                "type": "BARREL-01",
+                "gender" : "male"
+            }
+        ],
+        "properties": [
+            {
+                "type": "VOLTAGE_INPUT",
+                "name": "Voltage input",
+                "value": "120VAC"
+            },
+            {
+                "type": "VOLTAGE",
+                "name": "Voltage output",
+                "value": "12VDC"
+            },
+            {
+                "type": "AMPERAGE",
+                "name": "Amp output",
+                "value": "1A"
+            }
+        ]
+    },
+    {
+        "partID": "PLUG1",
+        "supplierID": "S1000",
+        "name": "Threaded Jack Plug",
+        "function": "PLUG",
+        "connections" : [
+            {
+                "type": "BARREL-01",
+                "gender" : "female",
+                "pinOut" : "center-pos"
+            },
+            {
+                "type": "JST-01",
+                "gender" : "male",
+                "pinOut" : "gnd,vcc"
+            }
+        ],
+        "properties": [
+            {
+                "type": "LEAD_LENGTH",
+                "name": "Lead Wire length",
+                "increment": {
+                    "incMin": "5cm",
+                    "incMax": "5m",
+                    "incDiv": "1cm"
+                }
+            }
+        ]
+    },
+    {
+        "partID": "WIRE1",
+        "supplierID": "S1000",
+        "name": "Lead Wire",
+        "function": "LEAD",
+        "connections" : [
+            {
+                "type": "JST-01",
+                "gender" : "male",
+                "pinOut" : "gnd,vcc"
+            },
+            {
+                "type": "JST-01",
+                "gender" : "female",
+                "pinOut" : "vcc,gnd"
+            }
+        ],
+        "properties": [
+            {
+                "type": "VOLTAGE",
+                "name": "Voltage current",
+                "value": "12VDC"
+            },
+            {
+                "type": "AMPERAGE",
+                "name": "Amp output",
+                "value": "1A"
+            },
+            {
+                "type": "LEAD_LENGTH",
+                "name": "Lead Wire length",
+                "increment": {
+                    "incMin": "2in",
+                    "incMax": "72in",
+                    "incDiv": "1in"
+                }
+            }
+        ]
+    },
+    {
+        "partID": "LIGHT1",
+        "supplierID": "S1000",
+        "name": "Linkable Flex LED Light Strip",
+        "function": "LIGHT",
+        "connections" : [
+            {
+                "type": "JST-01",
+                "gender" : "male",
+                "pinOut" : "gnd,vcc",
+                "connect" : "optional"
+            },
+            {
+                "type": "JST-01",
+                "gender" : "female",
+                "pinOut" : "vcc,gnd"
+            }
+        ],
+        "properties": [
+            {
+                "type": "LED_TYPE",
+                "name": "LED Type",
+                "value": "SMD 3528"
+            },
+            {
+                "type": "VOLTAGE",
+                "name": "Voltage current",
+                "value": "12VDC"
+            },
+            {
+                "type": "AMPERAGE",
+                "name": "Amp output",
+                "value": "100mA"
+            }
+        ]
+    }
+]

@@ -1,8 +1,8 @@
 package util;
 
+import product.Product;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import model.Assembly;
 
 import java.io.*;
 import java.net.URI;
@@ -18,7 +18,7 @@ public class GsonUtil {
     /**
      *
      */
-    public static void toJsonFile(Assembly obj, URI filepath) {
+    public static void toJsonFile(Product obj, URI filepath) {
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -47,7 +47,7 @@ public class GsonUtil {
     /**
      *
      */
-    public static Assembly fromJson(URI filepath) {
+    public static Product fromJson(URI filepath) {
 
         Gson gson = new Gson();
 
@@ -56,7 +56,7 @@ public class GsonUtil {
             BufferedReader br = new BufferedReader(new FileReader(new File(filepath)));
 
             // convert the json string back to object
-            Assembly obj = gson.fromJson(br, Assembly.class);
+            Product obj = gson.fromJson(br, Product.class);
 
             //System.out.println(obj);
             return obj;

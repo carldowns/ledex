@@ -1,0 +1,12 @@
+{
+    "assemblyID": "LIGHT-SET-001",
+    "functions": ["LIGHT", "POWER"],
+    "rules": [
+        {
+            "type": "VOLTAGE_COMPATIBLE"
+        },
+        {
+            "type": "AMPERAGE_COMPATIBLE"
+        }
+    ]
+}

@@ -1,0 +1,144 @@
+[
+    {
+        "partID": "ADAPT-04-021-12",
+        "supplierID": "S1000",
+        "name": "AC Adapter",
+        "function": "POWER",
+        "properties": [
+            {
+                "type": "VOLTAGE",
+                "name": "Voltage current",
+                "value": "12VDC"
+            },
+            {
+                "type": "AMPERAGE",
+                "name": "Amp output",
+                "value": "1A"
+            },
+            {
+                "type": "SWITCH",
+                "name": "Inline On/Off switch",
+                "value": "yes"
+            },
+            {
+                "type": "POWER_CORD",
+                "name": "Cord length",
+                "increment": {
+                    "incMin": "24in",
+                    "incMax": "72in",
+                    "incDiv": "1in"
+                }
+            }
+        ]
+     },
+    {
+        "partID": "ADAPT-04-022-4.5",
+        "supplierID": "S1000",
+        "name": "AC Adapter",
+        "function": "POWER",
+        "properties": [
+            {
+                "type": "VOLTAGE",
+                "name": "Voltage current",
+                "value": "4.5VDC"
+            },
+            {
+                "type": "AMPERAGE",
+                "name": "Amp output",
+                "value": "500mA"
+            },
+            {
+                "type": "SWITCH",
+                "name": "Inline On/Off switch",
+                "value": "yes"
+            }
+        ]
+    },
+    {
+        "partID": "LIGHT-00-009-4.5",
+        "supplierID": "S1000",
+        "name": "4.5V Flex LED Light Strip",
+        "function": "LIGHT",
+        "properties": [
+            {
+                "type": "LED_TYPE",
+                "name": "Type of LED",
+                "value": "3528"
+            },
+            {
+                "type": "LED_COLOR",
+                "name": "LED Color",
+                "value": "White"
+            },
+            {
+                "type": "AMPERAGE",
+                "name": "Amp consumed per part",
+                "value": "500mA"
+            },
+            {
+                "type": "LED_COLOR_TEMP",
+                "name": "Cool white",
+                "value": "6000k"
+            },
+            {
+                "type": "LED_BEAM_ANGLE",
+                "name": "LED beam angle",
+                "value": "180 degrees"
+            },
+            {
+                "type": "VOLTAGE",
+                "name": "Supported Voltage",
+                "value": "4.5VDC"
+            },
+            {
+                "type": "CONNECTION_PLUG_TYPE",
+                "name": "Connection Plug Type",
+                "value": "J17"
+            }
+        ]
+    },
+    {
+        "partID": "LIGHT-00-010-12",
+        "supplierID": "S1000",
+        "name": "12 VDC Flex LED Light Strip",
+        "function": "LIGHT",
+        "properties": [
+            {
+                "type": "LED_TYPE",
+                "name": "Type of LED",
+                "value": "3528"
+            },
+            {
+                "type": "LED_COLOR",
+                "name": "LED Color",
+                "value": "White"
+            },
+            {
+                "type": "AMPERAGE",
+                "name": "Amp consumed per part",
+                "value": "1A"
+            },
+            {
+                "type": "LED_COLOR_TEMP",
+                "name": "Cool white",
+                "value": "6000k"
+            },
+            {
+                "type": "LED_BEAM_ANGLE",
+                "name": "LED beam angle",
+                "value": "180 degrees"
+            },
+            {
+                "type": "VOLTAGE",
+                "name": "Supported Voltage",
+                "value": "12VDC"
+            },
+            {
+                "type": "CONNECTION_PLUG_TYPE",
+                "name": "Connection Plug Type",
+                "value": "J17"
+            }
+        ]
+    }
+
+]

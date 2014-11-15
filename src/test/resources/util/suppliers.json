@@ -1,0 +1,73 @@
+[
+    {
+        "supplierID" : "S100",
+        "name" : "Nan King Golden Corral",
+        "phone" : [
+            {
+                "type" : "office",
+                "countryCode" : "01",
+                "number" : "444-345-3456"
+            }
+        ],
+        "address" : [
+            {
+                "type" : "factory",
+                "street" : "1200 Lang Dong",
+                "city" : "Shanghai",
+                "code" : "01344-344",
+                "region" : "JiangSu",
+                "province" : "Guang Dong",
+                "country" : "China"
+            }
+        ],
+        "internet" : [
+            {
+                "type" : "web",
+                "address" : "www.sign-display.com"
+            },
+            {
+                "type" : "email_company",
+                "address" : "sales@KingCorral.com"
+            },
+            {
+                "type" : "chat",
+                "address" : "KingCorral"
+            }
+        ],
+        "contact" : [
+            {
+                "name" : "Lucy Lynn",
+                "title" : "Project Manager",
+                "phone" : [
+                    {
+                        "type" : "cell",
+                        "countryCode" : "01",
+                        "number" : "444-333-555"
+                    }
+                ],
+                "internet" : [
+                    {
+                        "type" : "email",
+                        "address" : "lucylynn@yahoo.com"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "supplierID" : "S101",
+        "name" : "WeeBo Novelty"
+    },
+    {
+        "supplierID" : "S102",
+        "name" : "HungLo Electronics"
+    },
+    {
+        "supplierID" : "S103",
+        "name" : "Blissfully Electrical"
+    },
+    {
+        "supplierID" : "S104",
+        "name" : "Shining Top LED"
+    }
+]
