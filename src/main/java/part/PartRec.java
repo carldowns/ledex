@@ -1,6 +1,5 @@
 package part;
 
-import catalog.Function;
 import catalog.FunctionType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
