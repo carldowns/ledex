@@ -1,5 +1,7 @@
 package catalog;
 
+import catalog.rule.RuleEngine;
+import catalog.rule.RuleViolation;
 import ch.qos.logback.classic.Logger;
 
 import static com.google.common.base.Preconditions.*;

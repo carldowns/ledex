@@ -1,6 +1,7 @@
 package catalog;
 
 /**
+ * Pivotal type that ties Assembly and Parts together to create Products
 */
 public enum FunctionType {
     POWER,

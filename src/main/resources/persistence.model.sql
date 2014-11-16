@@ -107,29 +107,29 @@ CREATE INDEX ProductPart_AssemblyDoc_Idx ON ProductPart (assemblyDocID);
 create table CustomerRec (
   customerID text,
   name text,
-  PRIMARY KEY(supplierID)
+  PRIMARY KEY(customerID)
 );
 
 create table CustomerDoc (
   customerID text REFERENCES CustomerRec,
   doc text,
-  ts timestamp with time zone NOT NULL DEFAULT now(),
+  ts timestamp with time zone NOT NULL DEFAULT now()
 );
 
 -----------------------------
--- Quote
+-- quote.Quote
 -----------------------------
 
 create table QuoteRec (
   quoteID text,
-  customerID text REFERENCES Customer,
+  customerID text REFERENCES CustomerRec,
   PRIMARY KEY (quoteID)
 );
 
-create table QuoterDoc (
+create table QuoteDoc (
   quoteID text REFERENCES QuoteRec,
   doc text,
-  ts timestamp with time zone NOT NULL DEFAULT now(),
+  ts timestamp with time zone NOT NULL DEFAULT now()
 );
 
 -----------------------------
@@ -144,9 +144,9 @@ create table OrderRec (
 );
 
 create table OrderDoc (
-  orderID text REFERENCES Order,
+  orderID text REFERENCES OrderRec,
   doc text,
-  ts timestamp with time zone NOT NULL DEFAULT now(),
+  ts timestamp with time zone NOT NULL DEFAULT now()
 );
 
 -----------------------------

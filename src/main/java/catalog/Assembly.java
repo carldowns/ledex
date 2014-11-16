@@ -1,12 +1,11 @@
 package catalog;
 
+import catalog.rule.Rule;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
 
-import javax.annotation.Nullable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Architectural Overview

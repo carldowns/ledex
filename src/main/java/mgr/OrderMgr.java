@@ -4,7 +4,7 @@ package mgr;
  * Created by carl_downs on 10/9/14.
  *
  * Order CRUD
- * Creates an Order from a Quote
+ * Creates an Order from a quote.Quote
  * Computes shipping costs for an Assembly
  * Handles notifications for the Order
  *
