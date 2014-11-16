@@ -8,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
 import part.Part;
-import org.apache.commons.codec.binary.Hex;
 import org.eclipse.jetty.util.StringUtil;
 import org.slf4j.LoggerFactory;
 import part.PartDoc;
@@ -17,11 +16,11 @@ import part.PartSQL;
 import product.Product;
 import product.ProductPart;
 import util.AppRuntimeException;
+import util.HashUtil;
 import util.FileUtil;
 
 import java.io.File;
 import java.net.URI;
-import java.security.MessageDigest;
 import java.util.Iterator;
 import java.util.List;
 
@@ -51,7 +50,6 @@ public class CatalogMgr {
 
         try {
             URI uri = new URI(cmd.getInputFilePath());
-            MessageDigest md = MessageDigest.getInstance("MD5");
             List<Part> parts = new FileUtil().importParts(uri);
 
             for (Part part : parts) {
@@ -62,8 +60,7 @@ public class CatalogMgr {
 
                 // generate document ID based on the document content
                 String json = mapper.writeValueAsString(part);
-                byte[] messageDigest = md.digest(json.getBytes());
-                String docID = new String (Hex.encodeHex(messageDigest));
+                String docID = HashUtil.getChecksumAsString(json);
 
                 // if not in the core table, consider it new and add
                 PartRec found = partSQL.getPartRecByID(part.getPartID());
@@ -318,7 +315,6 @@ public class CatalogMgr {
 
         try {
             URI uri = new URI(cmd.getInputFilePath());
-            MessageDigest md = MessageDigest.getInstance("MD5");
             List<Assembly> assemblies = new FileUtil().importAssemblies(uri);
 
             for (Assembly assembly : assemblies) {
@@ -332,8 +328,7 @@ public class CatalogMgr {
 
                 // generate document ID based on the document content
                 String json = mapper.writeValueAsString(assembly);
-                byte[] messageDigest = md.digest(json.getBytes());
-                String docID = new String (Hex.encodeHex(messageDigest));
+                String docID = HashUtil.getChecksumAsString(json);
 
                 // if not in the core table, consider it new and add
                 AssemblyRec found = assemblySQL.getAssemblyRecByID(assemblyID);

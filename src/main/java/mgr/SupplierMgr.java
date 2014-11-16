@@ -13,6 +13,7 @@ import supplier.SupplierRec;
 import supplier.SupplierSQL;
 import util.AppRuntimeException;
 import util.FileUtil;
+import util.HashUtil;
 
 import java.io.File;
 import java.net.URI;
@@ -57,7 +58,8 @@ public class SupplierMgr {
                 // this becomes our document ID
                 String json = mapper.writeValueAsString(supplier);
                 byte[] messageDigest = MessageDigest.getInstance("MD5").digest(json.getBytes());
-                String docID = new String (Hex.encodeHex(messageDigest));
+                //String docID = new String (Hex.encodeHex(messageDigest));
+                String docID = HashUtil.getChecksumAsString(json);
 
                 // if not in the core table, consider it new and add
                 SupplierRec found = sql.getSupplierRecByID(supplier.getSupplierID());
