@@ -1,6 +1,9 @@
 package mgr;
 
 import catalog.*;
+import catalog.dao.AssemblyDoc;
+import catalog.dao.AssemblyRec;
+import catalog.dao.AssemblySQL;
 import ch.qos.logback.classic.Logger;
 import cmd.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,9 +13,9 @@ import com.google.common.collect.Lists;
 import part.Part;
 import org.eclipse.jetty.util.StringUtil;
 import org.slf4j.LoggerFactory;
-import part.PartDoc;
-import part.PartRec;
-import part.PartSQL;
+import part.dao.PartDoc;
+import part.dao.PartRec;
+import part.dao.PartSQL;
 import product.Product;
 import product.ProductPart;
 import util.AppRuntimeException;

@@ -3,7 +3,7 @@ package app;
 import org.junit.Before;
 import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
-import supplier.SupplierSQL;
+import supplier.dao.SupplierSQL;
 
 import java.util.Iterator;
 

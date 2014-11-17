@@ -5,7 +5,7 @@ import com.codahale.metrics.annotation.Metered;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.collect.ImmutableMultimap;
 import io.dropwizard.servlets.tasks.Task;
-import supplier.SupplierSQL;
+import supplier.dao.SupplierSQL;
 
 import java.io.PrintWriter;
 

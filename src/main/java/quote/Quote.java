@@ -52,7 +52,7 @@ public class Quote {
         List<QuotedPart> parts;
 
         @JsonProperty("metrics")
-        QuotedMetric metrics;
+        QuotedMetric metrics; // aggregate metrics for this product
     }
 
     /**

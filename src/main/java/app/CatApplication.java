@@ -1,6 +1,6 @@
 package app;
 
-import catalog.AssemblySQL;
+import catalog.dao.AssemblySQL;
 import io.dropwizard.Application;
 import io.dropwizard.jdbi.DBIFactory;
 import io.dropwizard.setup.Bootstrap;
@@ -10,11 +10,11 @@ import io.dropwizard.setup.Environment;
 
 import org.skife.jdbi.v2.DBI;
 //import supplier.SupplierDAO;
-import part.PartSQL;
-import resource.AssemblyResource;
-import resource.PartResource;
-import resource.SupplierResource;
-import supplier.SupplierSQL;
+import part.dao.PartSQL;
+import app.resource.AssemblyResource;
+import app.resource.PartResource;
+import app.resource.SupplierResource;
+import supplier.dao.SupplierSQL;
 import task.GenericTask;
 
 /**
