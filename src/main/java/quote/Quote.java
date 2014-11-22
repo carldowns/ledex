@@ -1,15 +1,19 @@
 package quote;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import part.Part;
+import com.google.common.collect.Lists;
 import part.PartProperty;
-import product.ProductPart;
+import catalog.dao.CatalogPart;
 
 import java.util.List;
 
 /**
- *
+ * Represents a quote based on a catalog product.
+ * Purely REST object.  No processing logic here.
  */
+
+@JsonIgnoreProperties(ignoreUnknown=true)
 public class Quote {
 
     @JsonProperty("projectName")
@@ -19,64 +23,70 @@ public class Quote {
     String customerID;
 
     @JsonProperty("items")
-    List<QuoteLineItem> items;
+    List<LineItem> items = Lists.newArrayList();
 
     /**
      * represents a single line item in the quote
      * may be either a product or service
      */
-    public static class QuoteLineItem {
+    public static class LineItem {
 
         @JsonProperty("quantity")
         String quantity;
 
         @JsonProperty("product")
-        QuotedProduct product; // product's parts aggregated into one line item.
+        QuoteProduct quotedProduct; // product's parts aggregated into one line item.
 
-        // @JsonProperty("service")
-        // QuotedService service;
+        @JsonProperty("service")
+        QuoteService quotedService;
 
         @JsonProperty("price")
-        QuotedBuyerPrice price;  // aggregate line item pricing (retail -buyer visibility ONLY)
+        QuotePrice quotedPrice;  // aggregate line item pricing (retail -buyer visibility ONLY)
 
         @JsonProperty("cost")
-        QuotedSupplierCost cost; // aggregate line item costs (wholesale)
+        QuoteCost quotedCost; // aggregate line item costs (wholesale)
     }
 
     /**
      * represents a quoted product which is a collection of quoted parts
      */
-    public static class QuotedProduct {
+    public static class QuoteProduct {
 
         @JsonProperty("parts")
-        List<QuotedPart> parts;
+        List<QuotePart> quotedParts = Lists.newArrayList();
 
         @JsonProperty("metrics")
-        QuotedMetric metrics; // aggregate metrics for this product
+        QuoteMetric quotedMetrics; // aggregate metrics for this product (single unit)
     }
 
     /**
      * represents one of the parts of a given quoted product.
      */
-    public static class QuotedPart {
+    public static class QuotePart {
 
         @JsonProperty("quantity")
         String quantity; // may have N of a part, depending on linkable nature, connections, etc
 
         @JsonProperty("part")
-        Part part; // original part description (immutable)
+        part.Part part; // original part description (immutable)
 
         @JsonProperty("productPart")
-        ProductPart productPart; // original catalog product part entry (immutable)
+        CatalogPart catalogPart; // original catalog product part entry (immutable)
+
+        @JsonProperty("label")
+        String label; // combined part ID + selection modifiers
+
+        @JsonProperty("description")
+        String description; // combined list of attribute value pairs
 
         @JsonProperty("selections")
-        List<PartProperty> selections; // formerly incremental -- now selected properties
+        List<PartProperty> selections = Lists.newArrayList(); // formerly incremental -- now selected properties
     }
 
     /**
      * represents the aggregate metrics for the part or product where it appears
      */
-    public static class QuotedMetric {
+    public static class QuoteMetric {
         /**
          * weight in milligrams
          */
@@ -102,26 +112,26 @@ public class Quote {
         String width;
     }
 
-    public static class QuotedBuyerPrice {
+    public static class QuotePrice {
         @JsonProperty("value")
         String value;
     }
 
-    public static class QuotedSupplierCost {
+    public static class QuoteCost {
         @JsonProperty("value")
         String value;
     }
 
-//    public static class QuotedService {
-//
-//        @JsonProperty("name")
-//        String name;
-//
-//        @JsonProperty("type")
-//        String type;
-//
-//        @JsonProperty("description")
-//        String description;
-//    }
+    public static class QuoteService {
+
+        @JsonProperty("name")
+        String name;
+
+        @JsonProperty("type")
+        String type;
+
+        @JsonProperty("description")
+        String description;
+    }
 
 }

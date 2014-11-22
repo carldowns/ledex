@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
 import part.dao.PartDoc;
 import part.dao.PartRec;
 import part.dao.PartSQL;
-import product.Product;
-import product.ProductPart;
+import catalog.Product;
+import catalog.dao.CatalogPart;
 import util.AppRuntimeException;
 import util.HashUtil;
 import util.FileUtil;
@@ -441,15 +441,15 @@ public class CatalogMgr {
     }
 
     public void addToCatalog (Product product) {
-        for (ProductPart productPart : product.getParts()) {
+        for (CatalogPart catalogPart : product.getParts()) {
             assemblySQL.insertProductPart
-                    (productPart.getProductID(),
-                     productPart.getPartID(),
-                     productPart.getPartDocID(),
-                     productPart.getAssemblyID(),
-                     productPart.getAssemblyDocID(),
-                     productPart.getFunction().name(),
-                     productPart.getLinkable());
+                    (catalogPart.getProductID(),
+                     catalogPart.getPartID(),
+                     catalogPart.getPartDocID(),
+                     catalogPart.getAssemblyID(),
+                     catalogPart.getAssemblyDocID(),
+                     catalogPart.getFunction().name(),
+                     catalogPart.getLinkable());
         }
     }
 

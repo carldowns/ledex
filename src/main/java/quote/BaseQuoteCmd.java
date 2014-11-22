@@ -1,4 +1,4 @@
-package cmd;
+package quote;
 
 import cmd.BaseCmd;
 import quote.Quote;
@@ -6,11 +6,16 @@ import quote.Quote;
 /**
  *
  */
-public class UpdateQuoteCmd extends BaseCmd {
+public class BaseQuoteCmd extends BaseCmd {
 
     private Quote quote;
 
-    public UpdateQuoteCmd(Quote quote) {
+    public BaseQuoteCmd() {
+        super();
+        quote = new Quote();
+    }
+
+    public BaseQuoteCmd(Quote quote) {
         super();
         this.quote = quote;
     }

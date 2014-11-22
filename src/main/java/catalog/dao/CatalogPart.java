@@ -1,4 +1,4 @@
-package product;
+package catalog.dao;
 
 
 import catalog.FunctionType;
@@ -17,7 +17,7 @@ import catalog.FunctionType;
  * <p>If multiple Parts for a given Function are Linkable, they can be mixed and matched in multiples.</p>
  *
  */
-public class ProductPart {
+public class CatalogPart {
 
     private String productID;
 
@@ -88,7 +88,7 @@ public class ProductPart {
 
     @Override
     public String toString() {
-        return "ProductPart{" +
+        return "CatalogPart {" +
                 "productID='" + productID + '\'' +
                 ", partID='" + partID + '\'' +
                 ", partDocID='" + partDocID + '\'' +

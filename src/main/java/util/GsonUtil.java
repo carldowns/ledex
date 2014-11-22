@@ -1,6 +1,6 @@
 package util;
 
-import product.Product;
+import catalog.Product;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

@@ -13,8 +13,7 @@ import com.google.common.collect.Maps;
 import mgr.CatalogMgr;
 import org.slf4j.LoggerFactory;
 import part.Part;
-import product.Product;
-import product.ProductPart;
+import catalog.dao.CatalogPart;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -59,16 +58,16 @@ public class CatalogEngine {
                         FunctionType function = set.getKey();
                         Part part = candidatePart.getPart();
 
-                        ProductPart productPart = new ProductPart();
-                        productPart.setProductID(productID);
-                        productPart.setAssemblyID(assembly.getAssemblyID());
-                        productPart.setAssemblyDocID(assembly.getAssemblyDocID());
-                        productPart.setPartID(part.getPartID());
-                        productPart.setPartDocID(part.getPartDocID());
-                        productPart.setFunction(function);
-                        productPart.setLinkable(part.isLinkable());
+                        CatalogPart catalogPart = new CatalogPart();
+                        catalogPart.setProductID(productID);
+                        catalogPart.setAssemblyID(assembly.getAssemblyID());
+                        catalogPart.setAssemblyDocID(assembly.getAssemblyDocID());
+                        catalogPart.setPartID(part.getPartID());
+                        catalogPart.setPartDocID(part.getPartDocID());
+                        catalogPart.setFunction(function);
+                        catalogPart.setLinkable(part.isLinkable());
 
-                        product.addPart(productPart);
+                        product.addPart(catalogPart);
                     }
                     catalogMgr.addToCatalog(product);
                     cmd.log(product.getProductID() + " added");
@@ -112,7 +111,7 @@ public class CatalogEngine {
         List<CandidateProduct> products = Lists.newArrayList();
         while (!builder.isAllPermutationsReported()) {
 
-            CandidateProduct candidate = builder.nextCandidate();
+            CandidateProduct candidate = builder.nextCandidate(assembly);
             CandidateProblem report = engine.evaluate(assembly, candidate);
             if (report.hasProblems()) {
                 // hold off on eliminations
@@ -127,6 +126,12 @@ public class CatalogEngine {
     }
 
     public static class CandidateProduct {
+
+        Assembly assembly;
+        CandidateProduct (Assembly assembly) {
+            this.assembly = assembly;
+        }
+
         Map<FunctionType, CandidatePart> candidateParts = Maps.newHashMap();
 
         public void put(FunctionType f, CandidatePart p) {
@@ -139,6 +144,10 @@ public class CatalogEngine {
 
         public void setCandidateParts(Map<FunctionType, CandidatePart> candidateParts) {
             this.candidateParts = candidateParts;
+        }
+
+        public Assembly getAssembly() {
+            return assembly;
         }
 
         public List<String> getPartIDs() {
@@ -169,13 +178,13 @@ public class CatalogEngine {
             return allPermutationsReported;
         }
 
-        CandidateProduct nextCandidate() {
+        CandidateProduct nextCandidate(Assembly assembly) {
 
             if (isAllPermutationsReported()) {
                 return null;
             }
 
-            CandidateProduct candidate = new CandidateProduct();
+            CandidateProduct candidate = new CandidateProduct(assembly);
             allPermutationsReported = table.nextCandidate(candidate);
             return candidate;
         }
