@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import org.joda.time.Chronology;
 import org.joda.time.DateTime;
 import org.joda.time.chrono.ISOChronology;
+import util.CmdRuntimeException;
 
 import java.util.LinkedHashMap;
 
@@ -28,6 +29,13 @@ import java.util.LinkedHashMap;
 
 @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
 public abstract class BaseCmd {
+
+    public static enum CmdState {
+        started,
+        waiting,
+        completed,
+        failed
+    }
 
     /**
      * type of command
@@ -90,6 +98,22 @@ public abstract class BaseCmd {
         return state;
     }
 
+    public boolean isCompleted () {
+        return state == CmdState.completed;
+    }
+
+    public boolean isFailed () {
+        return state == CmdState.failed;
+    }
+
+    public boolean isStarted () {
+        return state == CmdState.started;
+    }
+
+    public boolean isWaiting () {
+        return state == CmdState.waiting;
+    }
+
     /**
      * record that the state of the command has changed
      * @param state
@@ -128,13 +152,27 @@ public abstract class BaseCmd {
     }
 
     /////////////////////////////////
-    // state types
+    // Checks
     /////////////////////////////////
 
-    public static enum CmdState {
-        started,
-        waiting,
-        completed,
-        failed
+    public void checkNotNull (Object ref, String msg) {
+        if (ref != null) {
+            return;
+        }
+
+        log(msg);
+        showFailed();
+        throw new CmdRuntimeException(msg);
     }
+
+    public void checkState (Boolean success, String msg) {
+        if (success) {
+            return;
+        }
+
+        log(msg);
+        showFailed();
+        throw new CmdRuntimeException(msg);
+    }
+
 }
