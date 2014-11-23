@@ -21,7 +21,7 @@ public class AssemblyPermutationTest {
     public void test1Combination () throws Exception {
 
         CatalogMgr catalogMgr = mock(CatalogMgr.class);
-        CatalogEngine mgr = new CatalogEngine(catalogMgr);
+        AssemblyEngine mgr = new AssemblyEngine(catalogMgr);
         FileUtil util = new FileUtil();
 
         URL url = getClass().getResource("/catalog/test1.permute.parts.json");
@@ -34,7 +34,7 @@ public class AssemblyPermutationTest {
         url = getClass().getResource("/catalog/test1.permute.assembly.json");
         Assembly assembly = util.importAssembly(url.toURI());
 
-        List<CatalogEngine.CandidateProduct> candidates = mgr.assembleProductCandidates(assembly);
+        List<AssemblyEngine.CandidateProduct> candidates = mgr.assembleProductCandidates(assembly);
         org.junit.Assert.assertTrue(candidates.size() == 1);
 
     }
@@ -43,7 +43,7 @@ public class AssemblyPermutationTest {
     public void test2Combinations () throws Exception {
 
         CatalogMgr catalogMgr = mock(CatalogMgr.class);
-        CatalogEngine mgr = new CatalogEngine(catalogMgr);
+        AssemblyEngine mgr = new AssemblyEngine(catalogMgr);
         FileUtil util = new FileUtil();
 
         URL url = getClass().getResource("/catalog/test2.permute.parts.json");
@@ -56,7 +56,7 @@ public class AssemblyPermutationTest {
         url = getClass().getResource("/catalog/test2.permute.assembly.json");
         Assembly assembly = util.importAssembly(url.toURI());
 
-        List<CatalogEngine.CandidateProduct> candidates = mgr.assembleProductCandidates(assembly);
+        List<AssemblyEngine.CandidateProduct> candidates = mgr.assembleProductCandidates(assembly);
         org.junit.Assert.assertTrue(candidates.size() == 2);
 
     }
@@ -65,7 +65,7 @@ public class AssemblyPermutationTest {
     public void test16Combinations () throws Exception {
 
         CatalogMgr catalogMgr = mock(CatalogMgr.class);
-        CatalogEngine mgr = new CatalogEngine(catalogMgr);
+        AssemblyEngine mgr = new AssemblyEngine(catalogMgr);
         FileUtil util = new FileUtil();
 
         URL url = getClass().getResource("/catalog/test3.permute.parts.json");
@@ -78,7 +78,7 @@ public class AssemblyPermutationTest {
         url = getClass().getResource("/catalog/test3.permute.assembly.json");
         Assembly assembly = util.importAssembly(url.toURI());
 
-        List<CatalogEngine.CandidateProduct> candidates = mgr.assembleProductCandidates(assembly);
+        List<AssemblyEngine.CandidateProduct> candidates = mgr.assembleProductCandidates(assembly);
         org.junit.Assert.assertTrue(candidates.size() == 16);
 
     }

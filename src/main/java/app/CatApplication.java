@@ -1,39 +1,24 @@
 package app;
 
-import catalog.dao.AssemblySQL;
-import io.dropwizard.Application;
-import io.dropwizard.jdbi.DBIFactory;
-import io.dropwizard.setup.Bootstrap;
-import io.dropwizard.setup.Environment;
-//import com.example.helloworld.resources.HelloWorldResource;
-//import com.example.helloworld.health.TemplateHealthCheck;
-
-import org.skife.jdbi.v2.DBI;
-//import supplier.SupplierDAO;
-import part.dao.PartSQL;
 import app.resource.AssemblyResource;
 import app.resource.PartResource;
 import app.resource.SupplierResource;
-import supplier.dao.SupplierSQL;
-import task.GenericTask;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import io.dropwizard.Application;
+import io.dropwizard.setup.Bootstrap;
+import io.dropwizard.setup.Environment;
+import task.PingTask;
 
 /**
- * Dropwizard application
- * 
- * @author carl_downs
- * 
+ * Drop wizard main
  */
 public class CatApplication extends Application<CatConfiguration> {
 
-    /**
-     * Entry point for the application.
-     * 
-     * @param args
-     * @throws Exception
-     */
-    public static void main(String[] args) 
+
+    public static void main(String[] args)
             throws Exception {
-        
+
         new CatApplication().run(args);
     }
 
@@ -42,69 +27,33 @@ public class CatApplication extends Application<CatConfiguration> {
         return "LED Exchange Catalog";
     }
 
-    /**
-     * 
-     */
     @Override
     public void initialize(Bootstrap<CatConfiguration> bootstrap) {
-
         bootstrap.addCommand(new CatCommand());
-
-        // bootstrap.addBundle(new AssetsBundle("/assets/css", "/css", null, "css"));
-        // bootstrap.addBundle(new AssetsBundle("/assets/js", "/js", null, "js"));
-        // bootstrap.addBundle(new AssetsBundle("/assets/fonts", "/fonts", null, "fonts"));
-
     }
 
-    /**
-     * 
-     */
     @Override
     public void run(CatConfiguration config, Environment env)
             throws ClassNotFoundException {
-
-        initResources(config, env);
-        initHealthChecks(config, env);
+        Injector injector = Guice.createInjector(new CatModule(config, env));
+        initTasks(injector, config, env);
+        initResources(injector, config, env);
+        initHealthChecks(injector, config, env);
     }
 
-    /**
-     * 
-     * @param config
-     * @param env
-     * @throws ClassNotFoundException
-     */
-    private void initResources(CatConfiguration config, Environment env) 
+    private void initResources(Injector injector, CatConfiguration config, Environment env)
             throws ClassNotFoundException {
-
-        final DBIFactory factory = new DBIFactory();
-        final DBI dbi = factory.build(env, config.getDataSourceFactory(), "postgresql");
-
-        final SupplierSQL supplierSQL = dbi.onDemand(SupplierSQL.class);
-        env.jersey().register(new SupplierResource(supplierSQL));
-
-        final AssemblySQL assemblySQL = dbi.onDemand(AssemblySQL.class);
-        final PartSQL partSQL = dbi.onDemand(PartSQL.class);
-
-        env.jersey().register(new AssemblyResource(partSQL, assemblySQL));
-        env.jersey().register(new PartResource(partSQL, assemblySQL));
-
-        //final SupplierDAO dao2 = new SupplierDAO(dbi);
-        //env.jersey().register(new SupplierResource2(dao2));
-
-        env.admin().addTask(new GenericTask(supplierSQL));
-    }
-    
-    /**
-     * 
-     * @param config
-     * @param env
-     */
-    private void initHealthChecks(CatConfiguration config, Environment env) {
-
-        final CatHealth check = new CatHealth(
-                config.getTemplate());
-
-        env.healthChecks().register("template", check);
+        env.jersey().register(injector.getInstance(SupplierResource.class));
+        env.jersey().register(injector.getInstance(AssemblyResource.class));
+        env.jersey().register(injector.getInstance(PartResource.class));
     }
 
+    private void initTasks(Injector injector, CatConfiguration config, Environment env)
+            throws ClassNotFoundException {
+        env.admin().addTask(injector.getInstance(PingTask.class));
+    }
+
+    private void initHealthChecks(Injector injector, CatConfiguration config, Environment env) {
+        env.healthChecks().register("general", injector.getInstance(CatHealth.class));
+    }
 }

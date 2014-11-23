@@ -2,12 +2,16 @@ package app;
 
 
 import com.codahale.metrics.health.HealthCheck;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
+@Singleton
 public class CatHealth extends HealthCheck {
     private final String template;
 
-    public CatHealth(String template) {
-        this.template = template;
+    @Inject
+    public CatHealth(CatConfiguration config) {
+        this.template = config.getTemplate();
     }
 
     @Override

@@ -10,6 +10,8 @@ import cmd.BaseCmd;
 import cmd.UpdateCatalogCmd;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import mgr.CatalogMgr;
 import org.slf4j.LoggerFactory;
 import part.Part;
@@ -21,12 +23,14 @@ import java.util.Map;
 
 /**
  */
-public class CatalogEngine {
+@Singleton
+public class AssemblyEngine {
 
     CatalogMgr catalogMgr;
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(CatalogEngine.class);
+    private static final Logger logger = (Logger) LoggerFactory.getLogger(AssemblyEngine.class);
 
-    public CatalogEngine(CatalogMgr catalogMgr) {
+    @Inject
+    public AssemblyEngine(CatalogMgr catalogMgr) {
         this.catalogMgr = catalogMgr;
     }
 

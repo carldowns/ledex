@@ -10,6 +10,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Lists;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import part.Part;
 import org.eclipse.jetty.util.StringUtil;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,7 @@ import java.util.List;
 
 /**
  */
+@Singleton
 public class CatalogMgr {
 
     private PartSQL partSQL;
@@ -37,8 +40,9 @@ public class CatalogMgr {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(CatalogMgr.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    public CatalogMgr(PartSQL sql, AssemblySQL assemblySQL) {
-        this.partSQL = sql;
+    @Inject
+    public CatalogMgr(PartSQL partSQL, AssemblySQL assemblySQL) {
+        this.partSQL = partSQL;
         this.assemblySQL = assemblySQL;
     }
 

@@ -1,6 +1,7 @@
 package part.dao;
 
 import catalog.FunctionType;
+import com.google.inject.Singleton;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;

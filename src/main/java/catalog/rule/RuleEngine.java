@@ -3,7 +3,7 @@ package catalog.rule;
 import catalog.Assembly;
 import ch.qos.logback.classic.Logger;
 import com.google.common.collect.Lists;
-import catalog.CatalogEngine.*;
+import catalog.AssemblyEngine.*;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;

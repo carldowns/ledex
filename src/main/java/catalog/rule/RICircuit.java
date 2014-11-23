@@ -4,9 +4,9 @@ import catalog.Assembly;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import catalog.CatalogEngine.CandidatePart;
-import catalog.CatalogEngine.CandidateProblem;
-import catalog.CatalogEngine.CandidateProduct;
+import catalog.AssemblyEngine.CandidatePart;
+import catalog.AssemblyEngine.CandidateProblem;
+import catalog.AssemblyEngine.CandidateProduct;
 import part.Part;
 import part.PartConnection;
 

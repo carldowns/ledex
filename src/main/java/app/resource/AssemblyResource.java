@@ -1,11 +1,11 @@
 package app.resource;
 
-import catalog.dao.AssemblySQL;
 import cmd.*;
 import com.codahale.metrics.annotation.Timed;
-import catalog.CatalogEngine;
+import catalog.AssemblyEngine;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import mgr.CatalogMgr;
-import part.dao.PartSQL;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -15,14 +15,22 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/assembly")
 @Produces(MediaType.APPLICATION_JSON)
+@Singleton
 public class AssemblyResource {
 
-    private CatalogMgr mgr;
-    private CatalogEngine assemblyMgr;
+    private CatalogMgr catalogMgr;
+    private AssemblyEngine assemblyEngine;
 
-    public AssemblyResource(PartSQL partSQL, AssemblySQL assemblySQL) {
-        this.mgr = new CatalogMgr(partSQL, assemblySQL);
-        assemblyMgr = new CatalogEngine(mgr);
+//    @Inject
+//    public AssemblyResource(PartSQL partSQL, AssemblySQL assemblySQL) {
+//        this.mgr = new CatalogMgr(partSQL, assemblySQL);
+//        assemblyMgr = new CatalogEngine(mgr);
+//    }
+
+    @Inject
+    public AssemblyResource(CatalogMgr catalogMgr, AssemblyEngine assemblyEngine) {
+        this.catalogMgr = catalogMgr;
+        this.assemblyEngine = assemblyEngine;
     }
 
     //////////////////////////////
@@ -35,7 +43,7 @@ public class AssemblyResource {
     public ImportAssembliesCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
         ImportAssembliesCmd cmd = new ImportAssembliesCmd();
         cmd.setInputFilePath(pathURI);
-        mgr.importAssemblies(cmd);
+        catalogMgr.importAssemblies(cmd);
         return cmd;
     }
 
@@ -45,7 +53,7 @@ public class AssemblyResource {
     public ExportAssembliesCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
         ExportAssembliesCmd cmd = new ExportAssembliesCmd();
         cmd.setOutputFilePath(pathURI);
-        mgr.exportAssemblies(cmd);
+        catalogMgr.exportAssemblies(cmd);
         return cmd;
     }
 
@@ -55,7 +63,7 @@ public class AssemblyResource {
     public GetAssemblyCmd getSupplier (@QueryParam("assemblyID") String assemblyID ) {
         GetAssemblyCmd cmd = new GetAssemblyCmd();
         cmd.setAssemblyID(assemblyID);
-        mgr.getAssembly(cmd);
+        catalogMgr.getAssembly(cmd);
         return cmd;
     }
 
@@ -64,7 +72,7 @@ public class AssemblyResource {
     @Timed
     public UpdateCatalogCmd getSupplier () {
         UpdateCatalogCmd cmd = new UpdateCatalogCmd();
-        assemblyMgr.rebuildCatalog(cmd);
+        assemblyEngine.rebuildCatalog(cmd);
         return cmd;
     }
 

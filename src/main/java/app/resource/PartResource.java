@@ -3,6 +3,8 @@ package app.resource;
 import catalog.dao.AssemblySQL;
 import cmd.*;
 import com.codahale.metrics.annotation.Timed;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import mgr.CatalogMgr;
 import part.dao.PartSQL;
 
@@ -11,12 +13,14 @@ import javax.ws.rs.core.MediaType;
 
 @Path("/part")
 @Produces(MediaType.APPLICATION_JSON)
+@Singleton
 public class PartResource {
 
     private CatalogMgr mgr;
 
-    public PartResource(PartSQL sql, AssemblySQL assemblySQL) {
-        this.mgr = new CatalogMgr(sql, assemblySQL);
+    @Inject
+    public PartResource(CatalogMgr mgr) {
+        this.mgr = mgr;
     }
 
     //////////////////////////////

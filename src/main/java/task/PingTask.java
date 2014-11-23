@@ -4,20 +4,23 @@ import com.codahale.metrics.annotation.ExceptionMetered;
 import com.codahale.metrics.annotation.Metered;
 import com.codahale.metrics.annotation.Timed;
 import com.google.common.collect.ImmutableMultimap;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import io.dropwizard.servlets.tasks.Task;
-import supplier.dao.SupplierSQL;
+import mgr.SupplierMgr;
 
 import java.io.PrintWriter;
 
 /**
- * Created by carl_downs on 10/9/14.
  */
-public class GenericTask extends Task {
+@Singleton
+public class PingTask extends Task {
 
-    SupplierSQL dao;
+    SupplierMgr dao;
 
-    public GenericTask(SupplierSQL dao) {
-        super("doit");
+    @Inject
+    public PingTask(SupplierMgr dao) {
+        super("ping");
         this.dao = dao;
     }
 
@@ -26,7 +29,6 @@ public class GenericTask extends Task {
     @Metered
     @ExceptionMetered
     public void execute(ImmutableMultimap<String, String> parameters, PrintWriter out) throws Exception {
-        out.println("doing stuff...");
-        out.println("done doing stuff");
+        out.println("pong");
     }
 }

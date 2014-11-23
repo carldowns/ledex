@@ -10,20 +10,24 @@ import javax.ws.rs.core.MediaType;
 import cmd.ExportSuppliersCmd;
 import cmd.GetSupplierCmd;
 import cmd.ImportSuppliersCmd;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import mgr.SupplierMgr;
 import supplier.dao.SupplierSQL;
 import com.codahale.metrics.annotation.Timed;
 
 @Path("/supplier")
 @Produces(MediaType.APPLICATION_JSON)
+@Singleton
 public class SupplierResource {
 
-    private SupplierSQL sql;
     private SupplierMgr mgr;
+    private SupplierSQL sql;
 
-    public SupplierResource(SupplierSQL sql) {
+    @Inject
+    public SupplierResource(SupplierMgr mgr, SupplierSQL sql) {
+        this.mgr = mgr;
         this.sql = sql;
-        this.mgr = new SupplierMgr(sql);
     }
 
     //////////////////////////////

@@ -1,15 +1,23 @@
 package quote;
 
 import com.google.common.base.Preconditions;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import mgr.CatalogMgr;
 import part.Part;
 
 /**
  * resolves quote referenced Parts
  */
+@Singleton
 public class QuotePartResolver implements QuoteHandler {
 
     CatalogMgr catalogMgr;
+
+    @Inject
+    QuotePartResolver (CatalogMgr catalogMgr) {
+        this.catalogMgr = catalogMgr;
+    }
 
     /**
      * make sure that the command contains all referenced parts

@@ -4,6 +4,8 @@ import ch.qos.logback.classic.Logger;
 import cmd.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.eclipse.jetty.util.StringUtil;
 import org.slf4j.LoggerFactory;
 import supplier.Supplier;
@@ -24,12 +26,14 @@ import java.util.List;
  * Supplier CRUD
  * Created by carl_downs on 10/9/14.
  */
+@Singleton
 public class SupplierMgr {
 
     private SupplierSQL sql;
     private static final Logger logger = (Logger) LoggerFactory.getLogger(SupplierMgr.class);
     private static final ObjectMapper mapper = new ObjectMapper();
 
+    @Inject
     public SupplierMgr(SupplierSQL sql) {
         this.sql = sql;
     }
