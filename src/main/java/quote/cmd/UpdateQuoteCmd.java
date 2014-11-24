@@ -1,4 +1,6 @@
-package quote;
+package quote.cmd;
+
+import quote.Quote;
 
 /**
  *

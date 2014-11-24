@@ -174,9 +174,9 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("12 lbs");
 
         // 12lbs = 4553.104 grams
-        Assert.assertEquals(uc.toGrams(0), "5443");
-        Assert.assertEquals(uc.toGrams(2), "5443.10");
-        Assert.assertEquals(uc.toGrams(3), "5443.104");
+        Assert.assertEquals(uc.toGramsStr(0), "5443");
+        Assert.assertEquals(uc.toGramsStr(2), "5443.10");
+        Assert.assertEquals(uc.toGramsStr(3), "5443.104");
     }
 
     @Test
@@ -184,7 +184,7 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("12 lbs");
 
         // 12lbs = 192 oz
-        Assert.assertEquals(uc.toOunces(0), "192");
+        Assert.assertEquals(uc.toOuncesStr(0), "192");
     }
 
     @Test
@@ -192,8 +192,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("12 lbs");
 
         // 12lbs = 5.4431 KG
-        Assert.assertEquals(uc.toKilos(0), "5");
-        Assert.assertEquals(uc.toKilos(2), "5.44");
+        Assert.assertEquals(uc.toKilosStr(0), "5");
+        Assert.assertEquals(uc.toKilosStr(2), "5.44");
     }
 
     @Test
@@ -201,8 +201,8 @@ public class UnitConverterTest {
         UnitConverter uc = new UnitConverter("1 oz");
 
         // 1 oz = 28.3495 grams
-        Assert.assertEquals("28", uc.toGrams(0));
-        Assert.assertEquals("28.3495", uc.toGrams(4));
+        Assert.assertEquals("28", uc.toGramsStr(0));
+        Assert.assertEquals("28.3495", uc.toGramsStr(4));
     }
 
     @Test(expected = IllegalArgumentException.class)

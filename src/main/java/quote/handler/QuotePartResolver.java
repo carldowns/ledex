@@ -1,21 +1,23 @@
-package quote;
+package quote.handler;
 
 import com.google.common.base.Preconditions;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import mgr.CatalogMgr;
 import part.Part;
+import quote.cmd.BaseQuoteCmd;
+import quote.Quote;
 
 /**
  * resolves, verifies referenced Parts for Product line items.
  */
 @Singleton
-public class QuotePartResolver implements QuoteHandler {
+public class QuotePartResolver implements QuoteHandlerInterface {
 
     CatalogMgr catalogMgr;
 
     @Inject
-    QuotePartResolver (CatalogMgr catalogMgr) {
+    public QuotePartResolver (CatalogMgr catalogMgr) {
         this.catalogMgr = catalogMgr;
         checkDependencies();
     }
@@ -51,6 +53,10 @@ public class QuotePartResolver implements QuoteHandler {
         }
     }
 
+    private void checkDependencies() {
+        Preconditions.checkNotNull(catalogMgr, "catalog manager dependency not resolved");
+    }
+
     private void checkQuoteIsSet (BaseQuoteCmd cmd, Quote quote) {
         cmd.checkNotNull(quote, "quote is not set");
     }
@@ -68,10 +74,6 @@ public class QuotePartResolver implements QuoteHandler {
 
     private void checkProductHasParts (BaseQuoteCmd cmd, Quote.QuoteProduct qProduct) {
         cmd.checkNotNull(qProduct, "quoted product is not set");
-        cmd.checkState(qProduct.quotedParts.size() > 0,"no product parts specified");
-    }
-
-    private void checkDependencies() {
-        Preconditions.checkNotNull(catalogMgr,"catalog manager dependency not resolved");
+        cmd.checkState(qProduct.quotedParts.size() > 0, "no product parts specified");
     }
 }

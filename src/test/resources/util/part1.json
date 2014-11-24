@@ -29,7 +29,7 @@
             "value": "yes"
         },
         {
-            "type": "POWER_CORD",
+            "type": "POWER_CORD_LENGTH",
             "name": "Cord length",
             "increment": {
                 "incMin": "24in",
@@ -44,7 +44,7 @@
             "baseCost": "$4.00",
             "increments": [
                 {
-                    "type": "POWER_CORD",
+                    "type": "POWER_CORD_LENGTH",
                     "addCost": "0.05 USD"
                 }
             ]
@@ -54,7 +54,7 @@
             "baseCost": "3.50 USD",
             "increments": [
                 {
-                    "type": "POWER_CORD",
+                    "type": "POWER_CORD_LENGTH",
                     "addCost": "0.04 USD"
                 }
             ]
@@ -64,7 +64,7 @@
             "baseCost": "3.25 USD",
             "increments": [
                 {
-                    "type": "POWER_CORD",
+                    "type": "POWER_CORD_LENGTH",
                     "addCost": "00.03 USD"
                 }
             ]

@@ -409,7 +409,11 @@ public class UnitConverter {
     // weight conversions
     // ////////////////////////////////
 
-    public String toPounds(int scale) {
+    public String toPoundsStr(int scale) {
+        return toPounds(scale).toString();
+    }
+
+    public BigDecimal toPounds(int scale) {
         UnitTypeValue utv = getWeightType();
 
         if (utv.type == UnitType.LB)
@@ -427,7 +431,11 @@ public class UnitConverter {
         throw new UnsupportedOperationException(input);
     }
 
-    public String toKilos(int scale) {
+    public String toKilosStr(int scale) {
+        return toKilos(scale).toString();
+    }
+
+    public BigDecimal toKilos(int scale) {
         UnitTypeValue utv = getWeightType();
 
         if (utv.type == UnitType.LB)
@@ -445,7 +453,11 @@ public class UnitConverter {
         throw new UnsupportedOperationException(input);
     }
 
-    public String toOunces(int scale) {
+    public String toOuncesStr(int scale) {
+        return toOunces(scale).toString();
+    }
+
+    public BigDecimal toOunces(int scale) {
         UnitTypeValue utv = getWeightType();
 
         if (utv.type == UnitType.LB)
@@ -463,7 +475,11 @@ public class UnitConverter {
         throw new UnsupportedOperationException(input);
     }
 
-    public String toGrams(int scale) {
+    public String toGramsStr(int scale) {
+        return toGrams(scale).toString();
+    }
+
+    public BigDecimal toGrams(int scale) {
         UnitTypeValue utv = getWeightType();
 
         if (utv.type == UnitType.LB)
@@ -485,7 +501,11 @@ public class UnitConverter {
     // measure conversions
     // //////////////////////////////////
 
-    public String toMeters(int scale) {
+    public String toMetersStr(int scale) {
+        return toMeters(scale).toString();
+    }
+
+    public BigDecimal toMeters(int scale) {
         UnitTypeValue utv = getLengthType();
 
         if (utv.type == UnitType.M)
@@ -506,7 +526,11 @@ public class UnitConverter {
         throw new UnsupportedOperationException(input);
     }
 
-    public String toCentimeters(int scale) {
+    public String toCentimetersStr(int scale) {
+        return toCentimeters(scale).toString();
+    }
+
+    public BigDecimal toCentimeters(int scale) {
         UnitTypeValue utv = getLengthType();
 
         if (utv.type == UnitType.M)
@@ -527,7 +551,11 @@ public class UnitConverter {
         throw new UnsupportedOperationException(input);
     }
 
-    public String toMillimeters(int scale) {
+    public String toMillimetersStr(int scale) {
+        return toMillimeters(scale).toString();
+    }
+
+    public BigDecimal toMillimeters(int scale) {
         UnitTypeValue utv = getLengthType();
 
         if (utv.type == UnitType.M)
@@ -548,7 +576,11 @@ public class UnitConverter {
         throw new UnsupportedOperationException(input);
     }
 
-    public String toFeet(int scale) {
+    public String toFeetStr(int scale) {
+        return toFeet(scale).toString();
+    }
+
+    public BigDecimal toFeet(int scale) {
         UnitTypeValue utv = getLengthType();
 
         if (utv.type == UnitType.M)
@@ -570,7 +602,11 @@ public class UnitConverter {
         throw new UnsupportedOperationException(input);
     }
 
-    public String toInches(int scale) {
+    public String toInchesStr(int scale) {
+        return toInches(scale).toString();
+    }
+
+    public BigDecimal toInches(int scale) {
         UnitTypeValue utv = getLengthType();
 
         if (utv.type == UnitType.M)
@@ -586,7 +622,7 @@ public class UnitConverter {
             return convert("(12", scale);
 
         if (utv.type == UnitType.IN)
-            return utv.value;
+            return convert("1", scale);
 
         throw new UnsupportedOperationException(input);
     }
@@ -603,12 +639,12 @@ public class UnitConverter {
      * @param scale
      * @return
      */
-    private String convert(String multiplier, int scale) {
+    private BigDecimal convert(String multiplier, int scale) {
         BigDecimal v1 = new BigDecimal(utv.value);
         BigDecimal v2 = new BigDecimal(multiplier);
         BigDecimal v3 = v1.multiply(v2).setScale(scale, BigDecimal.ROUND_HALF_UP);
 
-        return v3.toString();
+        return v3;
     }
 
 }

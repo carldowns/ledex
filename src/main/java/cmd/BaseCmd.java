@@ -130,6 +130,11 @@ public abstract class BaseCmd {
         state = CmdState.failed;
     }
 
+    public void showFailed(String msg) {
+        state = CmdState.failed;
+        log(msg);
+    }
+
     /////////////////////////////////
     // Logging
     /////////////////////////////////
@@ -160,8 +165,16 @@ public abstract class BaseCmd {
             return;
         }
 
-        log(msg);
-        showFailed();
+        showFailed(msg);
+        throw new CmdRuntimeException(msg);
+    }
+
+    public void checkNotBlank (String ref, String msg) {
+        if (ref != null && ref.length() > 0) {
+            return;
+        }
+
+        showFailed(msg);
         throw new CmdRuntimeException(msg);
     }
 
@@ -170,8 +183,7 @@ public abstract class BaseCmd {
             return;
         }
 
-        log(msg);
-        showFailed();
+        showFailed(msg);
         throw new CmdRuntimeException(msg);
     }
 

@@ -1,12 +1,16 @@
 package quote;
 
+import catalog.Product;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import part.PartProperty;
 import catalog.dao.CatalogPart;
+import part.PartPropertyType;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a quote based on a catalog product.
@@ -17,13 +21,33 @@ import java.util.List;
 public class Quote {
 
     @JsonProperty("projectName")
-    String projectName;
+    public String projectName;
 
     @JsonProperty("customerID")
-    String customerID;
+    public String customerID;
 
     @JsonProperty("items")
-    List<LineItem> items = Lists.newArrayList();
+    public List<LineItem> items = Lists.newArrayList();
+
+
+    public Quote.LineItem addLineItem (String quantity, Product product) {
+
+        Quote.LineItem qItem = new Quote.LineItem();
+        items.add(qItem);
+
+        Quote.QuoteProduct qProduct = new Quote.QuoteProduct();
+        qItem.quotedProduct = qProduct;
+        qItem.quantity = quantity;
+
+        for (CatalogPart catalogPart : product.getParts()) {
+            Quote.QuotePart quotePart = new Quote.QuotePart();
+            quotePart.catalogPart = catalogPart;
+            quotePart.quantity = "1";
+            qProduct.quotedParts.add(quotePart);
+        }
+
+        return qItem;
+    }
 
     /**
      * represents a single line item in the quote
@@ -32,19 +56,19 @@ public class Quote {
     public static class LineItem {
 
         @JsonProperty("quantity")
-        String quantity;
+        public String quantity;
 
         @JsonProperty("product")
-        QuoteProduct quotedProduct; // product's parts aggregated into one line item.
+        public QuoteProduct quotedProduct; // product's parts aggregated into one line item.
 
         @JsonProperty("service")
-        QuoteService quotedService;
+        public QuoteService quotedService;
 
         @JsonProperty("price")
-        QuotePrice quotedPrice;  // aggregate line item pricing (retail -buyer visibility ONLY)
+        public QuotePrice quotedPrice;  // aggregate line item pricing (retail -buyer visibility ONLY)
 
         @JsonProperty("cost")
-        QuoteCost quotedCost; // aggregate line item costs (wholesale)
+        public QuoteCost quotedCost; // aggregate line item costs (wholesale)
     }
 
     /**
@@ -53,10 +77,19 @@ public class Quote {
     public static class QuoteProduct {
 
         @JsonProperty("parts")
-        List<QuotePart> quotedParts = Lists.newArrayList();
+        public List<QuotePart> quotedParts = Lists.newArrayList();
 
         @JsonProperty("metrics")
-        QuoteMetric quotedMetrics; // aggregate metrics for this product (single unit)
+        public QuoteMetric quotedMetrics; // aggregate metrics for this product (single unit)
+
+        public QuotePart getPart (String partID) {
+            for (QuotePart qPart : quotedParts) {
+                if (qPart.catalogPart.getPartID().equals(partID)) {
+                    return qPart;
+                }
+            }
+            return null;
+        }
     }
 
     /**
@@ -64,23 +97,37 @@ public class Quote {
      */
     public static class QuotePart {
 
+        // may have 1 or N of a given part, depending on linkable nature, connections, etc
         @JsonProperty("quantity")
-        String quantity; // may have N of a part, depending on linkable nature, connections, etc
+        public String quantity;
 
+        // original part description (immutable)
         @JsonProperty("part")
-        part.Part part; // original part description (immutable)
+        public part.Part part;
 
+        // original catalog product part entry (immutable)
         @JsonProperty("productPart")
-        CatalogPart catalogPart; // original catalog product part entry (immutable)
+        public CatalogPart catalogPart;
 
+        // combined part ID + selection modifiers
         @JsonProperty("label")
-        String label; // combined part ID + selection modifiers
+        public String label;
 
+        // combined list of attribute value pairs
         @JsonProperty("description")
-        String description; // combined list of attribute value pairs
+        public String description;
 
+        // selected properties corresponding to PartProperty entries that have selectors or increments
         @JsonProperty("selections")
-        List<PartProperty> selections = Lists.newArrayList(); // formerly incremental -- now selected properties
+        public List<QuoteSelection> selections = Lists.newArrayList();
+
+        public QuoteSelection setSelection (PartPropertyType type, String value) {
+            QuoteSelection selection = new QuoteSelection();
+            selection.type = type;
+            selection.value = value;
+            selections.add(selection);
+            return selection;
+        }
     }
 
     /**
@@ -91,47 +138,60 @@ public class Quote {
          * weight in milligrams
          */
         @JsonProperty("weight")
-        String weight;
+        public String weight;
 
         /**
          * height in millimeters
          */
         @JsonProperty("height")
-        String height;
+        public String height;
 
         /**
          * length in millimeters
          */
         @JsonProperty("length")
-        String length;
+        public String length;
 
         /**
          * width in millimeters
          */
         @JsonProperty("width")
-        String width;
+        public String width;
     }
 
     public static class QuotePrice {
+
         @JsonProperty("value")
-        String value;
+        public String value;
     }
 
     public static class QuoteCost {
+
         @JsonProperty("value")
-        String value;
+        public String value;
     }
 
     public static class QuoteService {
 
         @JsonProperty("name")
-        String name;
+        public String name;
 
         @JsonProperty("type")
-        String type;
+        public String type;
 
         @JsonProperty("description")
-        String description;
+        public String description;
     }
 
+    public static class QuoteSelection {
+        // try to get rid of 'name' as a key
+        //        @JsonProperty("name")
+        //        public String name;
+
+        @JsonProperty("type")
+        public PartPropertyType type;
+
+        @JsonProperty("value")
+        public String value;
+    }
 }

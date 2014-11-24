@@ -19,7 +19,7 @@
           "value": "yes"
         },
         {
-          "type": "POWER_CORD",
+          "type": "POWER_CORD_LENGTH",
           "name": "Cord length",
           "increment": {
             "incMin": "24in",
@@ -34,7 +34,7 @@
           "baseCost": "$4.00",
           "increments": [
             {
-              "type": "POWER_CORD",
+              "type": "POWER_CORD_LENGTH",
               "addCost": "0.05 USD"
             }
           ]
@@ -44,7 +44,7 @@
           "baseCost": "3.50 USD",
           "increments": [
             {
-              "type": "POWER_CORD",
+              "type": "POWER_CORD_LENGTH",
               "addCost": "0.04 USD"
             }
           ]
@@ -54,7 +54,7 @@
           "baseCost": "3.25 USD",
           "increments": [
             {
-              "type": "POWER_CORD",
+              "type": "POWER_CORD_LENGTH",
               "addCost": "00.03 USD"
             }
           ]
@@ -106,11 +106,6 @@
           "value": "4.5VDC"
         },
         {
-          "type": "CONNECTION_PLUG_TYPE",
-          "name": "Connection Plug Type",
-          "value": "J17"
-        },
-        {
           "type": "STRIP_LENGTH",
           "name": "Strip Length",
           "increment": {
@@ -120,7 +115,7 @@
           }
         },
         {
-          "type": "STRIP_INPUT_LEAD_LENGTH",
+          "type": "FEMALE_LEAD_LENGTH",
           "name": "Strip Input Lead Length",
           "increment": {
             "incMin": "2in",
@@ -129,7 +124,7 @@
           }
         },
         {
-          "type": "STRIP_OUTPUT_LEAD_LENGTH",
+          "type": "MALE_LEAD_LENGTH",
           "name": "Strip Output Lead Length",
           "increment": {
             "incMin": "2in",
@@ -149,12 +144,12 @@
               "addCost": "0.05 USD"
             },
             {
-              "type": "STRIP_INPUT_LEAD_LENGTH",
+              "type": "FEMALE_LEAD_LENGTH",
               "name": "Strip Input Lead Length",
               "addCost": "0.01 USD"
             },
             {
-              "type": "STRIP_OUTPUT_LEAD_LENGTH",
+              "type": "MALE_LEAD_LENGTH",
               "name": "Strip Output Lead Length",
               "addCost": "0.01 USD"
             }
@@ -170,12 +165,12 @@
               "addCost": "0.04 USD"
             },
             {
-              "type": "STRIP_INPUT_LEAD_LENGTH",
+              "type": "FEMALE_LEAD_LENGTH",
               "name": "Strip Input Lead Length",
               "addCost": "0.01 USD"
             },
             {
-              "type": "STRIP_OUTPUT_LEAD_LENGTH",
+              "type": "MALE_LEAD_LENGTH",
               "name": "Strip Output Lead Length",
               "addCost": "0.01 USD"
             }
@@ -191,12 +186,12 @@
               "addCost": "0.03 USD"
             },
             {
-              "type": "STRIP_INPUT_LEAD_LENGTH",
+              "type": "FEMALE_LEAD_LENGTH",
               "name": "Strip Input Lead Length",
               "addCost": "0.01 USD"
             },
             {
-              "type": "STRIP_OUTPUT_LEAD_LENGTH",
+              "type": "MALE_LEAD_LENGTH",
               "name": "Strip Output Lead Length",
               "addCost": "0.01 USD"
             }

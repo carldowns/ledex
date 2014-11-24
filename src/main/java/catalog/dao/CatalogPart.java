@@ -98,4 +98,24 @@ public class CatalogPart {
                 ", linkable=" + linkable +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CatalogPart)) return false;
+
+        CatalogPart that = (CatalogPart) o;
+
+        if (!assemblyID.equals(that.assemblyID)) return false;
+        if (!partID.equals(that.partID)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = partID.hashCode();
+        result = 31 * result + assemblyID.hashCode();
+        return result;
+    }
 }

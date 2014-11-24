@@ -21,7 +21,7 @@
                 "value": "yes"
             },
             {
-                "type": "POWER_CORD",
+                "type": "POWER_CORD_LENGTH",
                 "name": "Cord length",
                 "increment": {
                     "incMin": "24in",
@@ -89,11 +89,6 @@
                 "type": "VOLTAGE",
                 "name": "Supported Voltage",
                 "value": "4.5VDC"
-            },
-            {
-                "type": "CONNECTION_PLUG_TYPE",
-                "name": "Connection Plug Type",
-                "value": "J17"
             }
         ]
     },
@@ -132,11 +127,6 @@
                 "type": "VOLTAGE",
                 "name": "Supported Voltage",
                 "value": "12VDC"
-            },
-            {
-                "type": "CONNECTION_PLUG_TYPE",
-                "name": "Connection Plug Type",
-                "value": "J17"
             }
         ]
     }

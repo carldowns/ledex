@@ -1,30 +1,15 @@
 package quote;
 
-import app.ApplicationDBI;
-import app.CatConfiguration;
-import app.CatHealth;
 import catalog.Assembly;
-import catalog.AssemblyEngine;
-import com.google.common.collect.Lists;
-import com.google.inject.Inject;
-import com.sun.xml.internal.xsom.impl.WildcardImpl;
-import io.dropwizard.setup.Environment;
+import catalog.Product;
+import catalog.dao.CatalogPart;
 import mgr.CatalogMgr;
-import mgr.SupplierMgr;
-import org.jukito.JukitoModule;
-import org.jukito.JukitoRunner;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import part.Part;
-import catalog.Product;
-import catalog.dao.CatalogPart;
-import part.dao.PartDoc;
-import part.dao.PartSQL;
-import task.PingTask;
+import quote.cmd.CreateQuoteCmd;
+import quote.handler.QuotePartResolver;
 import util.AppRuntimeException;
 import util.CmdRuntimeException;
 import util.FileUtil;
@@ -32,44 +17,21 @@ import util.FileUtil;
 import java.net.URL;
 import java.util.List;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 /**
  *
  */
-//@RunWith(JukitoRunner.class)
-public class QuoteTest {
+public class QuotePartResolverTest {
 
     FileUtil util = new FileUtil();
 
-//    public static class GuiceTestModule extends JukitoModule {
-//        protected void configureTest() {
-//            bind(CatalogMgr.class);
-//            bind(QuotePartResolver.class);
-//        }
-//    };
-
-//    @Inject
-//    QuoteEngine engine;
-
-    //    @Before
-//    public void setupMocks (CatalogMgr mgr) {
-//        when(mgr.getPart(anyString())).thenReturn(new Part());
-//    }
-//    @Before
-//    public void setupMocks(PartSQL partSQL) {
-//        when(partSQL.getCurrentPartDoc(anyString())).thenReturn(new PartDoc());
-//    }
-
     /**
      * verify that part resolver can find and attach Part object
-     *
-     * @throws Exception
      */
     @Test
-    public void test_QuotePartResolver() throws Exception {
+    public void basicTest() throws Exception {
 
         final String assemblyURI = "/quote/test1.quote.assembly.json";
         final String partsURI = "/quote/test1.quote.parts.json";
@@ -84,13 +46,10 @@ public class QuoteTest {
 
 
         CreateQuoteCmd cmd = new CreateQuoteCmd();
-        cmd.getQuote();
-        cmd.setCustomerID("1");
-        cmd.setProjectName("test");
         int quantity = 100;
 
         Product product = makeProduct(assemblyURI, partsURI);
-        cmd.addLineItem(Integer.toString(quantity), product);
+        cmd.getQuote().addLineItem(Integer.toString(quantity), product);
 
         QuotePartResolver i = new QuotePartResolver(catMgr);
         i.evaluate(cmd);
@@ -99,11 +58,9 @@ public class QuoteTest {
 
     /**
      * verify that part resolver reacts properly when it cannot find and attach Part
-     *
-     * @throws Exception
      */
     @Test
-    public void test_QuotePartResolver_PartsNotFound() throws Exception {
+    public void testPartsNotFound() throws Exception {
 
         final String assemblyURI = "/quote/test1.quote.assembly.json";
         final String partsURI = "/quote/test1.quote.parts.json";
@@ -118,7 +75,7 @@ public class QuoteTest {
         int quantity = 100;
 
         Product product = makeProduct(assemblyURI, partsURI);
-        cmd.addLineItem(Integer.toString(quantity), product);
+        cmd.getQuote().addLineItem(Integer.toString(quantity), product);
 
         try {
             QuotePartResolver i = new QuotePartResolver(catMgr);
@@ -129,6 +86,10 @@ public class QuoteTest {
         }
         org.junit.Assert.assertTrue(cmd.isFailed());
     }
+
+    ///////////////
+    // Helpers
+    ///////////////
 
     private Product makeProduct(String assemblyURI, String partsURI) throws Exception {
 

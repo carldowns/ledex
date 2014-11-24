@@ -8,7 +8,8 @@ import io.dropwizard.setup.Environment;
 import mgr.CatalogMgr;
 import mgr.SupplierMgr;
 import part.dao.PartSQL;
-import quote.QuotePartResolver;
+import quote.handler.QuoteIncrementResolver;
+import quote.handler.QuotePartResolver;
 import supplier.dao.SupplierSQL;
 import task.PingTask;
 
@@ -49,6 +50,7 @@ public class CatModule extends AbstractModule {
 
         // inject quote interpreters
         bind (QuotePartResolver.class);
+        bind (QuoteIncrementResolver.class);
     }
 
     @Provides
