@@ -37,13 +37,13 @@ public class Part {
     FunctionType function;
 
     @JsonProperty("connections")
-    List<PartConnection> connections = new ArrayList<PartConnection>();
+    List<PartConnection> connections = new ArrayList<>();
 
     @JsonProperty("properties")
-    List<PartProperty> properties = new ArrayList<PartProperty>();
+    List<PartProperty> properties = new ArrayList<>();
 
     @JsonProperty("costs")
-    List<PartCost> costs = new ArrayList<PartCost>();
+    List<PartCost> costs = new ArrayList<>();
 
     @JsonProperty("metrics")
     PartMetric metrics;

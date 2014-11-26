@@ -8,6 +8,8 @@ public enum PartPropertyType {
 
     AMPERAGE("Amperage rating for the circuit"),
 
+    ADHESIVE("Mounting Adhesive"),
+
     LED_TYPE("LED type"), 
     LED_COLOR("LED color"), 
     LED_COLOR_TEMP("Tone or shade of white LED"),

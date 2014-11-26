@@ -3,6 +3,9 @@ package part;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PartProperty {
 
     @JsonProperty("type")
@@ -26,6 +29,9 @@ public class PartProperty {
      */
     @JsonProperty("increment")
     PartPropertyIncrement increment;
+
+    @JsonProperty("choice")
+    List<PartPropertyChoice> choices  = new ArrayList<>();
 
     /**
      * default constructor for Jackson
@@ -96,6 +102,14 @@ public class PartProperty {
 
     public void setIncrement(PartPropertyIncrement increment) {
         this.increment = increment;
+    }
+
+    public List<PartPropertyChoice> getChoices() {
+        return choices;
+    }
+
+    public void setChoice(List<PartPropertyChoice> choices) {
+        this.choices = choices;
     }
 
     @Override

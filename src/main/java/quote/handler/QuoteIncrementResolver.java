@@ -40,7 +40,6 @@ public class QuoteIncrementResolver implements QuoteHandlerInterface {
 
             for (Quote.QuotePart qPart : qProduct.quotedParts) {
                 evaluateIncrement(cmd, qPart);
-                evaluateChoice(cmd, qPart);
             }
         }
     }
@@ -52,7 +51,9 @@ public class QuoteIncrementResolver implements QuoteHandlerInterface {
 
         for (PartProperty prop : part.getProperties()) {
             PartPropertyIncrement inc = prop.getIncrement();
-            if (inc == null) continue;
+            if (inc == null) {
+                continue;
+            }
 
             // for incremental properties found:
             // verify that corresponding selections are present
@@ -61,9 +62,14 @@ public class QuoteIncrementResolver implements QuoteHandlerInterface {
             boolean resolved = false;
             for (Quote.QuoteSelection selection : qPart.selections) {
 
-                // match name and type
-                //if (!selection.name.equals(prop.getName())) continue; TODO can we get rid of name and instead rely on unique property types per part?
-                if (!selection.type.equals(prop.getType())) continue;
+                // TODO can we get rid of name and instead rely on unique property types per part?
+                //if (!selection.name.equals(prop.getName())) {
+                //   continue;
+                //}
+
+                if (!selection.type.equals(prop.getType())) {
+                    continue;
+                }
 
                 // verify we have a corresponding selection
                 checkValueNotBlank(cmd, part, selection.value);
@@ -91,38 +97,6 @@ public class QuoteIncrementResolver implements QuoteHandlerInterface {
 
             cmd.checkState(resolved, "no selection found for " + prop.getName());
         }
-    }
-
-
-    private void evaluateChoice(BaseQuoteCmd cmd, Quote.QuotePart qPart) {
-
-        // currently the design does not support choices but we can see a
-        // point where a product
-
-        // Decision was made to NOT support choices within a Part but to instead
-        // declare each part variation that can happen within a choice range as
-        // a specific, individual part.
-
-        // If this decision changes in the future, here is one JSON means of
-        // representing a choice:
-
-        //        "type": "LED_COLOR",
-        //        "name": "LED Color",
-        //        "choices": [
-        //                {
-        //                    "name" : "Warm White",
-        //                        "value" : "WW"
-        //                },
-        //                {
-        //                    "name" : "Cool White",
-        //                        "value" : "CW"
-        //                },
-        //                {
-        //                    "name" : "Daylight White",
-        //                        "value" : "DW"
-        //                }
-        //        ]
-
     }
 
     private boolean isLengthMeasure(PartProperty prop) {

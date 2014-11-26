@@ -8,13 +8,14 @@ import io.dropwizard.setup.Environment;
 import mgr.CatalogMgr;
 import mgr.SupplierMgr;
 import part.dao.PartSQL;
+import quote.handler.QuoteChoiceResolver;
 import quote.handler.QuoteIncrementResolver;
 import quote.handler.QuotePartResolver;
 import supplier.dao.SupplierSQL;
 import task.PingTask;
 
 /**
- * Guice Injection Module
+ * Injection Module
  */
 public class CatModule extends AbstractModule {
 
@@ -49,8 +50,9 @@ public class CatModule extends AbstractModule {
         bind(CatHealth.class);
 
         // inject quote interpreters
-        bind (QuotePartResolver.class);
-        bind (QuoteIncrementResolver.class);
+        bind(QuotePartResolver.class);
+        bind(QuoteIncrementResolver.class);
+        bind(QuoteChoiceResolver.class);
     }
 
     @Provides

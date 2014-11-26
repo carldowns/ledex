@@ -1,0 +1,138 @@
+[
+    {
+        "partID": "ADAPT-01",
+        "supplierID": "S1000",
+        "name": "AC Adapter",
+        "function": "POWER",
+        "properties": [
+            {
+                "type": "VOLTAGE",
+                "name": "Voltage current",
+                "value": "12VDC"
+            },
+            {
+                "type": "AMPERAGE",
+                "name": "Amp output",
+                "value": "1A"
+            },
+            {
+                "type": "SWITCH",
+                "name": "Inline On/Off switch",
+                "value": "yes"
+            },
+            {
+                "type": "POWER_CORD_LENGTH",
+                "name": "Cord length",
+                "increment": {
+                    "incMin": "24in",
+                    "incMax": "72in",
+                    "incDiv": "1in"
+                }
+            }
+        ]
+    },
+    {
+        "partID": "LIGHT-01",
+        "supplierID": "S1000",
+        "name": "Flex LED Light Strip",
+        "function": "LIGHT",
+        "connections" : [
+            {
+                "type": "JST-01",
+                "gender" : "female",
+                "pinOut" : "vcc,gnd"
+            }
+        ],
+        "properties": [
+            {
+                "type": "LED_TYPE",
+                "name": "LED Type",
+                "value": "SMD 3528"
+            },
+            {
+                "type": "LED_COLOR_TEMP",
+                "name": "LED Color Temperature",
+                "choice": [
+                    {
+                        "name": "Daylight White",
+                        "value": "5000k"
+                    },
+                    {
+                        "name": "Warm White",
+                        "value": "4500k"
+                    },
+                    {
+                        "name": "Cool White",
+                        "value": "6000k"
+                    }
+                ]
+            },
+            {
+                "type": "VOLTAGE",
+                "name": "Voltage current",
+                "value": "12VDC"
+            },
+            {
+                "type": "AMPERAGE",
+                "name": "Amp output",
+                "value": "100mA"
+            },
+            {
+                "type": "FLEX_LENGTH",
+                "name": "Strip Length",
+                "increment": {
+                    "incMin": "2in",
+                    "incMax": "72in",
+                    "incDiv": "1in"
+                }
+            },
+            {
+                "type": "ADHESIVE",
+                "name": "Adhesive Type",
+                "choice": [
+                    {
+                        "name": "10mm Foam Block, Back Mount",
+                        "value": "Tb10mm"
+                    },
+                    {
+                        "name": "10mm Foam Block, Front Mount",
+                        "value": "Tf10mm"
+                    },
+                    {
+                        "name": "2mm Tape, Back Mount",
+                        "value": "Tb2mm"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "partID": "PLUG-01",
+        "supplierID": "S1000",
+        "name": "Threaded Jack Plug",
+        "function": "PLUG",
+        "connections" : [
+            {
+                "type": "5MM_BARREL_JACK",
+                "gender" : "female",
+                "pinOut" : "center-pos"
+            },
+            {
+                "type": "JST-01",
+                "gender" : "male",
+                "pinOut" : "gnd,vcc"
+            }
+        ],
+        "properties": [
+            {
+                "type": "LEAD_LENGTH",
+                "name": "Lead Wire length",
+                "increment": {
+                    "incMin": "5cm",
+                    "incMax": "5m",
+                    "incDiv": "1cm"
+                }
+            }
+        ]
+    }
+]

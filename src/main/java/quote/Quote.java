@@ -184,14 +184,22 @@ public class Quote {
     }
 
     public static class QuoteSelection {
-        // try to get rid of 'name' as a key
-        //        @JsonProperty("name")
-        //        public String name;
+        @JsonProperty("name")
+        public String name;
 
         @JsonProperty("type")
         public PartPropertyType type;
 
         @JsonProperty("value")
         public String value;
+
+        @Override
+        public String toString() {
+            return "QuoteSelection{" +
+                    "name='" + name + '\'' +
+                    ", type=" + type +
+                    ", value='" + value + '\'' +
+                    '}';
+        }
     }
 }

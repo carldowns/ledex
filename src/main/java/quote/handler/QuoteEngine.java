@@ -1,13 +1,13 @@
 package quote.handler;
 
 import ch.qos.logback.classic.Logger;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import org.slf4j.LoggerFactory;
 import quote.cmd.BaseQuoteCmd;
 import util.CmdRuntimeException;
 
-import java.util.ArrayList;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 /////////////
 // Products
@@ -18,17 +18,18 @@ import java.util.ArrayList;
 
 // QuotePartResolver (DONE)
 
-// some parts require incremental property choices such as LED strip length
+// some parts require incremental property selection such as LED strip length
 // which will affect pricing.  verify that required incremental selections are specified
 
 // QuoteIncrementResolver (DONE)
-// QuoteSelectionResolver
+
+// some parts require choice property selection such as tape front/back, etc.
+// choices do NOT affect pricing.  verify that required choice selections are specified
+
+// QuoteChoiceResolver
 
 // a quote may request a range of quantities for a given product (100, 250, 500 sets)
 // clone / add alternate quote volumes to the command
-
-// calculate part pricing based on closest quantity match, incremental values
-// record details of how pricing was derived
 
 // QuoteQuantityResolver
 
@@ -66,6 +67,9 @@ import java.util.ArrayList;
 //////////////////
 // Pricing
 //////////////////
+
+// calculate part pricing based on closest quantity match, incremental values
+// record details of how pricing was derived
 
 // QuotePriceResolver;
 
@@ -110,16 +114,12 @@ import java.util.ArrayList;
 public class QuoteEngine {
 
     private static final Logger logger = (Logger) LoggerFactory.getLogger(QuoteEngine.class);
-    private static ArrayList<QuoteHandlerInterface> interpreters = Lists.newArrayList();
-    // FIXME this list of interpreters needs to be ordered now that we are
-    // FIXME using IoC to add all of the interpreters we don't know in what order they are added
-    // FIXME either that or we introduce a dependency chain
-
+    private static SortedMap<Integer,QuoteHandlerInterface> interpreters = new TreeMap<>();
 
     public void evaluate(BaseQuoteCmd cmd) throws Exception {
 
         try {
-            for (QuoteHandlerInterface ri : interpreters) {
+            for (QuoteHandlerInterface ri : interpreters.values()) {
                 ri.evaluate(cmd);
             }
         }
@@ -137,11 +137,16 @@ public class QuoteEngine {
 
     @Inject
     public void addHandler(QuotePartResolver handler) {
-        interpreters.add(handler);
+        interpreters.put(0,handler);
     }
 
     @Inject
     public void addHandler(QuoteIncrementResolver handler) {
-        interpreters.add(handler);
+        interpreters.put(1,handler);
+    }
+
+    @Inject
+    public void addHandler(QuoteChoiceResolver handler) {
+        interpreters.put(2,handler);
     }
 }
