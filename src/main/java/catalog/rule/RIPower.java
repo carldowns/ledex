@@ -57,13 +57,13 @@ public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
 
             List<PartProperty> props = part.getPropertiesOfType(PartPropertyType.AMPERAGE);
             for (PartProperty prop : props) {
-                UnitConverter.UnitTypeValue unit = new UnitConverter(prop.getValue()).getAmperageType();
+                UnitConverter uc = new UnitConverter(prop.getValue());
 
                 switch (part.getFunctionType()) {
                     case POWER:
                         // FIXME: guard against two power parts for now
                         Preconditions.checkArgument(powerSourceMA == 0, "only 1 part per POWER function is supported");
-                        powerSourceMA = Integer.valueOf(unit.toMilliAmps());
+                        powerSourceMA = uc.toMilliAmps().intValue();
                         break;
 
                     case LIGHT:
@@ -71,11 +71,10 @@ public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
                     case SWITCH:
                     case SENSOR:
                     case LEAD:
-                        cumulativeLoadMA += Integer.valueOf(unit.toMilliAmps());
+                        cumulativeLoadMA += uc.toMilliAmps().intValue();
                         break;
                 }
             }
-
         }
 
         if (cumulativeLoadMA > powerSourceMA) {
@@ -98,12 +97,13 @@ public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
 
             List<PartProperty> props = part.getPropertiesOfType(PartPropertyType.VOLTAGE);
             for (PartProperty prop : props) {
-                UnitConverter.UnitTypeValue unit = new UnitConverter(prop.getValue()).getVoltageType();
+                UnitConverter uc = new UnitConverter(prop.getValue());
+                UnitConverter.UnitTypeValue unit = uc.getVoltageType(true);
 
                 // assign voltage of first participating candidate
                 if (targetVoltage == null) {
                     targetVoltage = unit.getValue();
-                } else if (unit.getValue().equals(targetVoltage) == false) {
+                } else if (!unit.getValue().equals(targetVoltage)) {
                     return reportProblem(candidatePart, " not voltage compatible " + targetVoltage);
                 }
             }
@@ -117,7 +117,7 @@ public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
 
         String targetVoltage = rule.getProperty(PartPropertyType.VOLTAGE.name());
         Preconditions.checkNotNull(targetVoltage, "target voltage not specified");
-        UnitConverter.UnitTypeValue targetUnit = new UnitConverter(targetVoltage).getVoltageType();
+        UnitConverter.UnitTypeValue targetUnit = new UnitConverter(targetVoltage).getVoltageType(true);
 
         for (CandidatePart candidatePart : candidate.getCandidateParts().values()) {
 
@@ -127,10 +127,10 @@ public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
             List<PartProperty> props = part.getPropertiesOfType(PartPropertyType.VOLTAGE);
 
             for (PartProperty prop : props) {
-                UnitConverter.UnitTypeValue unit = new UnitConverter(prop.getValue()).getVoltageType();
+                UnitConverter.UnitTypeValue unit = new UnitConverter(prop.getValue()).getVoltageType(true);
 
                 // check to see if we have a voltage match
-                if (unit.getValue().equals(targetUnit.getValue()) == false) {
+                if (!unit.getValue().equals(targetUnit.getValue())) {
                     return reportProblem(candidatePart, " does not match voltage requirement of " + targetVoltage);
                 }
             }

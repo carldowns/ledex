@@ -16,7 +16,7 @@ public class UnitConverterTest {
     @Test
     public void validateUSD() {
         UnitConverter uc = new UnitConverter("  300.05 USD        ");
-        UnitTypeValue utv = uc.getCurrencyType();
+        UnitTypeValue utv = uc.getCurrencyType(true);
 
         Assert.assertEquals(utv.getValue(), "300.05");
         Assert.assertTrue(utv.getType() == UnitType.USD);
@@ -28,7 +28,7 @@ public class UnitConverterTest {
     @Test
     public void validateUSDSymbol() {
         UnitConverter uc = new UnitConverter("$300");
-        UnitTypeValue utv = uc.getCurrencyType();
+        UnitTypeValue utv = uc.getCurrencyType(true);
 
         Assert.assertEquals(utv.getValue(), "300");
         Assert.assertTrue(utv.getType() == UnitType.USD);
@@ -40,7 +40,7 @@ public class UnitConverterTest {
     @Test(expected = IllegalArgumentException.class)
     public void badCurrency() {
         UnitConverter uc = new UnitConverter("$500,");
-        uc.getCurrencyType().validate();
+        uc.getCurrencyType(true).validate();
     }
 
     // ///////////////////
@@ -50,7 +50,7 @@ public class UnitConverterTest {
     @Test
     public void validateMeters() {
         UnitConverter uc = new UnitConverter("7.5m");
-        UnitTypeValue utv = uc.getLengthType();
+        UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "7.5");
         Assert.assertTrue(utv.getType() == UnitType.M);
@@ -61,7 +61,7 @@ public class UnitConverterTest {
     @Test
     public void validateCm() {
         UnitConverter uc = new UnitConverter("57.5cm");
-        UnitTypeValue utv = uc.getLengthType();
+        UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "57.5");
         Assert.assertTrue(utv.getType() == UnitType.CM);
@@ -72,7 +72,7 @@ public class UnitConverterTest {
     @Test
     public void validateMm() {
         UnitConverter uc = new UnitConverter("120mm");
-        UnitTypeValue utv = uc.getLengthType();
+        UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "120");
         Assert.assertTrue(utv.getType() == UnitType.MM);
@@ -83,7 +83,7 @@ public class UnitConverterTest {
     @Test
     public void validateInches() {
         UnitConverter uc = new UnitConverter("12in");
-        UnitTypeValue utv = uc.getLengthType();
+        UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "12");
         Assert.assertTrue(utv.getType() == UnitType.IN);
@@ -94,7 +94,7 @@ public class UnitConverterTest {
     @Test
     public void validateInchSymbol() {
         UnitConverter uc = new UnitConverter("12\"");
-        UnitTypeValue utv = uc.getLengthType();
+        UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "12");
         Assert.assertTrue(utv.getType() == UnitType.IN);
@@ -105,7 +105,7 @@ public class UnitConverterTest {
     @Test
     public void validateFeet() {
         UnitConverter uc = new UnitConverter("12\'");
-        UnitTypeValue utv = uc.getLengthType();
+        UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "12");
         Assert.assertTrue(utv.getType() == UnitType.FT);
@@ -116,7 +116,7 @@ public class UnitConverterTest {
     @Test
     public void validateFeetSymbol() {
         UnitConverter uc = new UnitConverter("12ft");
-        UnitTypeValue utv = uc.getLengthType();
+        UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "12");
         Assert.assertTrue(utv.getType() == UnitType.FT);
@@ -127,7 +127,7 @@ public class UnitConverterTest {
     @Test(expected = IllegalArgumentException.class)
     public void badLength() {
         UnitConverter uc = new UnitConverter("fifteen inches");
-        uc.getLengthType().validate();
+        uc.getLengthType(true).validate();
     }
 
     // ///////////////////
@@ -137,7 +137,7 @@ public class UnitConverterTest {
     @Test
     public void validateLbs() {
         UnitConverter uc = new UnitConverter("12 lbs");
-        UnitTypeValue utv = uc.getWeightType();
+        UnitTypeValue utv = uc.getWeightType(true);
 
         Assert.assertEquals(utv.getValue(), "12");
         Assert.assertTrue(utv.getType() == UnitType.LB);
@@ -148,7 +148,7 @@ public class UnitConverterTest {
     @Test
     public void validateKg() {
         UnitConverter uc = new UnitConverter("12.6kg");
-        UnitTypeValue utv = uc.getWeightType();
+        UnitTypeValue utv = uc.getWeightType(true);
 
         Assert.assertEquals(utv.getValue(), "12.6");
         Assert.assertTrue(utv.getType() == UnitType.KG);
@@ -160,7 +160,7 @@ public class UnitConverterTest {
     @Test
     public void validateGrams() {
         UnitConverter uc = new UnitConverter("400 g");
-        UnitTypeValue utv = uc.getWeightType();
+        UnitTypeValue utv = uc.getWeightType(true);
 
         Assert.assertEquals(utv.getValue(), "400");
         Assert.assertTrue(utv.getType() == UnitType.G);
@@ -208,13 +208,13 @@ public class UnitConverterTest {
     @Test(expected = IllegalArgumentException.class)
     public void badWeight() {
         UnitConverter uc = new UnitConverter("1 1/2 oz");
-        uc.getWeightType().validate();
+        uc.getWeightType(true).validate();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void wrongTypeRequest() {
         UnitConverter uc = new UnitConverter("1000 lbs");
-        uc.getCurrencyType();
+        uc.getCurrencyType(true);
     }
 
 }

@@ -4,13 +4,11 @@ import catalog.Product;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import part.PartProperty;
 import catalog.dao.CatalogPart;
 import part.PartPropertyType;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Represents a quote based on a catalog product.
@@ -49,31 +47,57 @@ public class Quote {
         return qItem;
     }
 
+    @Override
+    public String toString() {
+        return "Quote{" +
+                "projectName='" + projectName + '\'' +
+                ", customerID='" + customerID + '\'' +
+                ", items=" + items +
+                '}';
+    }
+
     /**
      * represents a single line item in the quote
      * may be either a product or service
      */
+    @JsonIgnoreProperties(ignoreUnknown=true)
     public static class LineItem {
 
         @JsonProperty("quantity")
         public String quantity;
 
-        @JsonProperty("product")
-        public QuoteProduct quotedProduct; // product's parts aggregated into one line item.
+        @JsonProperty("quotedCost")
+        public QuoteCost quotedCost; // aggregate line item costs (wholesale)
 
-        @JsonProperty("service")
-        public QuoteService quotedService;
-
-        @JsonProperty("price")
+        @JsonProperty("quotedPrice")
         public QuotePrice quotedPrice;  // aggregate line item pricing (retail -buyer visibility ONLY)
 
-        @JsonProperty("cost")
-        public QuoteCost quotedCost; // aggregate line item costs (wholesale)
+        @JsonProperty("quotedProduct")
+        public QuoteProduct quotedProduct; // product's parts aggregated into one line item.
+
+        @JsonProperty("quotedService")
+        public QuoteService quotedService;
+
+        @JsonProperty("calculations")
+        public List<QuoteNote> calculations = new ArrayList<>();
+
+        @Override
+        public String toString() {
+            return "LineItem{" +
+                    "quantity='" + quantity + '\'' +
+                    ", quotedProduct=" + quotedProduct +
+                    ", quotedService=" + quotedService +
+                    ", quotedPrice=" + quotedPrice +
+                    ", quotedCost=" + quotedCost +
+                    ", calculations=" + calculations +
+                    '}';
+        }
     }
 
     /**
      * represents a quoted product which is a collection of quoted parts
      */
+    @JsonIgnoreProperties(ignoreUnknown=true)
     public static class QuoteProduct {
 
         @JsonProperty("parts")
@@ -90,16 +114,29 @@ public class Quote {
             }
             return null;
         }
+
+        @Override
+        public String toString() {
+            return "QuoteProduct{" +
+                    "quotedParts=" + quotedParts +
+                    ", quotedMetrics=" + quotedMetrics +
+                    '}';
+        }
     }
 
     /**
      * represents one of the parts of a given quoted product.
      */
+    @JsonIgnoreProperties(ignoreUnknown=true)
     public static class QuotePart {
 
         // may have 1 or N of a given part, depending on linkable nature, connections, etc
         @JsonProperty("quantity")
         public String quantity;
+
+        @JsonProperty("quotedCost")
+        // aggregate base + incremental part costs
+        public QuoteCost quotedCost;
 
         // original part description (immutable)
         @JsonProperty("part")
@@ -108,14 +145,6 @@ public class Quote {
         // original catalog product part entry (immutable)
         @JsonProperty("productPart")
         public CatalogPart catalogPart;
-
-        // combined part ID + selection modifiers
-        @JsonProperty("label")
-        public String label;
-
-        // combined list of attribute value pairs
-        @JsonProperty("description")
-        public String description;
 
         // selected properties corresponding to PartProperty entries that have selectors or increments
         @JsonProperty("selections")
@@ -128,11 +157,22 @@ public class Quote {
             selections.add(selection);
             return selection;
         }
+
+        @Override
+        public String toString() {
+            return "QuotePart{" +
+                    "quantity='" + quantity + '\'' +
+                    ", part=" + part +
+                    ", catalogPart=" + catalogPart +
+                    ", selections=" + selections +
+                    '}';
+        }
     }
 
     /**
      * represents the aggregate metrics for the part or product where it appears
      */
+    @JsonIgnoreProperties(ignoreUnknown=true)
     public static class QuoteMetric {
         /**
          * weight in milligrams
@@ -159,18 +199,21 @@ public class Quote {
         public String width;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown=true)
     public static class QuotePrice {
 
         @JsonProperty("value")
         public String value;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown=true)
     public static class QuoteCost {
 
         @JsonProperty("value")
         public String value;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown=true)
     public static class QuoteService {
 
         @JsonProperty("name")
@@ -183,6 +226,7 @@ public class Quote {
         public String description;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown=true)
     public static class QuoteSelection {
         @JsonProperty("name")
         public String name;
@@ -199,6 +243,28 @@ public class Quote {
                     "name='" + name + '\'' +
                     ", type=" + type +
                     ", value='" + value + '\'' +
+                    '}';
+        }
+    }
+
+    @JsonIgnoreProperties(ignoreUnknown=true)
+    public static class QuoteNote {
+
+        @JsonProperty("type")
+        public String type;
+
+        @JsonProperty("type")
+        public String value;
+
+        @JsonProperty("treatment")
+        public String treatment;
+
+        @Override
+        public String toString() {
+            return "QuoteCalculation{" +
+                    "type='" + type + '\'' +
+                    ", value='" + value + '\'' +
+                    ", treatment='" + treatment + '\'' +
                     '}';
         }
     }

@@ -92,7 +92,7 @@ public class UnitConverter {
         UnitType type;
         String value;
 
-        private UnitTypeValue(UnitType type, String value) {
+        public UnitTypeValue(UnitType type, String value) {
             this.type = type;
             this.value = value;
         }
@@ -125,43 +125,14 @@ public class UnitConverter {
             return new BigDecimal(value);
         }
 
+        @Override
         public String toString() {
-            return value + " (" + type + ")";
+            return toTypeValueString();
         }
 
-        /**
-         * altered the contract here.  We need to directly off of the UnitTypeValue
-         * @param utv
-         * @return
-         */
-        public String toMilliAmps() {
-
-            if (type == UnitType.MA)
-                return value;
-
-            if (type == UnitType.A)
-                /// 1000 mA per Amp
-                return convert(1000, 0);
-
-            throw new UnsupportedOperationException("failed " + type + " conversion to milliAmps");
+        public String toTypeValueString() {
+            return value + " " + type;
         }
-
-        /**
-         * converts the unit value and multiplier to BigDecimals, multiplies them,
-         * and returns a string with the precision given.
-         *
-         * @param multiplier
-         * @param scale
-         * @return
-         */
-        private String convert(int multiplier, int scale) {
-            BigDecimal v1 = new BigDecimal(value);
-            BigDecimal v2 = new BigDecimal(multiplier);
-            BigDecimal v3 = v1.multiply(v2).setScale(scale, BigDecimal.ROUND_HALF_UP);
-
-            return v3.toString();
-        }
-
     }
 
     // //////////////////////
@@ -170,28 +141,28 @@ public class UnitConverter {
 
     public static String assertMonetaryType(String input) {
         if (StringUtil.isNotBlank(input))
-            new UnitConverter(input).getCurrencyType().validate();
+            new UnitConverter(input).getCurrencyType(true).validate();
 
         return input;
     }
 
     public static String assertLengthType(String input) {
         if (StringUtil.isNotBlank(input))
-            new UnitConverter(input).getLengthType().validate();
+            new UnitConverter(input).getLengthType(true).validate();
 
         return input;
     }
 
     public static String assertWeightType(String input) {
         if (StringUtil.isNotBlank(input))
-            new UnitConverter(input).getWeightType().validate();
+            new UnitConverter(input).getWeightType(true).validate();
 
         return input;
     }
 
     public static String assertVoltageType(String input) {
         if (StringUtil.isNotBlank(input))
-            new UnitConverter(input).getVoltageType().validate();
+            new UnitConverter(input).getVoltageType(true).validate();
 
         return input;
     }
@@ -204,9 +175,84 @@ public class UnitConverter {
         this.input = input.toUpperCase();
     }
 
+    public UnitConverter(UnitTypeValue utv) {
+        this.utv = utv;
+        this.input = utv.toTypeValueString();
+    }
+
     // //////////////////////
     // public methods
     // //////////////////////
+
+    public UnitConverter convertTo(UnitType unitType, int scale) {
+        switch (unitType) {
+
+            // currency
+            case USD:
+                return new UnitConverter(new UnitTypeValue(unitType, toUSD()));
+            case RMB:
+                return new UnitConverter(new UnitTypeValue(unitType, toRMB()));
+
+            // weights
+            case G:
+                return new UnitConverter(new UnitTypeValue(unitType, toGramsStr(scale)));
+            case KG:
+                return new UnitConverter(new UnitTypeValue(unitType, toKilosStr(scale)));
+            case LB:
+                return new UnitConverter(new UnitTypeValue(unitType, toPoundsStr(scale)));
+            case OZ:
+                return new UnitConverter(new UnitTypeValue(unitType, toOuncesStr(scale)));
+
+            // measures
+            case M:
+                return new UnitConverter(new UnitTypeValue(unitType, toMetersStr(scale)));
+            case CM:
+                return new UnitConverter(new UnitTypeValue(unitType, toCentimetersStr(scale)));
+            case MM:
+                return new UnitConverter(new UnitTypeValue(unitType, toMillimetersStr(scale)));
+            case IN:
+                return new UnitConverter(new UnitTypeValue(unitType, toInchesStr(scale)));
+            case FT:
+                return new UnitConverter(new UnitTypeValue(unitType, toFeetStr(scale)));
+
+            // power
+            case A:
+            case MA:
+            case VDC:
+            case VAC:
+            default:
+                throw new AppRuntimeException("conversion not implemented for " + unitType);
+        }
+    }
+
+    public UnitType getUnitType () {
+        return getUnitTypeValue(true).getType();
+    }
+
+    public UnitTypeValue getUnitTypeValue(boolean required) {
+        if (utv != null)
+            return utv;
+
+        UnitTypeValue type = null;
+
+        type = getCurrencyType(false);
+        if (type != null) return type;
+
+        type = getLengthType(false);
+        if (type != null) return type;
+
+        type = getWeightType(false);
+        if (type != null) return type;
+
+        type = getVoltageType(false);
+        if (type != null) return type;
+
+        type = getAmperageType(false);
+        if (type != null) return type;
+
+        if (!required) return null;
+        throw new IllegalArgumentException("unknown unit type value: " + input);
+    }
 
     /**
      * returns a 'measure' type for the intrinsic value.
@@ -214,7 +260,7 @@ public class UnitConverter {
      * @return
      * @throws IllegalArgumentException if value not a measure type
      */
-    public UnitTypeValue getLengthType() {
+    public UnitTypeValue getLengthType(boolean required) {
         if (utv != null)
             return utv;
 
@@ -262,10 +308,11 @@ public class UnitConverter {
             return utv = new UnitTypeValue(UnitType.FT, s);
         }
 
+        if (!required) return null;
         throw new IllegalArgumentException("unknown measurement type: " + input);
     }
 
-    public UnitTypeValue getVoltageType() {
+    public UnitTypeValue getVoltageType(boolean required) {
         if (utv != null)
             return utv;
 
@@ -283,10 +330,11 @@ public class UnitConverter {
             return utv = new UnitTypeValue(UnitType.VAC, s);
         }
 
+        if (!required) return null;
         throw new IllegalArgumentException("unknown voltage type: " + input);
     }
 
-    public UnitTypeValue getAmperageType() {
+    public UnitTypeValue getAmperageType(boolean required) {
         if (utv != null)
             return utv;
 
@@ -304,6 +352,7 @@ public class UnitConverter {
             return utv = new UnitTypeValue(UnitType.A, s);
         }
 
+        if (!required) return null;
         throw new IllegalArgumentException("unknown amperage type: " + input);
     }
 
@@ -313,7 +362,7 @@ public class UnitConverter {
      * @return
      * @throws IllegalArgumentException if value not a measure type
      */
-    public UnitTypeValue getCurrencyType() {
+    public UnitTypeValue getCurrencyType(boolean required) {
         if (utv != null)
             return utv;
 
@@ -337,6 +386,7 @@ public class UnitConverter {
             return utv = new UnitTypeValue(UnitType.RMB, s);
         }
 
+        if (!required) return null;
         throw new IllegalArgumentException("unknown currency type: " + input);
     }
 
@@ -346,7 +396,7 @@ public class UnitConverter {
      * @return
      * @throws IllegalArgumentException if value not a measure type
      */
-    public UnitTypeValue getWeightType() {
+    public UnitTypeValue getWeightType(boolean required) {
         if (utv != null)
             return utv;
 
@@ -382,6 +432,7 @@ public class UnitConverter {
             return utv = new UnitTypeValue(UnitType.OZ, s);
         }
 
+        if (!required) return null;
         throw new IllegalArgumentException("unknown weight type: " + input);
     }
 
@@ -390,7 +441,7 @@ public class UnitConverter {
     // ////////////////////////////////
 
     public String toUSD() {
-        UnitTypeValue utv = getCurrencyType();
+        UnitTypeValue utv = getCurrencyType(true);
         if (utv.type == UnitType.USD)
             return utv.value;
 
@@ -398,7 +449,7 @@ public class UnitConverter {
     }
 
     public String toRMB() {
-        UnitTypeValue utv = getCurrencyType();
+        UnitTypeValue utv = getCurrencyType(true);
         if (utv.type == UnitType.RMB)
             return utv.value;
 
@@ -414,7 +465,7 @@ public class UnitConverter {
     }
 
     public BigDecimal toPounds(int scale) {
-        UnitTypeValue utv = getWeightType();
+        UnitTypeValue utv = getWeightType(true);
 
         if (utv.type == UnitType.LB)
             return convert("1", scale);
@@ -436,7 +487,7 @@ public class UnitConverter {
     }
 
     public BigDecimal toKilos(int scale) {
-        UnitTypeValue utv = getWeightType();
+        UnitTypeValue utv = getWeightType(true);
 
         if (utv.type == UnitType.LB)
             return convert("0.453592", scale);
@@ -458,7 +509,7 @@ public class UnitConverter {
     }
 
     public BigDecimal toOunces(int scale) {
-        UnitTypeValue utv = getWeightType();
+        UnitTypeValue utv = getWeightType(true);
 
         if (utv.type == UnitType.LB)
             return convert("16", scale);
@@ -480,7 +531,7 @@ public class UnitConverter {
     }
 
     public BigDecimal toGrams(int scale) {
-        UnitTypeValue utv = getWeightType();
+        UnitTypeValue utv = getWeightType(true);
 
         if (utv.type == UnitType.LB)
             return convert("453.592", scale);
@@ -506,7 +557,7 @@ public class UnitConverter {
     }
 
     public BigDecimal toMeters(int scale) {
-        UnitTypeValue utv = getLengthType();
+        UnitTypeValue utv = getLengthType(true);
 
         if (utv.type == UnitType.M)
             return convert("1", scale);
@@ -531,7 +582,7 @@ public class UnitConverter {
     }
 
     public BigDecimal toCentimeters(int scale) {
-        UnitTypeValue utv = getLengthType();
+        UnitTypeValue utv = getLengthType(true);
 
         if (utv.type == UnitType.M)
             return convert("100", scale);
@@ -556,7 +607,7 @@ public class UnitConverter {
     }
 
     public BigDecimal toMillimeters(int scale) {
-        UnitTypeValue utv = getLengthType();
+        UnitTypeValue utv = getLengthType(true);
 
         if (utv.type == UnitType.M)
             return convert("1000", scale);
@@ -581,7 +632,7 @@ public class UnitConverter {
     }
 
     public BigDecimal toFeet(int scale) {
-        UnitTypeValue utv = getLengthType();
+        UnitTypeValue utv = getLengthType(true);
 
         if (utv.type == UnitType.M)
 
@@ -607,7 +658,7 @@ public class UnitConverter {
     }
 
     public BigDecimal toInches(int scale) {
-        UnitTypeValue utv = getLengthType();
+        UnitTypeValue utv = getLengthType(true);
 
         if (utv.type == UnitType.M)
             return convert("(39.3701", scale);
@@ -630,6 +681,23 @@ public class UnitConverter {
     //////////////////////
     // Power conversions
     //////////////////////
+
+    public String toMilliAmpsStr() {
+        return toMilliAmps().toString();
+    }
+
+    public BigDecimal toMilliAmps() {
+        UnitTypeValue utv = getAmperageType(true);
+
+        if (utv.type == UnitType.MA)
+            return convert("1", 0);
+
+        if (utv.type == UnitType.A)
+            /// 1000 mA per Amp
+            return convert("1000", 0);
+
+        throw new UnsupportedOperationException(input);
+    }
 
     /**
      * converts the unit value and multiplier to BigDecimals, multiplies them,

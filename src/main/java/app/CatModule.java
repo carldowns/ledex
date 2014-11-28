@@ -34,7 +34,7 @@ public class CatModule extends AbstractModule {
         bind(Environment.class).toInstance(env);
 
         // inject database connection pool
-        bind(ApplicationDBI.class);
+        bind(CatDBI.class);
 
         // inject DAO managers
         bind(CatalogMgr.class);
@@ -56,17 +56,17 @@ public class CatModule extends AbstractModule {
     }
 
     @Provides
-    AssemblySQL getAssemblySQL (ApplicationDBI connectionPool) {
+    AssemblySQL getAssemblySQL (CatDBI connectionPool) {
         return connectionPool.getDbi().onDemand(AssemblySQL.class);
     }
 
     @Provides
-    SupplierSQL getSupplierSQL (ApplicationDBI connectionPool) {
+    SupplierSQL getSupplierSQL (CatDBI connectionPool) {
         return connectionPool.getDbi().onDemand(SupplierSQL.class);
     }
 
     @Provides
-    PartSQL getPartSQL (ApplicationDBI connectionPool) {
+    PartSQL getPartSQL (CatDBI connectionPool) {
         return connectionPool.getDbi().onDemand(PartSQL.class);
     }
 }

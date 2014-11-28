@@ -11,12 +11,12 @@ import org.skife.jdbi.v2.DBI;
  *
  */
 @Singleton
-public class ApplicationDBI {
+public class CatDBI {
 
     private final DBI dbi;
 
     @Inject
-    public ApplicationDBI(CatConfiguration config, Environment environment) throws ClassNotFoundException {
+    public CatDBI(CatConfiguration config, Environment environment) throws ClassNotFoundException {
         this.dbi = new DBIFactory().build(environment, config.getDataSourceFactory(), "postgresql");
     }
 

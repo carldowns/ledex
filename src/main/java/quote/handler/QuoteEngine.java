@@ -15,73 +15,94 @@ import java.util.TreeMap;
 
 // product items will refer to one or more catalog parts.
 // retrieve and attach full-definition Parts based on each catalog part
-
 // QuotePartResolver (DONE)
 
 // some parts require incremental property selection such as LED strip length
 // which will affect pricing.  verify that required incremental selections are specified
-
 // QuoteIncrementResolver (DONE)
 
 // some parts require choice property selection such as tape front/back, etc.
 // choices do NOT affect pricing.  verify that required choice selections are specified
+// QuoteChoiceResolver (DONE)
 
-// QuoteChoiceResolver
+////////////////////
+// Product Cost
+////////////////////
 
-// a quote may request a range of quantities for a given product (100, 250, 500 sets)
-// clone / add alternate quote volumes to the command
+// accumulate each part's fixed, incremental costs based on incremental selections.
+// add it all up showing a cost number plus some means of showing the calculation?
+// QuoteProductCostResolver
 
-// QuoteQuantityResolver
+////////////////////
+// Product Pricing
+////////////////////
 
-// calculate metrics based on baseline and incremental values
-// record details of how the metrics were derived
+// calculate part pricing based on closest quantity match, incremental costs
+// record details of how pricing was derived
+// QuoteProductPriceResolver;
 
-// QuoteMetricsResolver
+////////////////////
+// Part Identifier
+////////////////////
 
 // concatenate the complete agg Label and description for each part based on features, increments and selections.
+// QuoteAggPartLabelResolver
+// QuoteAggPartDescriptionResolver
 
-// QuoteAggregateLabelResolver
-// QuoteAggregateDescriptionResolver
+//////////////////////
+// Logistics Service
+//////////////////////
 
-/////////////
-// Services
-/////////////
+// calculate metrics based on baseline and incremental metrics
+// record details of how the metrics were derived
+// QuoteMetricsResolver
+
+// calculate the lead time estimated for each phase of the product build
+// phases possible include prototype, sample, pre-pro visual, pre-pro actual, production, ship, in-transit
+// QuoteLeadTimeEstimator
 
 // calculate logistics based on service level selected
-// record details of how the metrics were derived
-// calculate handling / project management service fees if selected
+// QuoteShippingServiceResolver
+// QuoteImportFeesResolver
+// QuoteAirFreightResolver
+// QuoteOceanFreightResolver
+// QuoteLTLResolver
+// QuoteRailResolver
+// QuoteOvernightResolver
+// QuoteTmpStorageResolver
 
-// QuoteServiceResolver
+////////////////////////
+// Management Service
+////////////////////////
+
+// calculate handling / project management service fees if selected
+// QuoteManagementServiceResolver
 
 /////////////////////
 // SLA
 /////////////////////
 
-// calculate the lead time estimated for each phase of the product build
-// phases possible include prototype, sample, pre-pro visual, pre-pro actual, production, ship, in-transit
-// Includes warranty information
-
-// QuoteAgreementResolver
 // QuoteWarrantyResolver
 
-//////////////////
-// Pricing
-//////////////////
+/////////////////////////
+// Multiple Quantities
+/////////////////////////
 
-// calculate part pricing based on closest quantity match, incremental values
-// record details of how pricing was derived
-
-// QuotePriceResolver;
+// a quote may request a range of quantities for a given product (100, 250, 500 sets)
+// clone / add alternate quote volumes to the command
+// QuoteMultiQuantityResolver
 
 //////////////////
 // Verification
 //////////////////
 
 // verify that at least one line item is present with one service or product and a quantity for each
+// QuoteVerifier
+
 // verify that of present, each product contains compatible parts
 // verify that part quantities are correct taking linkable property into account
+// QuotePartConnectionResolver
 
-// QuoteVerifier
 
 ///////////////
 // Report
@@ -89,7 +110,6 @@ import java.util.TreeMap;
 
 // reporting is very important.  The quote contains ALL of the pertinent data.  Neither supplier nor
 // customer should see the entire set of data.  Instead, we filter the output based on who they are (role)
-
 // QuoteReporter
 
 ///////////////
@@ -102,7 +122,6 @@ import java.util.TreeMap;
 // Reports can be sent to competitors of customers or multiple email addresses
 // Consolidated reports for multiple quantity levels can be generated
 // within a customer (project manager versus buying manager)
-
 // QuoteNotifier
 
 ///////////////
@@ -110,6 +129,7 @@ import java.util.TreeMap;
 ///////////////
 
 // QuoteWriter
+
 
 public class QuoteEngine {
 
