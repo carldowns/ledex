@@ -10,8 +10,6 @@ import quote.cmd.BaseQuoteCmd;
 import util.UnitConverter;
 import util.UnitMath;
 
-import java.math.BigDecimal;
-
 /**
  * calculates aggregate product costs
  * verify that none of the parts have an MOQ that is lower than the product quantity.
@@ -38,24 +36,25 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
 
             // collect calculations of base cost and any incremental costs defined for that cost bracket.
             for (Quote.QuotePart qPart : qProduct.quotedParts) {
-                calculatePartCost(cmd, lineItem, qPart);
+                calculateQuotedPartCost(cmd, lineItem, qPart);
             }
 
             // calculate the total cost for the product line item.
             for (Quote.QuotePart qPart : qProduct.quotedParts) {
-                addCostToLineItem(cmd, lineItem, qPart);
+                calculateLineItemTotalCost(cmd, lineItem, qPart);
             }
         }
     }
 
-    private void calculatePartCost(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
+    private void calculateQuotedPartCost(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
 
-        PartCost partCost = getBaseCostForPart(cmd, lineItem, qPart);
-        setBaseCostForPart(cmd, lineItem, qPart, partCost);
-        addIncrementalCostsForPart(cmd, lineItem, qPart, partCost);
+        PartCost partCost = selectBaseCostForPart(cmd, lineItem, qPart);
+        addCostToPartQuotedCost(cmd, qPart, partCost.getBaseCost());
+        addIncrementalCostsToPartQuotedCost(cmd, lineItem, qPart, partCost);
+        addCostToLineItemQuotedCost(cmd, lineItem, qPart);
     }
 
-    private PartCost getBaseCostForPart(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
+    private PartCost selectBaseCostForPart(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
 
         Part part = qPart.part;
 
@@ -110,7 +109,7 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
             Quote.QuoteNote note = new Quote.QuoteNote();
             note.type = "BASE-COST";
             note.value = lowestMatch.getBaseCost();
-            note.treatment = "base cost assigned using lowest quantity match for " + part.getPartID();
+            note.treatment = "MOQ warning: base cost assigned using lowest quantity match for " + part.getPartID();
             lineItem.calculations.add(note);
             return lowestMatch;
         }
@@ -119,13 +118,7 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
         return null;
     }
 
-    private void setBaseCostForPart(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart, PartCost partCost) {
-
-        String unit = UnitMath.multiplyScalar(partCost.getBaseCost(), lineItem.quantity);
-        addCostToQuotedPart(cmd, qPart, unit);
-    }
-
-    private void addIncrementalCostsForPart(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart, PartCost partCost) {
+    private void addIncrementalCostsToPartQuotedCost(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart, PartCost partCost) {
 
         // for all increments present on the part cost:
         // add cost for each incremental quantity selected
@@ -138,8 +131,9 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
                 if (!selection.type.equals(inc.getType()))
                     continue;
 
-                String unit = UnitMath.multiplyUnits(inc.getAddCost(), selection.value);
-                addCostToQuotedPart(cmd, qPart, unit);
+                // TODO: parameter-ize this: for now quotes are in USD, English measurements
+                String unit = UnitMath.multiplyUnits(inc.getAddCost(), UnitConverter.UnitType.USD, selection.value, UnitConverter.UnitType.IN);
+                addCostToPartQuotedCost(cmd, qPart, unit);
 
                 resolved = true;
                 break;
@@ -149,20 +143,18 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
         }
     }
 
-    private void addCostToLineItem(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
+    private void addCostToLineItemQuotedCost(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
 
         if (lineItem.quotedCost == null) {
             lineItem.quotedCost = new Quote.QuoteCost();
-            lineItem.quotedCost.value = UnitMath.multiplyScalar(qPart.quotedCost.value, lineItem.quantity);
+            lineItem.quotedCost.value = qPart.quotedCost.value;
             return;
         }
 
-        String unit1 = UnitMath.multiplyScalar(lineItem.quotedCost.value, qPart.quantity);
-        String unit2 = UnitMath.addUnits(lineItem.quotedCost.value, unit1);
-        lineItem.quotedCost.value = unit2;
+        lineItem.quotedCost.value = UnitMath.addUnits(lineItem.quotedCost.value, qPart.quotedCost.value);
     }
 
-    private void addCostToQuotedPart(BaseQuoteCmd cmd, Quote.QuotePart qPart, String cost) {
+    private void addCostToPartQuotedCost(BaseQuoteCmd cmd, Quote.QuotePart qPart, String cost) {
 
         if (qPart.quotedCost == null) {
             qPart.quotedCost = new Quote.QuoteCost();
@@ -170,9 +162,25 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
             return;
         }
 
+        // most of the time part quantity will be = 1.
+        // linkable parts can be specified in multiples hence the need for a part quantity
         String unit1 = UnitMath.multiplyScalar(cost, qPart.quantity);
         String unit2 = UnitMath.addUnits(qPart.quotedCost.value, unit1);
         qPart.quotedCost.value = unit2;
     }
+
+    private void calculateLineItemTotalCost(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
+
+        if (lineItem.totalCost == null) {
+            lineItem.totalCost = new Quote.QuoteCost();
+            lineItem.totalCost.value = UnitMath.multiplyScalar(qPart.quotedCost.value, lineItem.quantity);
+            return;
+        }
+
+        String unit1 = UnitMath.multiplyScalar(lineItem.totalCost.value, qPart.quantity);
+        String unit2 = UnitMath.addUnits(lineItem.totalCost.value, unit1);
+        lineItem.totalCost.value = unit2;
+    }
+
 
 }

@@ -69,8 +69,14 @@ public class Quote {
         @JsonProperty("quotedCost")
         public QuoteCost quotedCost; // aggregate line item costs (wholesale)
 
+        @JsonProperty("totalCost")
+        public QuoteCost totalCost; // quoted cost * line item quantity = total cost for the line item
+
         @JsonProperty("quotedPrice")
         public QuotePrice quotedPrice;  // aggregate line item pricing (retail -buyer visibility ONLY)
+
+        @JsonProperty("totalPrice")
+        public QuotePrice totalPrice;  // quoted price * line item quantity = total price for the line item
 
         @JsonProperty("quotedProduct")
         public QuoteProduct quotedProduct; // product's parts aggregated into one line item.
@@ -261,7 +267,7 @@ public class Quote {
 
         @Override
         public String toString() {
-            return "QuoteCalculation{" +
+            return "QuoteNote{" +
                     "type='" + type + '\'' +
                     ", value='" + value + '\'' +
                     ", treatment='" + treatment + '\'' +

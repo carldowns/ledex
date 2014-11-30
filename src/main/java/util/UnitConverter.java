@@ -217,7 +217,9 @@ public class UnitConverter {
 
             // power
             case A:
+                return new UnitConverter(new UnitTypeValue(unitType, toAmpsStr()));
             case MA:
+                return new UnitConverter(new UnitTypeValue(unitType, toMilliAmpsStr()));
             case VDC:
             case VAC:
             default:
@@ -661,16 +663,16 @@ public class UnitConverter {
         UnitTypeValue utv = getLengthType(true);
 
         if (utv.type == UnitType.M)
-            return convert("(39.3701", scale);
+            return convert("39.3701", scale);
 
         if (utv.type == UnitType.CM)
-            return convert("(0.393701", scale);
+            return convert("0.393701", scale);
 
         if (utv.type == UnitType.MM)
-            return convert("(0.00393701", scale);
+            return convert("0.00393701", scale);
 
         if (utv.type == UnitType.FT)
-            return convert("(12", scale);
+            return convert("12", scale);
 
         if (utv.type == UnitType.IN)
             return convert("1", scale);
@@ -699,6 +701,22 @@ public class UnitConverter {
         throw new UnsupportedOperationException(input);
     }
 
+    public String toAmpsStr() {
+        return toAmps().toString();
+    }
+
+    public BigDecimal toAmps() {
+        UnitTypeValue utv = getAmperageType(true);
+
+        if (utv.type == UnitType.MA)
+            /// 1000 mA per Amp
+            return convert(".001", 0);
+
+        if (utv.type == UnitType.A)
+            return convert("1", 0);
+
+        throw new UnsupportedOperationException(input);
+    }
     /**
      * converts the unit value and multiplier to BigDecimals, multiplies them,
      * and returns a string with the precision given.

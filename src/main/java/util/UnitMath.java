@@ -101,12 +101,13 @@ public class UnitMath {
     }
 
     /**
-     * no type conversion before multiplication is performed.  Type of unit1 parameter is preserved.
+     * unit1 and unit2 are both converted to respective types before multiplication is performed.
+     * return type is unit1Type.
      */
-    public static String multiplyUnits(String unit1, String unit2) {
+    public static String multiplyUnits(String unit1, UnitConverter.UnitType unit1Type, String unit2, UnitConverter.UnitType unit2Type) {
 
-        UnitConverter uc1 = new UnitConverter(unit1);
-        UnitConverter uc2 = new UnitConverter(unit2);
+        UnitConverter uc1 = new UnitConverter(unit1).convertTo(unit1Type, 0);
+        UnitConverter uc2 = new UnitConverter(unit2).convertTo(unit2Type, 0);
 
         UnitConverter.UnitTypeValue utv1 = uc1.getUnitTypeValue(true);
         UnitConverter.UnitTypeValue utv2 = uc2.getUnitTypeValue(true);
