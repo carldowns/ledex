@@ -4,6 +4,9 @@ import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 import quote.Quote;
 import quote.cmd.BaseQuoteCmd;
+import util.UnitMath;
+
+import java.math.BigDecimal;
 
 /**
  * handles assessing quote pricing
@@ -17,10 +20,6 @@ public class QuoteProductPriceResolver implements QuoteHandlerInterface {
 
         Quote quote = cmd.getQuote();
 
-        // apply margin rules based on customer profile and quote mode.
-        // We have yet to figure out what the market wants here.  Should not over do it.
-        // To start off, this will be a configuration of margin parameters sliding scale.
-
         for (Quote.LineItem lineItem : quote.items) {
             Quote.QuoteProduct qProduct = lineItem.quotedProduct;
 
@@ -29,13 +28,20 @@ public class QuoteProductPriceResolver implements QuoteHandlerInterface {
                 continue;
             }
 
-            for (Quote.QuotePart qPart : qProduct.quotedParts) {
-                evaluateProductPricing(cmd, qPart);
-            }
+            calculateLineItemFixedMarginPricing(cmd, lineItem);
         }
     }
 
-    private void evaluateProductPricing(BaseQuoteCmd cmd, Quote.QuotePart qPart) {
+
+    private void calculateLineItemFixedMarginPricing(BaseQuoteCmd cmd, Quote.LineItem lineItem) {
+
+        BigDecimal margin = new BigDecimal("1.25");
+
+        // calculate 'quoted price' which is the cost for 1 product
+        lineItem.quotedPrice = new Quote.QuotePrice(UnitMath.multiplyBigDecimal(lineItem.quotedCost.value, margin, 2));
+
+        // calculate 'total price' which is the cost for N products where N is line item quantity
+        lineItem.totalPrice = new Quote.QuotePrice(UnitMath.multiplyBigDecimal(lineItem.totalCost.value, margin, 2));
     }
 
 }

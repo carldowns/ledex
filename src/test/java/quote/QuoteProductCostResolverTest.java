@@ -40,7 +40,7 @@ public class QuoteProductCostResolverTest {
      * present in all parts of all products included in the quote.
      */
     @Test
-    public void testBasic1() throws Exception {
+    public void testOnePartExact() throws Exception {
 
         final String assemblyURI = "/quote/test4.quote.assembly.json";
         final String partsURI = "/quote/test4.quote.parts.json";
@@ -97,8 +97,12 @@ public class QuoteProductCostResolverTest {
         //printCalculations (quote);
     }
 
+    /**
+     * verify multiple part quantities
+     * @throws Exception
+     */
     @Test
-    public void testBasic2() throws Exception {
+    public void testOnePartMultiQuantityMidRange() throws Exception {
 
         final String assemblyURI = "/quote/test4.quote.assembly.json";
         final String partsURI = "/quote/test4.quote.parts.json";
@@ -154,7 +158,7 @@ public class QuoteProductCostResolverTest {
     }
 
     @Test
-    public void testBasic3() throws Exception {
+    public void testOnePartMultiQuantityTopRange() throws Exception {
 
         final String assemblyURI = "/quote/test4.quote.assembly.json";
         final String partsURI = "/quote/test4.quote.parts.json";
@@ -210,8 +214,12 @@ public class QuoteProductCostResolverTest {
         //printCalculations (quote);
     }
 
+    /**
+     * verify unit conversion from cm to inches for selection
+     * @throws Exception
+     */
     @Test
-    public void testBasic4() throws Exception {
+    public void testOnePartMultiQuantityMOQWarning() throws Exception {
 
         final String assemblyURI = "/quote/test4.quote.assembly.json";
         final String partsURI = "/quote/test4.quote.parts.json";
@@ -233,7 +241,7 @@ public class QuoteProductCostResolverTest {
         Quote.LineItem lineItem = quote.addLineItem(Integer.toString(quantity), product);
 
         Quote.QuotePart quotePart = lineItem.quotedProduct.getPart("LIGHT-01");
-        quotePart.setSelection(PartPropertyType.STRIP_LENGTH, "400cm");
+        quotePart.setSelection(PartPropertyType.STRIP_LENGTH, "16in");
         quotePart.quantity = "1"; // IMPORTANT - number of parts of this type in the product
 
         CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
@@ -258,19 +266,16 @@ public class QuoteProductCostResolverTest {
         //            }
         //            ]
         //        },
-        // 400cm ~ 157in
-        // $5.00 + $157.00 = $162.00 * 1 = $162.00
-        // $162.00 * 1 = $162.00
-        Assert.assertEquals("line item quoted cost", "162.00 USD", lineItem.quotedCost.value);
-        Assert.assertEquals("line item total cost", "162.00 USD", lineItem.totalCost.value);
+        Assert.assertEquals("line item quoted cost", "21.00 USD", lineItem.quotedCost.value);
+        Assert.assertEquals("line item total cost", "21.00 USD", lineItem.totalCost.value);
         Assert.assertEquals("calculations", 1, lineItem.calculations.size());
         Assert.assertEquals("calc type", lineItem.calculations.get(0).type, "BASE-COST");
         Assert.assertTrue("exact treatment", lineItem.calculations.get(0).treatment.contains("MOQ warning"));
         //printCalculations (quote);
     }
 
-    //@Test
-    public void testDoubleIncrements() throws Exception {
+    @Test
+    public void testThreePartsFiveIncrements() throws Exception {
 
         final String assemblyURI = "/quote/test5.quote.assembly.json";
         final String partsURI = "/quote/test5.quote.parts.json";
@@ -289,9 +294,15 @@ public class QuoteProductCostResolverTest {
         Product product = makeProduct(assemblyURI, partsURI);
         Quote.LineItem lineItem = quote.addLineItem(Integer.toString(quantity), product);
 
-        Quote.QuotePart quotePart = lineItem.quotedProduct.getPart("LIGHT-01");
-        quotePart.setSelection(PartPropertyType.ADHESIVE, "Tb10mm");
-        quotePart.setSelection(PartPropertyType.LED_COLOR_TEMP, "6000k");
+        Quote.QuotePart quotePart1 = lineItem.quotedProduct.getPart("LIGHT-01");
+        quotePart1.setSelection(PartPropertyType.STRIP_LENGTH, "100cm");
+        quotePart1.setSelection(PartPropertyType.FEMALE_LEAD_LENGTH, "12in");
+
+        Quote.QuotePart quotePart2 = lineItem.quotedProduct.getPart("ADAPT-01");
+        quotePart2.setSelection(PartPropertyType.POWER_CORD_LENGTH, "24in");
+
+        Quote.QuotePart quotePart3 = lineItem.quotedProduct.getPart("PLUG-01");
+        quotePart3.setSelection(PartPropertyType.LEAD_LENGTH, "100cm");
 
         CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
 
@@ -303,11 +314,214 @@ public class QuoteProductCostResolverTest {
         i2.evaluate(cmd);
         i3.evaluate(cmd);
 
-        Assert.assertTrue(cmd.isStarted());
-        //xSystem.out.println(cmd.getQuote());
+        // LIGHT-01
+        Assert.assertEquals("quotedCost", "24.20 USD", quotePart1.quotedCost.value);
 
-//        ObjectWriter writer = mapper.writerWithDefaultPrettyPrinter();
-//        writer.writeValue(System.out, cmd.getQuote());
+        // ADAPT-01
+        Assert.assertEquals("quotedCost", "7.40 USD", quotePart2.quotedCost.value);
+
+        // PLUG-01
+        Assert.assertEquals("quotedCost", "4.90 USD", quotePart3.quotedCost.value);
+
+        Assert.assertEquals("line item quoted cost", "36.50 USD", lineItem.quotedCost.value);
+        Assert.assertEquals("line item total cost", "3650.00 USD", lineItem.totalCost.value);
+        Assert.assertEquals("calculations", 3, lineItem.calculations.size());
+        Assert.assertEquals("calc type", lineItem.calculations.get(0).type, "BASE-COST");
+
+        Assert.assertTrue(cmd.isStarted());
+        System.out.println(cmd.getQuote());
+    }
+
+    @Test
+    public void testSelectionOverMaximum() throws Exception {
+
+        final String assemblyURI = "/quote/test5.quote.assembly.json";
+        final String partsURI = "/quote/test5.quote.parts.json";
+
+        CatalogMgr catMgr = mock(CatalogMgr.class);
+        doAnswer(new Answer<Part>() {
+            @Override
+            public Part answer(InvocationOnMock invocation) throws Exception {
+                return getPart(partsURI, (String) invocation.getArguments()[0]);
+            }
+        }).when(catMgr).getPart(anyString());
+
+        int quantity = 100;
+
+        Quote quote = new Quote();
+        Product product = makeProduct(assemblyURI, partsURI);
+        Quote.LineItem lineItem = quote.addLineItem(Integer.toString(quantity), product);
+
+        Quote.QuotePart quotePart1 = lineItem.quotedProduct.getPart("LIGHT-01");
+        quotePart1.setSelection(PartPropertyType.STRIP_LENGTH, "1000cm");// wrong
+        quotePart1.setSelection(PartPropertyType.FEMALE_LEAD_LENGTH, "12in");
+
+        Quote.QuotePart quotePart2 = lineItem.quotedProduct.getPart("ADAPT-01");
+        quotePart2.setSelection(PartPropertyType.POWER_CORD_LENGTH, "24in");
+
+        Quote.QuotePart quotePart3 = lineItem.quotedProduct.getPart("PLUG-01");
+        quotePart3.setSelection(PartPropertyType.LEAD_LENGTH, "100cm");
+
+        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+
+        QuotePartResolver i1 = new QuotePartResolver(catMgr);
+        QuoteChoiceResolver i2 = new QuoteChoiceResolver();
+        QuoteProductCostResolver i3 = new QuoteProductCostResolver();
+
+        try {
+            i1.evaluate(cmd);
+            i2.evaluate(cmd);
+            i3.evaluate(cmd);
+        }
+        catch (CmdRuntimeException cre) {
+            Assert.assertTrue(cre.getMessage().contains("selection is above maximum"));
+        }
+
+        Assert.assertTrue(cmd.isFailed());
+    }
+
+    @Test
+    public void testSelectionUnderMinimum() throws Exception {
+
+        final String assemblyURI = "/quote/test5.quote.assembly.json";
+        final String partsURI = "/quote/test5.quote.parts.json";
+
+        CatalogMgr catMgr = mock(CatalogMgr.class);
+        doAnswer(new Answer<Part>() {
+            @Override
+            public Part answer(InvocationOnMock invocation) throws Exception {
+                return getPart(partsURI, (String) invocation.getArguments()[0]);
+            }
+        }).when(catMgr).getPart(anyString());
+
+        int quantity = 100;
+
+        Quote quote = new Quote();
+        Product product = makeProduct(assemblyURI, partsURI);
+        Quote.LineItem lineItem = quote.addLineItem(Integer.toString(quantity), product);
+
+        Quote.QuotePart quotePart1 = lineItem.quotedProduct.getPart("LIGHT-01");
+        quotePart1.setSelection(PartPropertyType.STRIP_LENGTH, "100cm");
+        quotePart1.setSelection(PartPropertyType.FEMALE_LEAD_LENGTH, "12in");
+
+        Quote.QuotePart quotePart2 = lineItem.quotedProduct.getPart("ADAPT-01");
+        quotePart2.setSelection(PartPropertyType.POWER_CORD_LENGTH, "24in");
+
+        Quote.QuotePart quotePart3 = lineItem.quotedProduct.getPart("PLUG-01");
+        quotePart3.setSelection(PartPropertyType.LEAD_LENGTH, "1cm");// wrong
+
+        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+
+        QuotePartResolver i1 = new QuotePartResolver(catMgr);
+        QuoteChoiceResolver i2 = new QuoteChoiceResolver();
+        QuoteProductCostResolver i3 = new QuoteProductCostResolver();
+
+        try {
+            i1.evaluate(cmd);
+            i2.evaluate(cmd);
+            i3.evaluate(cmd);
+        }
+        catch (CmdRuntimeException cre) {
+            Assert.assertTrue(cre.getMessage().contains("selection is below minimum"));
+        }
+
+        Assert.assertTrue(cmd.isFailed());
+    }
+
+    @Test
+    public void testSelectionNotDivisible() throws Exception {
+
+        final String assemblyURI = "/quote/test5.quote.assembly.json";
+        final String partsURI = "/quote/test5.quote.parts.json";
+
+        CatalogMgr catMgr = mock(CatalogMgr.class);
+        doAnswer(new Answer<Part>() {
+            @Override
+            public Part answer(InvocationOnMock invocation) throws Exception {
+                return getPart(partsURI, (String) invocation.getArguments()[0]);
+            }
+        }).when(catMgr).getPart(anyString());
+
+        int quantity = 100;
+
+        Quote quote = new Quote();
+        Product product = makeProduct(assemblyURI, partsURI);
+        Quote.LineItem lineItem = quote.addLineItem(Integer.toString(quantity), product);
+
+        Quote.QuotePart quotePart1 = lineItem.quotedProduct.getPart("LIGHT-01");
+        quotePart1.setSelection(PartPropertyType.STRIP_LENGTH, "101cm"); // wrong
+        quotePart1.setSelection(PartPropertyType.FEMALE_LEAD_LENGTH, "12in");
+
+        Quote.QuotePart quotePart2 = lineItem.quotedProduct.getPart("ADAPT-01");
+        quotePart2.setSelection(PartPropertyType.POWER_CORD_LENGTH, "24in");
+
+        Quote.QuotePart quotePart3 = lineItem.quotedProduct.getPart("PLUG-01");
+        quotePart3.setSelection(PartPropertyType.LEAD_LENGTH, "100cm");
+
+        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+
+        QuotePartResolver i1 = new QuotePartResolver(catMgr);
+        QuoteChoiceResolver i2 = new QuoteChoiceResolver();
+        QuoteProductCostResolver i3 = new QuoteProductCostResolver();
+
+        try {
+            i1.evaluate(cmd);
+            i2.evaluate(cmd);
+            i3.evaluate(cmd);
+        }
+        catch (CmdRuntimeException cre) {
+            Assert.assertTrue(cre.getMessage().contains("multiple"));
+        }
+
+        Assert.assertTrue(cmd.isFailed());
+    }
+
+    @Test
+    public void testSelectionWrongUnitType() throws Exception {
+
+        final String assemblyURI = "/quote/test5.quote.assembly.json";
+        final String partsURI = "/quote/test5.quote.parts.json";
+
+        CatalogMgr catMgr = mock(CatalogMgr.class);
+        doAnswer(new Answer<Part>() {
+            @Override
+            public Part answer(InvocationOnMock invocation) throws Exception {
+                return getPart(partsURI, (String) invocation.getArguments()[0]);
+            }
+        }).when(catMgr).getPart(anyString());
+
+        int quantity = 100;
+
+        Quote quote = new Quote();
+        Product product = makeProduct(assemblyURI, partsURI);
+        Quote.LineItem lineItem = quote.addLineItem(Integer.toString(quantity), product);
+
+        Quote.QuotePart quotePart1 = lineItem.quotedProduct.getPart("LIGHT-01");
+        quotePart1.setSelection(PartPropertyType.STRIP_LENGTH, "2in");// wrong
+        quotePart1.setSelection(PartPropertyType.FEMALE_LEAD_LENGTH, "12in");
+
+        Quote.QuotePart quotePart2 = lineItem.quotedProduct.getPart("ADAPT-01");
+        quotePart2.setSelection(PartPropertyType.POWER_CORD_LENGTH, "1m");// wrong
+
+        Quote.QuotePart quotePart3 = lineItem.quotedProduct.getPart("PLUG-01");
+        quotePart3.setSelection(PartPropertyType.LEAD_LENGTH, "5in");// wrong
+
+        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+
+        QuotePartResolver i1 = new QuotePartResolver(catMgr);
+        QuoteChoiceResolver i2 = new QuoteChoiceResolver();
+        QuoteProductCostResolver i3 = new QuoteProductCostResolver();
+
+        try {
+            i1.evaluate(cmd);
+            i2.evaluate(cmd);
+            i3.evaluate(cmd);
+        }
+        catch (CmdRuntimeException cre) {
+            Assert.assertTrue(cre.getMessage().contains("type mismatch"));
+        }
+
+        Assert.assertTrue(cmd.isFailed());
     }
 
     ///////////////

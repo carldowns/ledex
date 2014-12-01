@@ -31,7 +31,7 @@ import java.util.TreeMap;
 
 // accumulate each part's fixed, incremental costs based on incremental selections.
 // add it all up showing a cost number plus some means of showing the calculation?
-// QuoteProductCostResolver
+// QuoteProductCostResolver (DONE)
 
 ////////////////////
 // Product Pricing
@@ -39,7 +39,9 @@ import java.util.TreeMap;
 
 // calculate part pricing based on closest quantity match, incremental costs
 // record details of how pricing was derived
-// QuoteProductPriceResolver;
+// QuoteProductPriceResolver; (DONE)
+
+// TODO add in support for per-customer pricing strategies -- all we have now is 25% margin across the board
 
 ////////////////////
 // Part Identifier

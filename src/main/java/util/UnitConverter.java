@@ -7,7 +7,7 @@ import org.eclipse.jetty.util.StringUtil;
 /**
  */
 
-public class UnitConverter {
+public class UnitConverter implements Comparable<UnitConverter>{
 
     // ////////////////////////////////
     // currency constants
@@ -184,6 +184,29 @@ public class UnitConverter {
     // public methods
     // //////////////////////
 
+    @Override
+    public int compareTo(UnitConverter that) {
+        if (!this.isSameType(that))
+            throw new AppRuntimeException ("UnitConverters are not same type");
+
+        return this.getUnitTypeValue(true).toDecimal().compareTo(that.getUnitTypeValue(true).toDecimal());
+    }
+
+    public BigDecimal modulo(UnitConverter that) {
+        if (!this.isSameType(that))
+            throw new AppRuntimeException ("UnitConverters are not same type");
+
+        return this.getUnitTypeValue(true).toDecimal().remainder(that.getUnitTypeValue(true).toDecimal());
+    }
+
+    public UnitTypeValue divideBy (UnitConverter that) {
+        if (!this.isSameType(that))
+            throw new AppRuntimeException ("UnitConverters are not same type");
+
+        BigDecimal result = this.getUnitTypeValue(true).toDecimal().divide(that.getUnitTypeValue(true).toDecimal());
+        return new UnitTypeValue(this.getUnitType(), result.toString());
+    }
+
     public UnitConverter convertTo(UnitType unitType, int scale) {
         switch (unitType) {
 
@@ -225,6 +248,10 @@ public class UnitConverter {
             default:
                 throw new AppRuntimeException("conversion not implemented for " + unitType);
         }
+    }
+
+    public boolean isSameType (UnitConverter that) {
+        return this.getUnitType() == that.getUnitType();
     }
 
     public UnitType getUnitType () {
@@ -596,10 +623,10 @@ public class UnitConverter {
             return convert("10", scale);
 
         if (utv.type == UnitType.FT)
-            return convert("304.8", scale);
+            return convert("30.48", scale);
 
         if (utv.type == UnitType.IN)
-            return convert("25.4", scale);
+            return convert("2.54", scale);
 
         throw new UnsupportedOperationException(input);
     }

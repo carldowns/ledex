@@ -2,13 +2,14 @@ package quote.handler;
 
 import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
-import part.Part;
-import part.PartCost;
-import part.PartCostIncrement;
+import part.*;
 import quote.Quote;
 import quote.cmd.BaseQuoteCmd;
 import util.UnitConverter;
 import util.UnitMath;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * calculates aggregate product costs
@@ -34,6 +35,9 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
                 continue;
             }
 
+            // idempotent support - this handler can re-evaluate a previously built quote
+            clearCostsAndPricing (cmd, lineItem, qProduct);
+
             // collect calculations of base cost and any incremental costs defined for that cost bracket.
             for (Quote.QuotePart qPart : qProduct.quotedParts) {
                 calculateQuotedPartCost(cmd, lineItem, qPart);
@@ -44,6 +48,17 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
                 calculateLineItemTotalCost(cmd, lineItem, qPart);
             }
         }
+    }
+
+    private void clearCostsAndPricing (BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuoteProduct qProduct) {
+        for (Quote.QuotePart qPart : qProduct.quotedParts) {
+            qPart.quotedCost = null;
+        }
+
+        lineItem.quotedPrice = null;
+        lineItem.quotedCost = null;
+        lineItem.totalCost = null;
+        lineItem.totalPrice = null;
     }
 
     private void calculateQuotedPartCost(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
@@ -123,23 +138,51 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
         // for all increments present on the part cost:
         // add cost for each incremental quantity selected
 
-        for (PartCostIncrement inc : partCost.getIncrements()) {
+        for (PartCostIncrement costInc : partCost.getIncrements()) {
 
             boolean resolved = false;
             for (Quote.QuoteSelection selection : qPart.selections) {
 
-                if (!selection.type.equals(inc.getType()))
+                if (!selection.type.equals(costInc.getType()))
                     continue;
 
-                // TODO: parameter-ize this: for now quotes are in USD, English measurements
-                String unit = UnitMath.multiplyUnits(inc.getAddCost(), UnitConverter.UnitType.USD, selection.value, UnitConverter.UnitType.IN);
+                // get property increment declaration.
+                // verify that there is only one part declared of this type
+
+                List<PartProperty> parts = qPart.part.getPropertiesOfType(costInc.getType());
+                cmd.checkState(parts.size() == 1, "requires exactly 1 part property specified for type " + costInc.getType());
+
+                PartProperty pProp = parts.get(0);
+                PartPropertyIncrement propInc = pProp.getIncrement();
+
+                UnitConverter incDivUC = new UnitConverter (propInc.getIncDiv());
+                UnitConverter incMinUC = new UnitConverter (propInc.getIncMin());
+                UnitConverter incMaxUC = new UnitConverter (propInc.getIncMax());
+                UnitConverter selectUC = new UnitConverter (selection.value);
+
+                // verify property increments and the selection are all of the same unit type
+
+                cmd.checkState(incDivUC.isSameType (incMinUC), "incremental property units type mismatch: " + pProp.toString());
+                cmd.checkState(incDivUC.isSameType (incMaxUC), "incremental property units type mismatch: " + pProp.toString());
+                cmd.checkState(incDivUC.isSameType (selectUC), "incremental property units type mismatch: " + pProp.toString());
+
+                // verify that this selection is valid (within min/max incremental limits and evenly divisible).
+
+                cmd.checkState(selectUC.compareTo(incMinUC) >= 0, "selection is below minimum " + pProp.toString());
+                cmd.checkState(selectUC.compareTo(incMaxUC) <= 0, "selection is above maximum " + pProp.toString());
+                cmd.checkState(selectUC.modulo(incDivUC).intValue() == 0, "selection is not a multiple " + pProp.toString());
+
+                // get the cost multiplier by dividing by divisor
+
+                UnitConverter multiplier = new UnitConverter (selectUC.divideBy(incDivUC));
+                String unit = UnitMath.multiplyUnits(new UnitConverter (costInc.getAddCost()), multiplier);
                 addCostToPartQuotedCost(cmd, qPart, unit);
 
                 resolved = true;
                 break;
             }
 
-            cmd.checkState(resolved, "unable to resolve incremental cost fo selection " + inc.getName());
+            cmd.checkState(resolved, "unable to resolve incremental cost fo selection " + costInc.getName());
         }
     }
 
@@ -177,10 +220,9 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
             return;
         }
 
-        String unit1 = UnitMath.multiplyScalar(lineItem.totalCost.value, qPart.quantity);
+        String unit1 = UnitMath.multiplyScalar(qPart.quotedCost.value, lineItem.quantity);
         String unit2 = UnitMath.addUnits(lineItem.totalCost.value, unit1);
         lineItem.totalCost.value = unit2;
     }
-
 
 }

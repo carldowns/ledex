@@ -208,8 +208,19 @@ public class Quote {
     @JsonIgnoreProperties(ignoreUnknown=true)
     public static class QuotePrice {
 
+        public QuotePrice (String value) {
+            this.value = value;
+        }
+
         @JsonProperty("value")
         public String value;
+
+        @Override
+        public String toString() {
+            return "QuotePrice{" +
+                    "value='" + value + '\'' +
+                    '}';
+        }
     }
 
     @JsonIgnoreProperties(ignoreUnknown=true)
@@ -217,6 +228,13 @@ public class Quote {
 
         @JsonProperty("value")
         public String value;
+
+        @Override
+        public String toString() {
+            return "QuoteCost{" +
+                    "value='" + value + '\'' +
+                    '}';
+        }
     }
 
     @JsonIgnoreProperties(ignoreUnknown=true)
