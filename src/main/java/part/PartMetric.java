@@ -1,7 +1,7 @@
 package part;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import util.UnitConverter;
+import util.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,19 +55,19 @@ public class PartMetric {
     }
 
     void setWeight(String measure) {
-        weight = UnitConverter.assertWeightType(measure);
+        weight = Unit.assertWeightType(measure);
     }
 
     void setHeight(String measure) {
-        height =UnitConverter.assertLengthType(measure);
+        height = Unit.assertLengthType(measure);
     }
 
     void setLength(String measure) {
-        length = UnitConverter.assertLengthType(measure);
+        length = Unit.assertLengthType(measure);
     }
 
     void setWidth(String measure) {
-        width = UnitConverter.assertLengthType(measure);
+        width = Unit.assertLengthType(measure);
     }
 
     PartMetric add (PartMetricIncrement increment) {

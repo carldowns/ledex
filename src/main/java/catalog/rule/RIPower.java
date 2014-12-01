@@ -9,7 +9,7 @@ import catalog.AssemblyEngine.CandidateProduct;
 import part.Part;
 import part.PartProperty;
 import part.PartPropertyType;
-import util.UnitConverter;
+import util.Unit;
 
 import java.util.List;
 
@@ -57,7 +57,7 @@ public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
 
             List<PartProperty> props = part.getPropertiesOfType(PartPropertyType.AMPERAGE);
             for (PartProperty prop : props) {
-                UnitConverter uc = new UnitConverter(prop.getValue());
+                Unit uc = new Unit(prop.getValue());
 
                 switch (part.getFunctionType()) {
                     case POWER:
@@ -97,8 +97,8 @@ public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
 
             List<PartProperty> props = part.getPropertiesOfType(PartPropertyType.VOLTAGE);
             for (PartProperty prop : props) {
-                UnitConverter uc = new UnitConverter(prop.getValue());
-                UnitConverter.UnitTypeValue unit = uc.getVoltageType(true);
+                Unit uc = new Unit(prop.getValue());
+                Unit.UnitTypeValue unit = uc.getVoltageType(true);
 
                 // assign voltage of first participating candidate
                 if (targetVoltage == null) {
@@ -117,7 +117,7 @@ public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
 
         String targetVoltage = rule.getProperty(PartPropertyType.VOLTAGE.name());
         Preconditions.checkNotNull(targetVoltage, "target voltage not specified");
-        UnitConverter.UnitTypeValue targetUnit = new UnitConverter(targetVoltage).getVoltageType(true);
+        Unit.UnitTypeValue targetUnit = new Unit(targetVoltage).getVoltageType(true);
 
         for (CandidatePart candidatePart : candidate.getCandidateParts().values()) {
 
@@ -127,7 +127,7 @@ public class RIPower extends BaseRuleInterpreter implements RuleInterpreter {
             List<PartProperty> props = part.getPropertiesOfType(PartPropertyType.VOLTAGE);
 
             for (PartProperty prop : props) {
-                UnitConverter.UnitTypeValue unit = new UnitConverter(prop.getValue()).getVoltageType(true);
+                Unit.UnitTypeValue unit = new Unit(prop.getValue()).getVoltageType(true);
 
                 // check to see if we have a voltage match
                 if (!unit.getValue().equals(targetUnit.getValue())) {

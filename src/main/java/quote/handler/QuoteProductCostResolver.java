@@ -5,10 +5,9 @@ import org.slf4j.LoggerFactory;
 import part.*;
 import quote.Quote;
 import quote.cmd.BaseQuoteCmd;
-import util.UnitConverter;
+import util.Unit;
 import util.UnitMath;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -36,7 +35,7 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
             }
 
             // idempotent support - this handler can re-cost a previously evaluated quote
-            clearCostsAndPricing (cmd, lineItem, qProduct);
+            clearCostsAndPricing(cmd, lineItem, qProduct);
 
             // collect calculations of base cost and any incremental costs defined for that cost bracket.
             for (Quote.QuotePart qPart : qProduct.quotedParts) {
@@ -155,27 +154,27 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
                 PartProperty pProp = parts.get(0);
                 PartPropertyIncrement propInc = pProp.getIncrement();
 
-                UnitConverter incDivUC = new UnitConverter (propInc.getIncDiv());
-                UnitConverter incMinUC = new UnitConverter (propInc.getIncMin());
-                UnitConverter incMaxUC = new UnitConverter (propInc.getIncMax());
-                UnitConverter selectUC = new UnitConverter (selection.value);
+                Unit incDiv = new Unit(propInc.getIncDiv());
+                Unit incMin = new Unit(propInc.getIncMin());
+                Unit incMax = new Unit(propInc.getIncMax());
+                Unit select = new Unit(selection.value);
 
                 // verify property increments and the selection are all of the same unit type
 
-                cmd.checkState(incDivUC.isSameType (incMinUC), "incremental property units type mismatch: " + pProp.toString());
-                cmd.checkState(incDivUC.isSameType (incMaxUC), "incremental property units type mismatch: " + pProp.toString());
-                cmd.checkState(incDivUC.isSameType (selectUC), "incremental property units type mismatch: " + pProp.toString());
+                cmd.checkState(incDiv.isSameType (incMin), "incremental property units type mismatch: " + pProp.toString());
+                cmd.checkState(incDiv.isSameType (incMax), "incremental property units type mismatch: " + pProp.toString());
+                cmd.checkState(incDiv.isSameType (select), "incremental property units type mismatch: " + pProp.toString());
 
                 // verify that this selection is valid (within min/max incremental limits and evenly divisible).
 
-                cmd.checkState(selectUC.compareTo(incMinUC) >= 0, "selection is below minimum " + pProp.toString());
-                cmd.checkState(selectUC.compareTo(incMaxUC) <= 0, "selection is above maximum " + pProp.toString());
-                cmd.checkState(selectUC.modulo(incDivUC).intValue() == 0, "selection is not a multiple " + pProp.toString());
+                cmd.checkState(select.compareTo(incMin) >= 0, "selection is below minimum " + pProp.toString());
+                cmd.checkState(select.compareTo(incMax) <= 0, "selection is above maximum " + pProp.toString());
+                cmd.checkState(select.modulo(incDiv).intValue() == 0, "selection is not a multiple " + pProp.toString());
 
                 // get the cost multiplier by dividing by divisor
 
-                UnitConverter multiplier = new UnitConverter (selectUC.divideBy(incDivUC));
-                String unit = UnitMath.multiplyUnits(new UnitConverter (costInc.getAddCost()), multiplier);
+                Unit multiplier = new Unit(select.divideBy(incDiv));
+                String unit = UnitMath.multiplyUnits(new Unit(costInc.getAddCost()), multiplier);
                 addCostToPartQuotedCost(cmd, qPart, unit);
 
                 resolved = true;
@@ -201,28 +200,28 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
 
         if (qPart.quotedCost == null) {
             qPart.quotedCost = new Quote.QuoteCost();
-            qPart.quotedCost.value = UnitMath.multiplyScalar(cost, qPart.quantity);
+            qPart.quotedCost.value = UnitMath.multiplyInteger(cost, qPart.quantity);
             return;
         }
 
         // most of the time part quantity will be = 1.
         // linkable parts can be specified in multiples hence the need for a part quantity
-        String unit1 = UnitMath.multiplyScalar(cost, qPart.quantity);
-        String unit2 = UnitMath.addUnits(qPart.quotedCost.value, unit1);
-        qPart.quotedCost.value = unit2;
+        String calc1 = UnitMath.multiplyInteger(cost, qPart.quantity);
+        String calc2 = UnitMath.addUnits(qPart.quotedCost.value, calc1);
+        qPart.quotedCost.value = calc2;
     }
 
     private void calculateLineItemTotalCost(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
 
         if (lineItem.totalCost == null) {
             lineItem.totalCost = new Quote.QuoteCost();
-            lineItem.totalCost.value = UnitMath.multiplyScalar(qPart.quotedCost.value, lineItem.quantity);
+            lineItem.totalCost.value = UnitMath.multiplyInteger(qPart.quotedCost.value, lineItem.quantity);
             return;
         }
 
-        String unit1 = UnitMath.multiplyScalar(qPart.quotedCost.value, lineItem.quantity);
-        String unit2 = UnitMath.addUnits(lineItem.totalCost.value, unit1);
-        lineItem.totalCost.value = unit2;
+        String calc1 = UnitMath.multiplyInteger(qPart.quotedCost.value, lineItem.quantity);
+        String calc2 = UnitMath.addUnits(lineItem.totalCost.value, calc1);
+        lineItem.totalCost.value = calc2;
     }
 
 }

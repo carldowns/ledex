@@ -3,11 +3,10 @@ package util;
 import java.math.BigDecimal;
 import org.junit.Assert;
 import org.junit.Test;
-import util.UnitConverter;
-import util.UnitConverter.UnitType;
-import util.UnitConverter.UnitTypeValue;
+import util.Unit.UnitType;
+import util.Unit.UnitTypeValue;
 
-public class UnitConverterTest {
+public class UnitTest {
 
     // ///////////////////
     // Currency
@@ -15,7 +14,7 @@ public class UnitConverterTest {
 
     @Test
     public void validateUSD() {
-        UnitConverter uc = new UnitConverter("  300.05 USD        ");
+        Unit uc = new Unit("  300.05 USD        ");
         UnitTypeValue utv = uc.getCurrencyType(true);
 
         Assert.assertEquals(utv.getValue(), "300.05");
@@ -27,7 +26,7 @@ public class UnitConverterTest {
 
     @Test
     public void validateUSDSymbol() {
-        UnitConverter uc = new UnitConverter("$300");
+        Unit uc = new Unit("$300");
         UnitTypeValue utv = uc.getCurrencyType(true);
 
         Assert.assertEquals(utv.getValue(), "300");
@@ -39,7 +38,7 @@ public class UnitConverterTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void badCurrency() {
-        UnitConverter uc = new UnitConverter("$500,");
+        Unit uc = new Unit("$500,");
         uc.getCurrencyType(true).validate();
     }
 
@@ -49,7 +48,7 @@ public class UnitConverterTest {
 
     @Test
     public void validateMeters() {
-        UnitConverter uc = new UnitConverter("7.5m");
+        Unit uc = new Unit("7.5m");
         UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "7.5");
@@ -60,7 +59,7 @@ public class UnitConverterTest {
 
     @Test
     public void validateCm() {
-        UnitConverter uc = new UnitConverter("57.5cm");
+        Unit uc = new Unit("57.5cm");
         UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "57.5");
@@ -71,7 +70,7 @@ public class UnitConverterTest {
 
     @Test
     public void validateMm() {
-        UnitConverter uc = new UnitConverter("120mm");
+        Unit uc = new Unit("120mm");
         UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "120");
@@ -82,7 +81,7 @@ public class UnitConverterTest {
 
     @Test
     public void validateInches() {
-        UnitConverter uc = new UnitConverter("12in");
+        Unit uc = new Unit("12in");
         UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "12");
@@ -93,7 +92,7 @@ public class UnitConverterTest {
 
     @Test
     public void validateInchSymbol() {
-        UnitConverter uc = new UnitConverter("12\"");
+        Unit uc = new Unit("12\"");
         UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "12");
@@ -104,7 +103,7 @@ public class UnitConverterTest {
 
     @Test
     public void validateFeet() {
-        UnitConverter uc = new UnitConverter("12\'");
+        Unit uc = new Unit("12\'");
         UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "12");
@@ -115,7 +114,7 @@ public class UnitConverterTest {
 
     @Test
     public void validateFeetSymbol() {
-        UnitConverter uc = new UnitConverter("12ft");
+        Unit uc = new Unit("12ft");
         UnitTypeValue utv = uc.getLengthType(true);
 
         Assert.assertEquals(utv.getValue(), "12");
@@ -126,7 +125,7 @@ public class UnitConverterTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void badLength() {
-        UnitConverter uc = new UnitConverter("fifteen inches");
+        Unit uc = new Unit("fifteen inches");
         uc.getLengthType(true).validate();
     }
 
@@ -136,7 +135,7 @@ public class UnitConverterTest {
 
     @Test
     public void validateLbs() {
-        UnitConverter uc = new UnitConverter("12 lbs");
+        Unit uc = new Unit("12 lbs");
         UnitTypeValue utv = uc.getWeightType(true);
 
         Assert.assertEquals(utv.getValue(), "12");
@@ -147,7 +146,7 @@ public class UnitConverterTest {
 
     @Test
     public void validateKg() {
-        UnitConverter uc = new UnitConverter("12.6kg");
+        Unit uc = new Unit("12.6kg");
         UnitTypeValue utv = uc.getWeightType(true);
 
         Assert.assertEquals(utv.getValue(), "12.6");
@@ -159,7 +158,7 @@ public class UnitConverterTest {
 
     @Test
     public void validateGrams() {
-        UnitConverter uc = new UnitConverter("400 g");
+        Unit uc = new Unit("400 g");
         UnitTypeValue utv = uc.getWeightType(true);
 
         Assert.assertEquals(utv.getValue(), "400");
@@ -171,7 +170,7 @@ public class UnitConverterTest {
 
     @Test
     public void convertLbsToGrams() {
-        UnitConverter uc = new UnitConverter("12 lbs");
+        Unit uc = new Unit("12 lbs");
 
         // 12lbs = 4553.104 grams
         Assert.assertEquals(uc.toGramsStr(0), "5443");
@@ -181,7 +180,7 @@ public class UnitConverterTest {
 
     @Test
     public void convertLbsToOz() {
-        UnitConverter uc = new UnitConverter("12 lbs");
+        Unit uc = new Unit("12 lbs");
 
         // 12lbs = 192 oz
         Assert.assertEquals(uc.toOuncesStr(0), "192");
@@ -189,7 +188,7 @@ public class UnitConverterTest {
 
     @Test
     public void convertLbsToKg() {
-        UnitConverter uc = new UnitConverter("12 lbs");
+        Unit uc = new Unit("12 lbs");
 
         // 12lbs = 5.4431 KG
         Assert.assertEquals(uc.toKilosStr(0), "5");
@@ -198,7 +197,7 @@ public class UnitConverterTest {
 
     @Test
     public void convertOzToGrams() {
-        UnitConverter uc = new UnitConverter("1 oz");
+        Unit uc = new Unit("1 oz");
 
         // 1 oz = 28.3495 grams
         Assert.assertEquals("28", uc.toGramsStr(0));
@@ -207,13 +206,13 @@ public class UnitConverterTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void badWeight() {
-        UnitConverter uc = new UnitConverter("1 1/2 oz");
+        Unit uc = new Unit("1 1/2 oz");
         uc.getWeightType(true).validate();
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void wrongTypeRequest() {
-        UnitConverter uc = new UnitConverter("1000 lbs");
+        Unit uc = new Unit("1000 lbs");
         uc.getCurrencyType(true);
     }
 

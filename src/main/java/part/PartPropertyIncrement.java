@@ -2,7 +2,7 @@ package part;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import util.UnitConverter;
+import util.Unit;
 
 /**
  * @author carl_downs
@@ -35,15 +35,15 @@ public class PartPropertyIncrement {
     PartPropertyIncrement() {}
 
     PartPropertyIncrement(String min, String max) {
-        this.incMin = UnitConverter.assertLengthType(min);
-        this.incMax = UnitConverter.assertLengthType(max);
+        this.incMin = Unit.assertLengthType(min);
+        this.incMax = Unit.assertLengthType(max);
         this.incDiv = incMin;
     }
 
     PartPropertyIncrement(String min, String max, String div) {
-        this.incMin = UnitConverter.assertLengthType(min);
-        this.incMax = UnitConverter.assertLengthType(max);
-        this.incDiv = UnitConverter.assertLengthType(div);
+        this.incMin = Unit.assertLengthType(min);
+        this.incMax = Unit.assertLengthType(max);
+        this.incDiv = Unit.assertLengthType(div);
     }
 
     public String getIncMin() {

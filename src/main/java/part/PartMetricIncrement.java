@@ -2,7 +2,7 @@ package part;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import util.UnitConverter;
+import util.Unit;
 
 /**
  * decide if we are going to normalize of not
@@ -45,10 +45,10 @@ public class PartMetricIncrement {
 
     PartMetricIncrement(String name, String addWeight, String addHeight, String addLength, String addWidth) {
         this.name = name;
-        this.addWeight = UnitConverter.assertWeightType(addWeight);
-        this.addHeight = UnitConverter.assertLengthType(addHeight);
-        this.addLength = UnitConverter.assertLengthType(addLength);
-        this.addWidth  = UnitConverter.assertLengthType(addWidth);
+        this.addWeight = Unit.assertWeightType(addWeight);
+        this.addHeight = Unit.assertLengthType(addHeight);
+        this.addLength = Unit.assertLengthType(addLength);
+        this.addWidth  = Unit.assertLengthType(addWidth);
 
     }
 }

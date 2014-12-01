@@ -7,7 +7,7 @@ import org.eclipse.jetty.util.StringUtil;
 /**
  */
 
-public class UnitConverter implements Comparable<UnitConverter>{
+public class Unit implements Comparable<Unit>{
 
     // ////////////////////////////////
     // currency constants
@@ -89,8 +89,8 @@ public class UnitConverter implements Comparable<UnitConverter>{
      */
     public static class UnitTypeValue {
 
-        UnitType type;
-        String value;
+        final UnitType type;
+        final String value;
 
         public UnitTypeValue(UnitType type, String value) {
             this.type = type;
@@ -109,25 +109,41 @@ public class UnitConverter implements Comparable<UnitConverter>{
             return type;
         }
 
-        public void setType(UnitType type) {
-            this.type = type;
-        }
-
         public String getValue() {
             return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
         }
 
         public BigDecimal toDecimal() {
             return new BigDecimal(value);
         }
 
+        public boolean isSameType (UnitTypeValue that) {
+            return this.getType() == that.getType();
+        }
+
         @Override
         public String toString() {
             return toTypeValueString();
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof UnitTypeValue)) return false;
+
+            UnitTypeValue that = (UnitTypeValue) o;
+
+            if (type != that.type) return false;
+            if (!value.equals(that.value)) return false;
+
+            return true;
+        }
+
+        @Override
+        public int hashCode() {
+            int result = type.hashCode();
+            result = 31 * result + value.hashCode();
+            return result;
         }
 
         public String toTypeValueString() {
@@ -141,28 +157,28 @@ public class UnitConverter implements Comparable<UnitConverter>{
 
     public static String assertMonetaryType(String input) {
         if (StringUtil.isNotBlank(input))
-            new UnitConverter(input).getCurrencyType(true).validate();
+            new Unit(input).getCurrencyType(true).validate();
 
         return input;
     }
 
     public static String assertLengthType(String input) {
         if (StringUtil.isNotBlank(input))
-            new UnitConverter(input).getLengthType(true).validate();
+            new Unit(input).getLengthType(true).validate();
 
         return input;
     }
 
     public static String assertWeightType(String input) {
         if (StringUtil.isNotBlank(input))
-            new UnitConverter(input).getWeightType(true).validate();
+            new Unit(input).getWeightType(true).validate();
 
         return input;
     }
 
     public static String assertVoltageType(String input) {
         if (StringUtil.isNotBlank(input))
-            new UnitConverter(input).getVoltageType(true).validate();
+            new Unit(input).getVoltageType(true).validate();
 
         return input;
     }
@@ -171,11 +187,11 @@ public class UnitConverter implements Comparable<UnitConverter>{
     // constructors
     // //////////////////////
 
-    public UnitConverter(String input) {
+    public Unit(String input) {
         this.input = input.toUpperCase();
     }
 
-    public UnitConverter(UnitTypeValue utv) {
+    public Unit(UnitTypeValue utv) {
         this.utv = utv;
         this.input = utv.toTypeValueString();
     }
@@ -185,21 +201,21 @@ public class UnitConverter implements Comparable<UnitConverter>{
     // //////////////////////
 
     @Override
-    public int compareTo(UnitConverter that) {
+    public int compareTo(Unit that) {
         if (!this.isSameType(that))
             throw new AppRuntimeException ("UnitConverters are not same type");
 
         return this.getUnitTypeValue(true).toDecimal().compareTo(that.getUnitTypeValue(true).toDecimal());
     }
 
-    public BigDecimal modulo(UnitConverter that) {
+    public BigDecimal modulo(Unit that) {
         if (!this.isSameType(that))
             throw new AppRuntimeException ("UnitConverters are not same type");
 
         return this.getUnitTypeValue(true).toDecimal().remainder(that.getUnitTypeValue(true).toDecimal());
     }
 
-    public UnitTypeValue divideBy (UnitConverter that) {
+    public UnitTypeValue divideBy (Unit that) {
         if (!this.isSameType(that))
             throw new AppRuntimeException ("UnitConverters are not same type");
 
@@ -207,42 +223,42 @@ public class UnitConverter implements Comparable<UnitConverter>{
         return new UnitTypeValue(this.getUnitType(), result.toString());
     }
 
-    public UnitConverter convertTo(UnitType unitType, int scale) {
+    public Unit convertTo(UnitType unitType, int scale) {
         switch (unitType) {
 
             // currency
             case USD:
-                return new UnitConverter(new UnitTypeValue(unitType, toUSD()));
+                return new Unit(new UnitTypeValue(unitType, toUSD()));
             case RMB:
-                return new UnitConverter(new UnitTypeValue(unitType, toRMB()));
+                return new Unit(new UnitTypeValue(unitType, toRMB()));
 
             // weights
             case G:
-                return new UnitConverter(new UnitTypeValue(unitType, toGramsStr(scale)));
+                return new Unit(new UnitTypeValue(unitType, toGramsStr(scale)));
             case KG:
-                return new UnitConverter(new UnitTypeValue(unitType, toKilosStr(scale)));
+                return new Unit(new UnitTypeValue(unitType, toKilosStr(scale)));
             case LB:
-                return new UnitConverter(new UnitTypeValue(unitType, toPoundsStr(scale)));
+                return new Unit(new UnitTypeValue(unitType, toPoundsStr(scale)));
             case OZ:
-                return new UnitConverter(new UnitTypeValue(unitType, toOuncesStr(scale)));
+                return new Unit(new UnitTypeValue(unitType, toOuncesStr(scale)));
 
             // measures
             case M:
-                return new UnitConverter(new UnitTypeValue(unitType, toMetersStr(scale)));
+                return new Unit(new UnitTypeValue(unitType, toMetersStr(scale)));
             case CM:
-                return new UnitConverter(new UnitTypeValue(unitType, toCentimetersStr(scale)));
+                return new Unit(new UnitTypeValue(unitType, toCentimetersStr(scale)));
             case MM:
-                return new UnitConverter(new UnitTypeValue(unitType, toMillimetersStr(scale)));
+                return new Unit(new UnitTypeValue(unitType, toMillimetersStr(scale)));
             case IN:
-                return new UnitConverter(new UnitTypeValue(unitType, toInchesStr(scale)));
+                return new Unit(new UnitTypeValue(unitType, toInchesStr(scale)));
             case FT:
-                return new UnitConverter(new UnitTypeValue(unitType, toFeetStr(scale)));
+                return new Unit(new UnitTypeValue(unitType, toFeetStr(scale)));
 
             // power
             case A:
-                return new UnitConverter(new UnitTypeValue(unitType, toAmpsStr()));
+                return new Unit(new UnitTypeValue(unitType, toAmpsStr()));
             case MA:
-                return new UnitConverter(new UnitTypeValue(unitType, toMilliAmpsStr()));
+                return new Unit(new UnitTypeValue(unitType, toMilliAmpsStr()));
             case VDC:
             case VAC:
             default:
@@ -250,7 +266,7 @@ public class UnitConverter implements Comparable<UnitConverter>{
         }
     }
 
-    public boolean isSameType (UnitConverter that) {
+    public boolean isSameType (Unit that) {
         return this.getUnitType() == that.getUnitType();
     }
 

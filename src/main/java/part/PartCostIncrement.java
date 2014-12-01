@@ -1,7 +1,7 @@
 package part;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import util.UnitConverter;
+import util.Unit;
 
 public class PartCostIncrement {
 
@@ -21,7 +21,7 @@ public class PartCostIncrement {
 
     PartCostIncrement (String type, String addCost) {
         this.type = PartPropertyType.valueOf(type);
-        this.addCost = UnitConverter.assertMonetaryType(addCost);
+        this.addCost = Unit.assertMonetaryType(addCost);
     }
     
     PartCostIncrement (String type, String name, String addCost) {

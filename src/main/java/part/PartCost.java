@@ -1,7 +1,7 @@
 package part;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import util.UnitConverter;
+import util.Unit;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,7 @@ public class PartCost {
     
     public PartCost (Integer quantity, String baseCost) {
         this.qty = quantity;
-        this.baseCost = UnitConverter.assertMonetaryType(baseCost);
+        this.baseCost = Unit.assertMonetaryType(baseCost);
     }
     
     public void add(PartCostIncrement inc) {

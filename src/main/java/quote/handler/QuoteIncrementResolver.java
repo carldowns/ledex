@@ -7,7 +7,7 @@ import part.PartProperty;
 import part.PartPropertyIncrement;
 import quote.cmd.BaseQuoteCmd;
 import quote.Quote;
-import util.UnitConverter;
+import util.Unit;
 
 import java.math.BigDecimal;
 
@@ -75,10 +75,10 @@ public class QuoteIncrementResolver implements QuoteHandlerInterface {
                 checkValueNotBlank(cmd, part, selection.value);
 
                 // get unit converters for selection and increment
-                UnitConverter value = new UnitConverter(selection.value);
-                UnitConverter div = new UnitConverter(inc.getIncDiv());
-                UnitConverter max = new UnitConverter(inc.getIncMax());
-                UnitConverter min = new UnitConverter(inc.getIncMin());
+                Unit value = new Unit(selection.value);
+                Unit div = new Unit(inc.getIncDiv());
+                Unit max = new Unit(inc.getIncMax());
+                Unit min = new Unit(inc.getIncMin());
 
                 // get everything in the same units of measure
                 BigDecimal valueMM = value.toMillimeters(3);
