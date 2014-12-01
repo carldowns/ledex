@@ -35,7 +35,7 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
                 continue;
             }
 
-            // idempotent support - this handler can re-evaluate a previously built quote
+            // idempotent support - this handler can re-cost a previously evaluated quote
             clearCostsAndPricing (cmd, lineItem, qProduct);
 
             // collect calculations of base cost and any incremental costs defined for that cost bracket.
