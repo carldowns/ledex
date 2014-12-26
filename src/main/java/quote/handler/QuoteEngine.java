@@ -48,8 +48,8 @@ import java.util.TreeMap;
 ////////////////////
 
 // concatenate the complete agg Label and description for each part based on features, increments and selections.
-// QuoteAggPartLabelResolver
-// QuoteAggPartDescriptionResolver
+// QuotePartLabelResolver
+// QuotePartDescriptionResolver
 
 //////////////////////
 // Logistics Service
@@ -170,5 +170,15 @@ public class QuoteEngine {
     @Inject
     public void addHandler(QuoteChoiceResolver handler) {
         interpreters.put(2,handler);
+    }
+
+    @Inject
+    public void addHandler(QuoteProductCostResolver handler) {
+        interpreters.put(3,handler);
+    }
+
+    @Inject
+    public void addHandler(QuoteProductPriceResolver handler) {
+        interpreters.put(4,handler);
     }
 }

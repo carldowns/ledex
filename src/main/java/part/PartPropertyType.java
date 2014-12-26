@@ -32,17 +32,24 @@ public enum PartPropertyType {
 
     SWITCH("Circuit switch"),
 
-    TAPE_TYPE(""),
-    TAPE_LOCATIONS(""),
+    TAPE_TYPE("Tape type"),
+    TAPE_LOCATIONS("Tape location"),
 
-    HARNESS (""),
+    HARNESS ("Wiring harness"),
+
+    PLUG_THREAD_DEPTH("Plug Thread depth in mm"),
 
     POWER_RECHARGEABLE("Rechargeable capability"),
     POWER_CORD_LENGTH("Power cord length");
+
 
     String description;
 
     PartPropertyType(String description) {
         this.description = description;
+    }
+
+    public String getDescription () {
+        return description;
     }
 }

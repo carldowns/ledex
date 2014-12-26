@@ -33,6 +33,9 @@ public class Part {
     @JsonProperty("name")
     String name;
 
+    @JsonProperty("skuLabel")
+    String skuLabel;
+
     @JsonProperty("function")
     FunctionType function;
 
@@ -107,6 +110,14 @@ public class Part {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getSkuLabel() {
+        return skuLabel;
+    }
+
+    public void setSkuLabel(String skuLabel) {
+        this.skuLabel = skuLabel;
     }
 
     /////////////////////////

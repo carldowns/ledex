@@ -71,14 +71,21 @@
   {
     "partID": "LIGHT-01",
     "supplierID": "S1000",
-    "name": "Flex LED Light Strip",
+    "name": "Linkable Flex LED Light Strip",
     "function": "LIGHT",
     "skuLabel" : "FLEX",
-    "connections": [
+    "connections" : [
       {
         "type": "JST-01",
-        "gender": "female",
-        "pinOut": "vcc,gnd"
+        "gender" : "female",
+        "pinOut" : "gnd,vcc",
+        "connect" : "required"
+      },
+      {
+        "type": "JST-01",
+        "gender" : "male",
+        "pinOut" : "gnd,vcc",
+        "connect" : "optional"
       }
     ],
     "properties": [

@@ -136,6 +136,13 @@ public class Quote {
     @JsonIgnoreProperties(ignoreUnknown=true)
     public static class QuotePart {
 
+        // configured sku label, comprised of part properties, choices, selections
+        @JsonProperty("cfgLabel")
+        public String cfgLabel;
+
+        @JsonProperty("cfgDescription")
+        public String cfgDescription;
+
         // may have 1 or N of a given part, depending on linkable nature, connections, etc
         @JsonProperty("quantity")
         public String quantity;

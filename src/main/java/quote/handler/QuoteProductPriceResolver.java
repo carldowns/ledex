@@ -35,6 +35,7 @@ public class QuoteProductPriceResolver implements QuoteHandlerInterface {
 
     private void calculateLineItemFixedMarginPricing(BaseQuoteCmd cmd, Quote.LineItem lineItem) {
 
+        // TODO: hard-coded margin needs to be configurable generally and also per customer.
         BigDecimal margin = new BigDecimal("1.25");
 
         // calculate 'quoted price' which is the cost for 1 product

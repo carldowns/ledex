@@ -8,9 +8,7 @@ import io.dropwizard.setup.Environment;
 import mgr.CatalogMgr;
 import mgr.SupplierMgr;
 import part.dao.PartSQL;
-import quote.handler.QuoteChoiceResolver;
-import quote.handler.QuoteIncrementResolver;
-import quote.handler.QuotePartResolver;
+import quote.handler.*;
 import supplier.dao.SupplierSQL;
 import task.PingTask;
 
@@ -49,10 +47,12 @@ public class CatModule extends AbstractModule {
         // inject health checks
         bind(CatHealth.class);
 
-        // inject quote interpreters
+        // inject quote handler interfaces
         bind(QuotePartResolver.class);
         bind(QuoteIncrementResolver.class);
         bind(QuoteChoiceResolver.class);
+        bind(QuoteProductCostResolver.class);
+        bind(QuoteProductPriceResolver.class);
     }
 
     @Provides
