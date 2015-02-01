@@ -8,9 +8,8 @@ import part.Part;
 import part.PartProperty;
 import part.PartPropertyChoice;
 import quote.Quote;
-import quote.cmd.BaseQuoteCmd;
+import quote.cmd.QuoteBaseCmd;
 
-import java.util.List;
 import java.util.Set;
 
 
@@ -21,7 +20,7 @@ public class QuoteChoiceResolver implements QuoteHandlerInterface {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(QuoteChoiceResolver.class);
 
     @Override
-    public void evaluate(BaseQuoteCmd cmd) {
+    public void evaluate(QuoteBaseCmd cmd) {
 
         Quote quote = cmd.getQuote();
 
@@ -42,7 +41,7 @@ public class QuoteChoiceResolver implements QuoteHandlerInterface {
         }
     }
 
-    private void evaluateChoice(BaseQuoteCmd cmd, Quote.QuotePart qPart) {
+    private void evaluateChoice(QuoteBaseCmd cmd, Quote.QuotePart qPart) {
 
         Part part = qPart.part;
         cmd.checkNotNull(part, "part is not set");

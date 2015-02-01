@@ -5,7 +5,7 @@ import ch.qos.logback.classic.Logger;
 import part.Part;
 import part.PartProperty;
 import part.PartPropertyIncrement;
-import quote.cmd.BaseQuoteCmd;
+import quote.cmd.QuoteBaseCmd;
 import quote.Quote;
 import util.Unit;
 
@@ -23,7 +23,7 @@ public class QuoteIncrementResolver implements QuoteHandlerInterface {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(QuoteIncrementResolver.class);
 
     @Override
-    public void evaluate(BaseQuoteCmd cmd) {
+    public void evaluate(QuoteBaseCmd cmd) {
 
         Quote quote = cmd.getQuote();
 
@@ -44,7 +44,7 @@ public class QuoteIncrementResolver implements QuoteHandlerInterface {
         }
     }
 
-    private void evaluateIncrement(BaseQuoteCmd cmd, Quote.QuotePart qPart) {
+    private void evaluateIncrement(QuoteBaseCmd cmd, Quote.QuotePart qPart) {
 
         Part part = qPart.part;
         cmd.checkNotNull(part, "part is not set");
@@ -115,7 +115,7 @@ public class QuoteIncrementResolver implements QuoteHandlerInterface {
         return false;
     }
 
-    private void checkValueNotBlank(BaseQuoteCmd cmd, Part part, String value) {
+    private void checkValueNotBlank(QuoteBaseCmd cmd, Part part, String value) {
         cmd.checkNotBlank(value, "selection is not set for part " + part.getPartID());
     }
 }

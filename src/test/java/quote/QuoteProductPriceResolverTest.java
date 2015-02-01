@@ -3,7 +3,6 @@ package quote;
 import catalog.Assembly;
 import catalog.Product;
 import catalog.dao.CatalogPart;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import mgr.CatalogMgr;
 import org.junit.Assert;
 import org.junit.Test;
@@ -11,13 +10,12 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import part.Part;
 import part.PartPropertyType;
-import quote.cmd.CreateQuoteCmd;
+import quote.cmd.QuoteCreateCmd;
 import quote.handler.QuoteChoiceResolver;
 import quote.handler.QuotePartResolver;
 import quote.handler.QuoteProductCostResolver;
 import quote.handler.QuoteProductPriceResolver;
 import util.AppRuntimeException;
-import util.CmdRuntimeException;
 import util.FileUtil;
 
 import java.net.URL;
@@ -65,7 +63,7 @@ public class QuoteProductPriceResolverTest {
         quotePart.setSelection(PartPropertyType.STRIP_LENGTH, "12in");
         quotePart.quantity = "1"; // IMPORTANT - number of parts of this type in the product
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+        QuoteCreateCmd cmd = new QuoteCreateCmd(quote);
 
         QuotePartResolver i1 = new QuotePartResolver(catMgr);
         QuoteChoiceResolver i2 = new QuoteChoiceResolver();
@@ -117,7 +115,7 @@ public class QuoteProductPriceResolverTest {
         quotePart.setSelection(PartPropertyType.STRIP_LENGTH, "12in");
         quotePart.quantity = "5"; // IMPORTANT - number of parts of this type in the product
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+        QuoteCreateCmd cmd = new QuoteCreateCmd(quote);
 
         QuotePartResolver i1 = new QuotePartResolver(catMgr);
         QuoteChoiceResolver i2 = new QuoteChoiceResolver();
@@ -169,7 +167,7 @@ public class QuoteProductPriceResolverTest {
         Quote.QuotePart quotePart3 = lineItem.quotedProduct.getPart("PLUG-01");
         quotePart3.setSelection(PartPropertyType.LEAD_LENGTH, "100cm");
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+        QuoteCreateCmd cmd = new QuoteCreateCmd(quote);
 
         QuotePartResolver i1 = new QuotePartResolver(catMgr);
         QuoteChoiceResolver i2 = new QuoteChoiceResolver();
@@ -222,7 +220,7 @@ public class QuoteProductPriceResolverTest {
         Quote.QuotePart quotePart3 = lineItem.quotedProduct.getPart("PLUG-01");
         quotePart3.setSelection(PartPropertyType.LEAD_LENGTH, "100cm");
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+        QuoteCreateCmd cmd = new QuoteCreateCmd(quote);
 
         QuotePartResolver i1 = new QuotePartResolver(catMgr);
         QuoteChoiceResolver i2 = new QuoteChoiceResolver();

@@ -8,7 +8,7 @@ import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import part.Part;
-import quote.cmd.CreateQuoteCmd;
+import quote.cmd.QuoteCreateCmd;
 import quote.handler.QuotePartResolver;
 import util.AppRuntimeException;
 import util.CmdRuntimeException;
@@ -45,7 +45,7 @@ public class QuotePartResolverTest {
         }).when(catMgr).getPart(anyString());
 
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd();
+        QuoteCreateCmd cmd = new QuoteCreateCmd();
         int quantity = 100;
 
         Product product = makeProduct(assemblyURI, partsURI);
@@ -68,7 +68,7 @@ public class QuotePartResolverTest {
         CatalogMgr catMgr = mock(CatalogMgr.class);
         when(catMgr.getPart(anyString())).thenReturn(null); // can't find part
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd();
+        QuoteCreateCmd cmd = new QuoteCreateCmd();
         cmd.getQuote();
         cmd.setCustomerID("1");
         cmd.setProjectName("test");

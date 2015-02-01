@@ -10,9 +10,8 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import part.Part;
 import part.PartPropertyType;
-import quote.cmd.CreateQuoteCmd;
+import quote.cmd.QuoteCreateCmd;
 import quote.handler.QuoteChoiceResolver;
-import quote.handler.QuoteIncrementResolver;
 import quote.handler.QuotePartResolver;
 import util.AppRuntimeException;
 import util.CmdRuntimeException;
@@ -60,7 +59,7 @@ public class QuoteChoiceResolverTest {
         quotePart.setSelection (PartPropertyType.ADHESIVE, "Tb10mm");
         quotePart.setSelection (PartPropertyType.LED_COLOR_TEMP, "6000k");
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+        QuoteCreateCmd cmd = new QuoteCreateCmd(quote);
 
         QuotePartResolver i1 = new QuotePartResolver(catMgr);
         QuoteChoiceResolver i2 = new QuoteChoiceResolver();
@@ -94,7 +93,7 @@ public class QuoteChoiceResolverTest {
         Quote.QuotePart quotePart = lineItem.quotedProduct.getPart("LIGHT-01");
         quotePart.setSelection (PartPropertyType.ADHESIVE, "Tb10mm");
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+        QuoteCreateCmd cmd = new QuoteCreateCmd(quote);
 
         QuotePartResolver i1 = new QuotePartResolver(catMgr);
         QuoteChoiceResolver i2 = new QuoteChoiceResolver();
@@ -136,7 +135,7 @@ public class QuoteChoiceResolverTest {
         quotePart.setSelection (PartPropertyType.ADHESIVE, "Tb2mm");
         quotePart.setSelection (PartPropertyType.LED_COLOR_TEMP, "6000k");
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+        QuoteCreateCmd cmd = new QuoteCreateCmd(quote);
 
         QuotePartResolver i1 = new QuotePartResolver(catMgr);
         QuoteChoiceResolver i2 = new QuoteChoiceResolver();
@@ -176,7 +175,7 @@ public class QuoteChoiceResolverTest {
         quotePart.setSelection (PartPropertyType.ADHESIVE, "not-found");
         quotePart.setSelection (PartPropertyType.LED_COLOR_TEMP, "6000k");
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+        QuoteCreateCmd cmd = new QuoteCreateCmd(quote);
 
         QuotePartResolver i1 = new QuotePartResolver(catMgr);
         QuoteChoiceResolver i2 = new QuoteChoiceResolver();

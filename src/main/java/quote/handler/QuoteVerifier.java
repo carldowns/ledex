@@ -1,6 +1,6 @@
 package quote.handler;
 
-import quote.cmd.BaseQuoteCmd;
+import quote.cmd.QuoteBaseCmd;
 
 /**
  * verifies that all of the necessary part of the quote are in place and valid
@@ -8,7 +8,7 @@ import quote.cmd.BaseQuoteCmd;
 public class QuoteVerifier implements QuoteHandlerInterface {
 
     @Override
-    public void evaluate(BaseQuoteCmd command) {
+    public void evaluate(QuoteBaseCmd command) {
 
     }
 }

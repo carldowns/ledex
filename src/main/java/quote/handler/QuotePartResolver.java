@@ -5,7 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import mgr.CatalogMgr;
 import part.Part;
-import quote.cmd.BaseQuoteCmd;
+import quote.cmd.QuoteBaseCmd;
 import quote.Quote;
 
 /**
@@ -27,7 +27,7 @@ public class QuotePartResolver implements QuoteHandlerInterface {
      * @param command
      */
     @Override
-    public void evaluate(BaseQuoteCmd cmd) {
+    public void evaluate(QuoteBaseCmd cmd) {
 
         Quote quote = cmd.getQuote();
         checkQuoteIsSet(cmd, quote);
@@ -57,22 +57,22 @@ public class QuotePartResolver implements QuoteHandlerInterface {
         Preconditions.checkNotNull(catalogMgr, "catalog manager dependency not resolved");
     }
 
-    private void checkQuoteIsSet (BaseQuoteCmd cmd, Quote quote) {
+    private void checkQuoteIsSet (QuoteBaseCmd cmd, Quote quote) {
         cmd.checkNotNull(quote, "quote is not set");
     }
 
-    private void checkServiceOrProductIsSet (BaseQuoteCmd cmd, Quote.LineItem lineItem) {
+    private void checkServiceOrProductIsSet (QuoteBaseCmd cmd, Quote.LineItem lineItem) {
         cmd.checkNotNull(lineItem, "lineItem is not set");
         cmd.checkState(lineItem.quotedProduct != null || lineItem.quotedService != null, "product or service election required");
     }
 
-    private void checkPartIDsMatch (BaseQuoteCmd cmd, Quote.QuotePart qPart, Part part) {
+    private void checkPartIDsMatch (QuoteBaseCmd cmd, Quote.QuotePart qPart, Part part) {
         cmd.checkNotNull(qPart, "quoted part is not set");
         cmd.checkNotNull(part, "part is not set");
         cmd.checkState(part.getPartID().equals(qPart.catalogPart.getPartID()), "part IDs don't match");
     }
 
-    private void checkProductHasParts (BaseQuoteCmd cmd, Quote.QuoteProduct qProduct) {
+    private void checkProductHasParts (QuoteBaseCmd cmd, Quote.QuoteProduct qProduct) {
         cmd.checkNotNull(qProduct, "quoted product is not set");
         cmd.checkState(qProduct.quotedParts.size() > 0, "no product parts specified");
     }

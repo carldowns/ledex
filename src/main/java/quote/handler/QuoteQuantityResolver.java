@@ -1,6 +1,6 @@
 package quote.handler;
 
-import quote.cmd.BaseQuoteCmd;
+import quote.cmd.QuoteBaseCmd;
 
 /**
  * handles the quantity aspects of the quote
@@ -8,7 +8,7 @@ import quote.cmd.BaseQuoteCmd;
 public class QuoteQuantityResolver implements QuoteHandlerInterface {
 
     @Override
-    public void evaluate(BaseQuoteCmd command) {
+    public void evaluate(QuoteBaseCmd command) {
 
     }
 }

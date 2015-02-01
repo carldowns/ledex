@@ -3,7 +3,7 @@ package quote.handler;
 import ch.qos.logback.classic.Logger;
 import com.google.inject.Inject;
 import org.slf4j.LoggerFactory;
-import quote.cmd.BaseQuoteCmd;
+import quote.cmd.QuoteBaseCmd;
 import util.CmdRuntimeException;
 
 import java.util.SortedMap;
@@ -142,7 +142,7 @@ public class QuoteEngine {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(QuoteEngine.class);
     private static SortedMap<Integer,QuoteHandlerInterface> interpreters = new TreeMap<>();
 
-    public void evaluate(BaseQuoteCmd cmd) throws Exception {
+    public void evaluate(QuoteBaseCmd cmd) throws Exception {
 
         try {
             for (QuoteHandlerInterface ri : interpreters.values()) {

@@ -3,7 +3,7 @@ package quote.handler;
 import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 import quote.Quote;
-import quote.cmd.BaseQuoteCmd;
+import quote.cmd.QuoteBaseCmd;
 import util.UnitMath;
 
 import java.math.BigDecimal;
@@ -16,7 +16,7 @@ public class QuoteProductPriceResolver implements QuoteHandlerInterface {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(QuoteChoiceResolver.class);
 
     @Override
-    public void evaluate(BaseQuoteCmd cmd) {
+    public void evaluate(QuoteBaseCmd cmd) {
 
         Quote quote = cmd.getQuote();
 
@@ -33,7 +33,7 @@ public class QuoteProductPriceResolver implements QuoteHandlerInterface {
     }
 
 
-    private void calculateLineItemFixedMarginPricing(BaseQuoteCmd cmd, Quote.LineItem lineItem) {
+    private void calculateLineItemFixedMarginPricing(QuoteBaseCmd cmd, Quote.LineItem lineItem) {
 
         // TODO: hard-coded margin needs to be configurable generally and also per customer.
         BigDecimal margin = new BigDecimal("1.25");

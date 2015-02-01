@@ -4,7 +4,7 @@ import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 import part.*;
 import quote.Quote;
-import quote.cmd.BaseQuoteCmd;
+import quote.cmd.QuoteBaseCmd;
 import util.Unit;
 import util.UnitMath;
 
@@ -22,7 +22,7 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(QuoteChoiceResolver.class);
 
     @Override
-    public void evaluate(BaseQuoteCmd cmd) {
+    public void evaluate(QuoteBaseCmd cmd) {
 
         Quote quote = cmd.getQuote();
 
@@ -49,7 +49,7 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
         }
     }
 
-    private void clearCostsAndPricing (BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuoteProduct qProduct) {
+    private void clearCostsAndPricing (QuoteBaseCmd cmd, Quote.LineItem lineItem, Quote.QuoteProduct qProduct) {
         for (Quote.QuotePart qPart : qProduct.quotedParts) {
             qPart.quotedCost = null;
         }
@@ -60,7 +60,7 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
         lineItem.totalPrice = null;
     }
 
-    private void calculateQuotedPartCost(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
+    private void calculateQuotedPartCost(QuoteBaseCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
 
         PartCost partCost = selectBaseCostForPart(cmd, lineItem, qPart);
         addCostToPartQuotedCost(cmd, qPart, partCost.getBaseCost());
@@ -68,7 +68,7 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
         addCostToLineItemQuotedCost(cmd, lineItem, qPart);
     }
 
-    private PartCost selectBaseCostForPart(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
+    private PartCost selectBaseCostForPart(QuoteBaseCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
 
         Part part = qPart.part;
 
@@ -132,7 +132,7 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
         return null;
     }
 
-    private void addIncrementalCostsToPartQuotedCost(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart, PartCost partCost) {
+    private void addIncrementalCostsToPartQuotedCost(QuoteBaseCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart, PartCost partCost) {
 
         // for all increments present on the part cost:
         // add cost for each incremental quantity selected
@@ -185,7 +185,7 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
         }
     }
 
-    private void addCostToLineItemQuotedCost(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
+    private void addCostToLineItemQuotedCost(QuoteBaseCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
 
         if (lineItem.quotedCost == null) {
             lineItem.quotedCost = new Quote.QuoteCost();
@@ -196,7 +196,7 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
         lineItem.quotedCost.value = UnitMath.addUnits(lineItem.quotedCost.value, qPart.quotedCost.value);
     }
 
-    private void addCostToPartQuotedCost(BaseQuoteCmd cmd, Quote.QuotePart qPart, String cost) {
+    private void addCostToPartQuotedCost(QuoteBaseCmd cmd, Quote.QuotePart qPart, String cost) {
 
         if (qPart.quotedCost == null) {
             qPart.quotedCost = new Quote.QuoteCost();
@@ -211,7 +211,7 @@ public class QuoteProductCostResolver implements QuoteHandlerInterface {
         qPart.quotedCost.value = calc2;
     }
 
-    private void calculateLineItemTotalCost(BaseQuoteCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
+    private void calculateLineItemTotalCost(QuoteBaseCmd cmd, Quote.LineItem lineItem, Quote.QuotePart qPart) {
 
         if (lineItem.totalCost == null) {
             lineItem.totalCost = new Quote.QuoteCost();

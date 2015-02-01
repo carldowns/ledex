@@ -5,14 +5,14 @@ import quote.Quote;
 /**
  *
  */
-public class CreateQuoteCmd extends BaseQuoteCmd {
+public class QuoteCreateCmd extends QuoteBaseCmd {
 
 
-    public CreateQuoteCmd() {
+    public QuoteCreateCmd() {
         super();
     }
 
-    public CreateQuoteCmd(Quote quote) {
+    public QuoteCreateCmd(Quote quote) {
         super(quote);
     }
 

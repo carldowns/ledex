@@ -9,7 +9,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import part.Part;
 import part.PartPropertyType;
-import quote.cmd.CreateQuoteCmd;
+import quote.cmd.QuoteCreateCmd;
 import quote.handler.QuoteIncrementResolver;
 import quote.handler.QuotePartResolver;
 import util.AppRuntimeException;
@@ -62,7 +62,7 @@ public class QuoteIncrementResolverTest {
         Quote.QuotePart quotePart3 = lineItem.quotedProduct.getPart("PLUG-01");
         quotePart3.setSelection (PartPropertyType.LEAD_LENGTH, "10cm");
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+        QuoteCreateCmd cmd = new QuoteCreateCmd(quote);
 
         QuotePartResolver i1 = new QuotePartResolver(catMgr);
         QuoteIncrementResolver i2 = new QuoteIncrementResolver();

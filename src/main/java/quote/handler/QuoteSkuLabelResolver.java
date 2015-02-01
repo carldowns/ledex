@@ -6,7 +6,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import part.*;
 import quote.Quote;
-import quote.cmd.BaseQuoteCmd;
+import quote.cmd.QuoteBaseCmd;
 
 import java.util.ArrayList;
 
@@ -28,7 +28,7 @@ public class QuoteSkuLabelResolver implements QuoteHandlerInterface {
      * @param command
      */
     @Override
-    public void evaluate(BaseQuoteCmd cmd) {
+    public void evaluate(QuoteBaseCmd cmd) {
 
         Quote quote = cmd.getQuote();
 

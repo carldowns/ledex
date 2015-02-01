@@ -6,16 +6,16 @@ import quote.Quote;
 /**
  *
  */
-public class BaseQuoteCmd extends AbstractBaseCmd {
+public class QuoteBaseCmd extends AbstractBaseCmd {
 
     private Quote quote;
 
-    public BaseQuoteCmd() {
+    public QuoteBaseCmd() {
         super();
         quote = new Quote();
     }
 
-    public BaseQuoteCmd(Quote quote) {
+    public QuoteBaseCmd(Quote quote) {
         super();
         this.quote = quote;
     }

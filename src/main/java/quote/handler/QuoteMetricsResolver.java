@@ -3,7 +3,7 @@ package quote.handler;
 import ch.qos.logback.classic.Logger;
 import org.slf4j.LoggerFactory;
 import quote.Quote;
-import quote.cmd.BaseQuoteCmd;
+import quote.cmd.QuoteBaseCmd;
 
 /**
  *
@@ -13,7 +13,7 @@ public class QuoteMetricsResolver implements QuoteHandlerInterface {
     private static final Logger logger = (Logger) LoggerFactory.getLogger(QuoteChoiceResolver.class);
 
     @Override
-    public void evaluate(BaseQuoteCmd cmd) {
+    public void evaluate(QuoteBaseCmd cmd) {
 
         Quote quote = cmd.getQuote();
 
@@ -34,6 +34,6 @@ public class QuoteMetricsResolver implements QuoteHandlerInterface {
         }
     }
 
-    private void evaluateMetrics (BaseQuoteCmd cmd, Quote.QuotePart qPart) {
+    private void evaluateMetrics (QuoteBaseCmd cmd, Quote.QuotePart qPart) {
     }
 }

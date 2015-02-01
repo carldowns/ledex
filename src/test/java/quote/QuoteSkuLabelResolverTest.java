@@ -10,7 +10,7 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import part.Part;
 import part.PartPropertyType;
-import quote.cmd.CreateQuoteCmd;
+import quote.cmd.QuoteCreateCmd;
 import quote.handler.*;
 import util.AppRuntimeException;
 import util.FileUtil;
@@ -57,7 +57,7 @@ public class QuoteSkuLabelResolverTest {
         quotePart.setSelection(PartPropertyType.STRIP_LENGTH, "12in");
         quotePart.quantity = "1"; // IMPORTANT - number of parts of this type in the product
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+        QuoteCreateCmd cmd = new QuoteCreateCmd(quote);
 
         QuotePartResolver i1 = new QuotePartResolver(catMgr);
         QuoteChoiceResolver i2 = new QuoteChoiceResolver();
@@ -111,7 +111,7 @@ public class QuoteSkuLabelResolverTest {
         Quote.QuotePart quotePart3 = lineItem.quotedProduct.getPart("PLUG-01");
         quotePart3.setSelection(PartPropertyType.LEAD_LENGTH, "100cm");
 
-        CreateQuoteCmd cmd = new CreateQuoteCmd(quote);
+        QuoteCreateCmd cmd = new QuoteCreateCmd(quote);
 
         QuotePartResolver i1 = new QuotePartResolver(catMgr);
         QuoteChoiceResolver i2 = new QuoteChoiceResolver();

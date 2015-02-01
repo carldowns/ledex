@@ -1,6 +1,6 @@
 package quote.handler;
 
-import quote.cmd.BaseQuoteCmd;
+import quote.cmd.QuoteBaseCmd;
 
 /**
  * handles notifications that are sent as a result of a successful quote
@@ -8,7 +8,7 @@ import quote.cmd.BaseQuoteCmd;
 public class QuoteNotifier implements QuoteHandlerInterface {
 
     @Override
-    public void evaluate(BaseQuoteCmd command) {
+    public void evaluate(QuoteBaseCmd command) {
 
     }
 }
