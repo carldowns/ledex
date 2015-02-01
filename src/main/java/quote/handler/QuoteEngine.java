@@ -48,8 +48,8 @@ import java.util.TreeMap;
 ////////////////////
 
 // concatenate the complete agg Label and description for each part based on features, increments and selections.
-// QuotePartLabelResolver
-// QuotePartDescriptionResolver
+// QuotePartLabelResolver (DONE)
+// QuotePartDescriptionResolver (DONE)
 
 //////////////////////
 // Logistics Service
@@ -59,19 +59,23 @@ import java.util.TreeMap;
 // record details of how the metrics were derived
 // QuoteMetricsResolver
 
-// calculate the lead time estimated for each phase of the product build
-// phases possible include prototype, sample, pre-pro visual, pre-pro actual, production, ship, in-transit
-// QuoteLeadTimeEstimator
+// select logistics service level
+// QuoteLogisticsServiceResolver
 
 // calculate logistics based on service level selected
-// QuoteShippingServiceResolver
-// QuoteImportFeesResolver
 // QuoteAirFreightResolver
+// QuoteUSCustomsImportFeesResolver
+
+// extra credit
 // QuoteOceanFreightResolver
 // QuoteLTLResolver
 // QuoteRailResolver
 // QuoteOvernightResolver
 // QuoteTmpStorageResolver
+
+// calculate the lead time estimated for each phase of the product build
+// phases possible include prototype, sample, pre-pro visual, pre-pro actual, production, ship, in-transit
+// QuoteLeadTimeEstimator
 
 ////////////////////////
 // Management Service
@@ -180,5 +184,10 @@ public class QuoteEngine {
     @Inject
     public void addHandler(QuoteProductPriceResolver handler) {
         interpreters.put(4,handler);
+    }
+
+    @Inject
+    public void addHandler(QuoteSkuLabelResolver handler) {
+        interpreters.put(5,handler);
     }
 }

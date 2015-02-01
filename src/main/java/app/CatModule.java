@@ -53,6 +53,7 @@ public class CatModule extends AbstractModule {
         bind(QuoteChoiceResolver.class);
         bind(QuoteProductCostResolver.class);
         bind(QuoteProductPriceResolver.class);
+        bind(QuoteSkuLabelResolver.class);
     }
 
     @Provides
