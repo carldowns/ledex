@@ -1,5 +1,8 @@
-package catalog;
+package mgr;
 
+import catalog.Assembly;
+import catalog.FunctionType;
+import catalog.Product;
 import catalog.rule.RuleEngine;
 import catalog.rule.RuleViolation;
 import ch.qos.logback.classic.Logger;
@@ -8,11 +11,11 @@ import static com.google.common.base.Preconditions.*;
 
 import cmd.AbstractBaseCmd;
 import cmd.CatalogUpdateCmd;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import mgr.CatalogMgr;
 import org.slf4j.LoggerFactory;
 import part.Part;
 import catalog.dao.CatalogPart;
@@ -24,20 +27,20 @@ import java.util.Map;
 /**
  */
 @Singleton
-public class AssemblyEngine {
+public class AssemblyMgr {
 
     CatalogMgr catalogMgr;
-    private static final Logger logger = (Logger) LoggerFactory.getLogger(AssemblyEngine.class);
+    private static final Logger logger = (Logger) LoggerFactory.getLogger(AssemblyMgr.class);
 
     @Inject
-    public AssemblyEngine(CatalogMgr catalogMgr) {
+    public AssemblyMgr(CatalogMgr catalogMgr) {
         this.catalogMgr = catalogMgr;
     }
 
     /**
      * deletes / rebuilds all products in the catalog based on imported Assemblies and Parts
      */
-    public void rebuildCatalog(CatalogUpdateCmd cmd) {
+    public void exec(CatalogUpdateCmd cmd) {
 
         try {
             cmd.setState(AbstractBaseCmd.CmdState.started);
@@ -96,6 +99,8 @@ public class AssemblyEngine {
      * @return
      * @throws Exception
      */
+
+    @VisibleForTesting
     public List<CandidateProduct> assembleProductCandidates(Assembly assembly) throws Exception {
 
         // build all candidate combinations (all permutations)

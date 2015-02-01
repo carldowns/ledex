@@ -37,7 +37,7 @@ public class SupplierResourceTest {
 
     // FIXME the interface changed
 //    @Test
-//    public void getSupplier() {
+//    public void someTest() {
 //
 //        when(DAO.getSupplierRecByID("S100")).thenReturn(supplierRec);
 //

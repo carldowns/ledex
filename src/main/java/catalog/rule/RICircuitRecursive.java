@@ -2,9 +2,9 @@ package catalog.rule;
 
 import catalog.Assembly;
 import com.google.common.collect.Lists;
-import catalog.AssemblyEngine.CandidatePart;
-import catalog.AssemblyEngine.CandidateProblem;
-import catalog.AssemblyEngine.CandidateProduct;
+import mgr.AssemblyMgr.CandidatePart;
+import mgr.AssemblyMgr.CandidateProblem;
+import mgr.AssemblyMgr.CandidateProduct;
 import part.Part;
 import part.PartConnection;
 

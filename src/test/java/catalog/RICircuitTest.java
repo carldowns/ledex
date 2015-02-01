@@ -1,6 +1,7 @@
 package catalog;
 
 
+import mgr.AssemblyMgr;
 import mgr.CatalogMgr;
 import org.junit.Test;
 import part.Part;
@@ -9,7 +10,7 @@ import util.FileUtil;
 import java.net.URL;
 import java.util.List;
 
-import static catalog.AssemblyEngine.CandidateProduct;
+import static mgr.AssemblyMgr.CandidateProduct;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -26,7 +27,7 @@ public class RICircuitTest {
     public void testCircuit1 () throws Exception {
 
         CatalogMgr catalogMgr = mock(CatalogMgr.class);
-        AssemblyEngine mgr = new AssemblyEngine(catalogMgr);
+        AssemblyMgr mgr = new AssemblyMgr(catalogMgr);
         FileUtil util = new FileUtil();
 
         URL url = getClass().getResource("/catalog/test1.circuit.parts.json");
@@ -59,7 +60,7 @@ public class RICircuitTest {
     public void testCircuit2 () throws Exception {
 
         CatalogMgr catalogMgr = mock(CatalogMgr.class);
-        AssemblyEngine mgr = new AssemblyEngine(catalogMgr);
+        AssemblyMgr mgr = new AssemblyMgr(catalogMgr);
         FileUtil util = new FileUtil();
 
         URL url = getClass().getResource("/catalog/test2.circuit.parts.json");
@@ -89,7 +90,7 @@ public class RICircuitTest {
     public void testCircuit3 () throws Exception {
 
         CatalogMgr catalogMgr = mock(CatalogMgr.class);
-        AssemblyEngine mgr = new AssemblyEngine(catalogMgr);
+        AssemblyMgr mgr = new AssemblyMgr(catalogMgr);
         FileUtil util = new FileUtil();
 
         URL url = getClass().getResource("/catalog/test3.circuit.parts.json");
@@ -129,7 +130,7 @@ public class RICircuitTest {
     public void testCircuit4 () throws Exception {
 
         CatalogMgr catalogMgr = mock(CatalogMgr.class);
-        AssemblyEngine mgr = new AssemblyEngine(catalogMgr);
+        AssemblyMgr mgr = new AssemblyMgr(catalogMgr);
         FileUtil util = new FileUtil();
 
         URL url = getClass().getResource("/catalog/test4.circuit.parts.json");

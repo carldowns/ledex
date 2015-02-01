@@ -1,6 +1,6 @@
 package app;
 
-import catalog.AssemblyEngine;
+import mgr.AssemblyMgr;
 import catalog.dao.AssemblySQL;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -34,12 +34,10 @@ public class CatModule extends AbstractModule {
         // inject database connection pool
         bind(CatDBI.class);
 
-        // inject DAO managers
+        // inject managers
         bind(CatalogMgr.class);
         bind(SupplierMgr.class);
-
-        // inject engines
-        bind(AssemblyEngine.class);
+        bind(AssemblyMgr.class);
 
         // inject tasks
         bind(PingTask.class);

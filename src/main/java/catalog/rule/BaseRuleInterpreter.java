@@ -1,13 +1,13 @@
 package catalog.rule;
 
-import catalog.AssemblyEngine;
+import mgr.AssemblyMgr;
 
 /**
  */
 public abstract class BaseRuleInterpreter {
 
-    protected AssemblyEngine.CandidateProblem reportProblem(AssemblyEngine.CandidatePart candidate, String message) {
-        AssemblyEngine.CandidateProblem problem = new AssemblyEngine.CandidateProblem(new RuleViolation(message), candidate);
+    protected AssemblyMgr.CandidateProblem reportProblem(AssemblyMgr.CandidatePart candidate, String message) {
+        AssemblyMgr.CandidateProblem problem = new AssemblyMgr.CandidateProblem(new RuleViolation(message), candidate);
         return problem;
     }
 }

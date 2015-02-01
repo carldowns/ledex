@@ -40,7 +40,7 @@ public class SupplierResource {
     public SupplierImportCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
         SupplierImportCmd cmd = new SupplierImportCmd();
         cmd.setInputFilePath(pathURI);
-        mgr.importSuppliers(cmd);
+        mgr.exec(cmd);
         return cmd;
     }
 
@@ -50,7 +50,7 @@ public class SupplierResource {
     public SupplierExportCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
         SupplierExportCmd cmd = new SupplierExportCmd();
         cmd.setOutputFilePath(pathURI);
-        mgr.exportSuppliers(cmd);
+        mgr.exec(cmd);
         return cmd;
     }
 
@@ -60,7 +60,7 @@ public class SupplierResource {
     public SupplierFetchCmd getSupplier (@QueryParam("supplierID") String id ) {
         SupplierFetchCmd cmd = new SupplierFetchCmd();
         cmd.setSupplierID(id);
-        mgr.getSupplier(cmd);
+        mgr.exec(cmd);
         return cmd;
     }
 

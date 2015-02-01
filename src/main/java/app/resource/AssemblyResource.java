@@ -2,7 +2,7 @@ package app.resource;
 
 import cmd.*;
 import com.codahale.metrics.annotation.Timed;
-import catalog.AssemblyEngine;
+import mgr.AssemblyMgr;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import mgr.CatalogMgr;
@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 public class AssemblyResource {
 
     private CatalogMgr catalogMgr;
-    private AssemblyEngine assemblyEngine;
+    private AssemblyMgr assemblyMgr;
 
 //    @Inject
 //    public AssemblyResource(PartSQL partSQL, AssemblySQL assemblySQL) {
@@ -28,9 +28,9 @@ public class AssemblyResource {
 //    }
 
     @Inject
-    public AssemblyResource(CatalogMgr catalogMgr, AssemblyEngine assemblyEngine) {
+    public AssemblyResource(CatalogMgr catalogMgr, AssemblyMgr assemblyMgr) {
         this.catalogMgr = catalogMgr;
-        this.assemblyEngine = assemblyEngine;
+        this.assemblyMgr = assemblyMgr;
     }
 
     //////////////////////////////
@@ -43,7 +43,7 @@ public class AssemblyResource {
     public AssemblyImportCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
         AssemblyImportCmd cmd = new AssemblyImportCmd();
         cmd.setInputFilePath(pathURI);
-        catalogMgr.importAssemblies(cmd);
+        catalogMgr.exec(cmd);
         return cmd;
     }
 
@@ -53,7 +53,7 @@ public class AssemblyResource {
     public AssemblyExportCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
         AssemblyExportCmd cmd = new AssemblyExportCmd();
         cmd.setOutputFilePath(pathURI);
-        catalogMgr.exportAssemblies(cmd);
+        catalogMgr.exec(cmd);
         return cmd;
     }
 
@@ -63,7 +63,7 @@ public class AssemblyResource {
     public AssemblyFetchCmd getSupplier (@QueryParam("assemblyID") String assemblyID ) {
         AssemblyFetchCmd cmd = new AssemblyFetchCmd();
         cmd.setAssemblyID(assemblyID);
-        catalogMgr.getAssembly(cmd);
+        catalogMgr.exec(cmd);
         return cmd;
     }
 
@@ -72,7 +72,7 @@ public class AssemblyResource {
     @Timed
     public CatalogUpdateCmd getSupplier () {
         CatalogUpdateCmd cmd = new CatalogUpdateCmd();
-        assemblyEngine.rebuildCatalog(cmd);
+        assemblyMgr.exec(cmd);
         return cmd;
     }
 

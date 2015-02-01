@@ -2,7 +2,7 @@ package catalog.rule;
 
 
 import catalog.Assembly;
-import catalog.AssemblyEngine.*;
+import mgr.AssemblyMgr.*;
 
 /**
  * implementations of this interface verify that a given ProductCandidate

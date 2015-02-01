@@ -32,7 +32,7 @@ public class PartResource {
     public PartImportCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
         PartImportCmd cmd = new PartImportCmd();
         cmd.setInputFilePath(pathURI);
-        mgr.importParts(cmd);
+        mgr.exec(cmd);
         return cmd;
     }
 
@@ -42,7 +42,7 @@ public class PartResource {
     public PartExportCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
         PartExportCmd cmd = new PartExportCmd();
         cmd.setOutputFilePath(pathURI);
-        mgr.exportParts(cmd);
+        mgr.exec(cmd);
         return cmd;
     }
 
@@ -52,7 +52,7 @@ public class PartResource {
     public PartFetchCmd getSupplier (@QueryParam("partID") String partID ) {
         PartFetchCmd cmd = new PartFetchCmd();
         cmd.setPartID(partID);
-        mgr.getPart(cmd);
+        mgr.exec(cmd);
         return cmd;
     }
 }
