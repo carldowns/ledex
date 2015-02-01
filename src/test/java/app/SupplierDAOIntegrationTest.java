@@ -1,6 +1,7 @@
 package app;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
 import supplier.dao.SupplierSQL;
@@ -23,6 +24,7 @@ public class SupplierDAOIntegrationTest {
     }
 
     @Test
+    @Ignore
     public void shouldFind() {
         Iterator<String> results = dao.getAllSupplierNames();
         org.junit.Assert.assertNotNull(results);
