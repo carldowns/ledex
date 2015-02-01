@@ -2,17 +2,15 @@ package cmd;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.net.URI;
-
 /**
  *
  */
-public class ExportSuppliersCmd extends BaseCmd {
+public class PartExportCmd extends AbstractBaseCmd {
 
     @JsonProperty
     private String outputFilePath;
 
-    public ExportSuppliersCmd() {
+    public PartExportCmd() {
         super();
     }
 

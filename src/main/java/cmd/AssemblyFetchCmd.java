@@ -2,12 +2,11 @@ package cmd;
 
 import catalog.Assembly;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import supplier.Supplier;
 
 /**
  *
  */
-public class GetAssemblyCmd extends BaseCmd {
+public class AssemblyFetchCmd extends AbstractBaseCmd {
 
     @JsonProperty
     private String assemblyID;
@@ -15,7 +14,7 @@ public class GetAssemblyCmd extends BaseCmd {
     @JsonProperty
     private Assembly assembly;
 
-    public GetAssemblyCmd() {
+    public AssemblyFetchCmd() {
         super();
     }
 

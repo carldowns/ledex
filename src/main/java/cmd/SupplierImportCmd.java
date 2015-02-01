@@ -2,20 +2,15 @@ package cmd;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.net.URI;
-
 /**
  *
  */
-public class ImportPartsCmd extends BaseCmd {
+public class SupplierImportCmd extends AbstractBaseCmd {
 
     @JsonProperty
     private String inputFilePath;
 
-    @JsonProperty
-    private String supplierID;
-
-    public ImportPartsCmd() {
+    public SupplierImportCmd() {
         super();
     }
 
@@ -25,13 +20,5 @@ public class ImportPartsCmd extends BaseCmd {
 
     public void setInputFilePath(String inputFilePath) {
         this.inputFilePath = inputFilePath;
-    }
-
-    public String getSupplierID() {
-        return supplierID;
-    }
-
-    public void setSupplierID(String supplierID) {
-        this.supplierID = supplierID;
     }
 }

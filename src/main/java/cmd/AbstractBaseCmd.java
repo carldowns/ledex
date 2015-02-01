@@ -28,7 +28,7 @@ import java.util.LinkedHashMap;
  */
 
 @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
-public abstract class BaseCmd {
+public abstract class AbstractBaseCmd {
 
     public static enum CmdState {
         started,
@@ -62,12 +62,12 @@ public abstract class BaseCmd {
     // Constructors
     /////////////////////////////////
 
-    public BaseCmd(CmdState initialState) {
+    public AbstractBaseCmd(CmdState initialState) {
         this.type = this.getClass().getSimpleName();
         this.state = initialState;
     }
 
-    public BaseCmd() {
+    public AbstractBaseCmd() {
         this.type = this.getClass().getSimpleName();
         this.state = CmdState.started;
     }

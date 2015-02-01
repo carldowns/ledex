@@ -5,15 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  *
  */
-public class ImportAssembliesCmd extends BaseCmd {
+public class PartImportCmd extends AbstractBaseCmd {
 
     @JsonProperty
     private String inputFilePath;
 
     @JsonProperty
-    private String assemblyID;
+    private String supplierID;
 
-    public ImportAssembliesCmd() {
+    public PartImportCmd() {
         super();
     }
 
@@ -25,11 +25,11 @@ public class ImportAssembliesCmd extends BaseCmd {
         this.inputFilePath = inputFilePath;
     }
 
-    public String getAssemblyID() {
-        return assemblyID;
+    public String getSupplierID() {
+        return supplierID;
     }
 
-    public void setAssemblyID(String supplierID) {
-        this.assemblyID = assemblyID;
+    public void setSupplierID(String supplierID) {
+        this.supplierID = supplierID;
     }
 }

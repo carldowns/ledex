@@ -6,8 +6,8 @@ import ch.qos.logback.classic.Logger;
 
 import static com.google.common.base.Preconditions.*;
 
-import cmd.BaseCmd;
-import cmd.UpdateCatalogCmd;
+import cmd.AbstractBaseCmd;
+import cmd.CatalogUpdateCmd;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
@@ -37,10 +37,10 @@ public class AssemblyEngine {
     /**
      * deletes / rebuilds all products in the catalog based on imported Assemblies and Parts
      */
-    public void rebuildCatalog(UpdateCatalogCmd cmd) {
+    public void rebuildCatalog(CatalogUpdateCmd cmd) {
 
         try {
-            cmd.setState(BaseCmd.CmdState.started);
+            cmd.setState(AbstractBaseCmd.CmdState.started);
             catalogMgr.deleteCatalog();
 
             cmd.log("rebuilding catalog from scratch");
@@ -79,11 +79,11 @@ public class AssemblyEngine {
                 }
 
             }
-            cmd.setState(BaseCmd.CmdState.completed);
+            cmd.setState(AbstractBaseCmd.CmdState.completed);
         }
         catch (Exception e) {
             cmd.log(e.toString());
-            cmd.setState(BaseCmd.CmdState.failed);
+            cmd.setState(AbstractBaseCmd.CmdState.failed);
             logger.error("unable to build catalog", e);
         }
     }

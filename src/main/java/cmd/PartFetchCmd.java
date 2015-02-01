@@ -6,7 +6,7 @@ import part.Part;
 /**
  *
  */
-public class GetPartCmd extends BaseCmd {
+public class PartFetchCmd extends AbstractBaseCmd {
 
     @JsonProperty
     private String partID;
@@ -14,7 +14,7 @@ public class GetPartCmd extends BaseCmd {
     @JsonProperty
     private Part part;
 
-    public GetPartCmd() {
+    public PartFetchCmd() {
         super();
     }
 

@@ -40,8 +40,8 @@ public class AssemblyResource {
     @GET
     @Path ("/import")
     @Timed
-    public ImportAssembliesCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
-        ImportAssembliesCmd cmd = new ImportAssembliesCmd();
+    public AssemblyImportCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
+        AssemblyImportCmd cmd = new AssemblyImportCmd();
         cmd.setInputFilePath(pathURI);
         catalogMgr.importAssemblies(cmd);
         return cmd;
@@ -50,8 +50,8 @@ public class AssemblyResource {
     @GET
     @Path ("/export")
     @Timed
-    public ExportAssembliesCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
-        ExportAssembliesCmd cmd = new ExportAssembliesCmd();
+    public AssemblyExportCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
+        AssemblyExportCmd cmd = new AssemblyExportCmd();
         cmd.setOutputFilePath(pathURI);
         catalogMgr.exportAssemblies(cmd);
         return cmd;
@@ -60,8 +60,8 @@ public class AssemblyResource {
     @GET
     @Path ("/get")
     @Timed
-    public GetAssemblyCmd getSupplier (@QueryParam("assemblyID") String assemblyID ) {
-        GetAssemblyCmd cmd = new GetAssemblyCmd();
+    public AssemblyFetchCmd getSupplier (@QueryParam("assemblyID") String assemblyID ) {
+        AssemblyFetchCmd cmd = new AssemblyFetchCmd();
         cmd.setAssemblyID(assemblyID);
         catalogMgr.getAssembly(cmd);
         return cmd;
@@ -70,8 +70,8 @@ public class AssemblyResource {
     @GET
     @Path ("/update-catalog")
     @Timed
-    public UpdateCatalogCmd getSupplier () {
-        UpdateCatalogCmd cmd = new UpdateCatalogCmd();
+    public CatalogUpdateCmd getSupplier () {
+        CatalogUpdateCmd cmd = new CatalogUpdateCmd();
         assemblyEngine.rebuildCatalog(cmd);
         return cmd;
     }

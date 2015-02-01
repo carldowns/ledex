@@ -53,7 +53,7 @@ public class CatalogMgr {
     /**
      * @param cmd
      */
-    public void importParts(ImportPartsCmd cmd) {
+    public void importParts(PartImportCmd cmd) {
 
         try {
             URI uri = new URI(cmd.getInputFilePath());
@@ -123,7 +123,7 @@ public class CatalogMgr {
      * exports suppliers to JSON
      * @param cmd
      */
-    public void exportParts(ExportPartsCmd cmd) {
+    public void exportParts(PartExportCmd cmd) {
         try {
             URI uri = new URI(cmd.getOutputFilePath());
 
@@ -169,7 +169,7 @@ public class CatalogMgr {
     // Part CRUD
     /////////////////////////
 
-    public void getPart(GetPartCmd cmd) {
+    public void getPart(PartFetchCmd cmd) {
         try {
             Part part = getPart (cmd.getPartID());
             cmd.setPart(part);
@@ -251,7 +251,7 @@ public class CatalogMgr {
     /////////////////////////
 
 
-    public void getAssembly(GetAssemblyCmd cmd) {
+    public void getAssembly(AssemblyFetchCmd cmd) {
         try {
             Assembly assembly = getAssembly(cmd.getAssemblyID());
             cmd.setAssembly(assembly);
@@ -318,7 +318,7 @@ public class CatalogMgr {
     /**
      * @param cmd
      */
-    public void importAssemblies(ImportAssembliesCmd cmd) {
+    public void importAssemblies(AssemblyImportCmd cmd) {
 
         try {
             URI uri = new URI(cmd.getInputFilePath());
@@ -392,7 +392,7 @@ public class CatalogMgr {
      * exports suppliers to JSON
      * @param cmd
      */
-    public void exportAssemblies(ExportAssembliesCmd cmd) {
+    public void exportAssemblies(AssemblyExportCmd cmd) {
         try {
             URI uri = new URI(cmd.getOutputFilePath());
 

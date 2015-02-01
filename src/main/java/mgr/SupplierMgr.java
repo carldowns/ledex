@@ -46,7 +46,7 @@ public class SupplierMgr {
      * imports suppliers from JSON
      * @param cmd
      */
-    public void importSuppliers(ImportSuppliersCmd cmd) {
+    public void importSuppliers(SupplierImportCmd cmd) {
         // open the file
 
         try {
@@ -118,7 +118,7 @@ public class SupplierMgr {
      * exports suppliers to JSON
      * @param cmd
      */
-    public void exportSuppliers(ExportSuppliersCmd cmd) {
+    public void exportSuppliers(SupplierExportCmd cmd) {
         try {
             URI uri = new URI(cmd.getOutputFilePath());
 
@@ -164,20 +164,20 @@ public class SupplierMgr {
     // Supplier CRUD
     /////////////////////////
 
-    public void createSupplier(BaseCmd cmd) {
+    public void createSupplier(AbstractBaseCmd cmd) {
     }
 
-    public void updateSupplier(BaseCmd cmd) {
+    public void updateSupplier(AbstractBaseCmd cmd) {
     }
 
-    public void deleteSupplier(BaseCmd cmd) {
+    public void deleteSupplier(AbstractBaseCmd cmd) {
     }
 
     /**
      * returns Supplier JSON document as POJO
      * @param cmd
      */
-    public void getSupplier(GetSupplierCmd cmd) {
+    public void getSupplier(SupplierFetchCmd cmd) {
         try {
             SupplierDoc doc = sql.getCurrentSupplierDoc(cmd.getSupplierID());
             if (doc == null)

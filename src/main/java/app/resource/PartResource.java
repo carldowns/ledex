@@ -1,12 +1,10 @@
 package app.resource;
 
-import catalog.dao.AssemblySQL;
 import cmd.*;
 import com.codahale.metrics.annotation.Timed;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import mgr.CatalogMgr;
-import part.dao.PartSQL;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -31,8 +29,8 @@ public class PartResource {
     @GET
     @Path ("/import")
     @Timed
-    public ImportPartsCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
-        ImportPartsCmd cmd = new ImportPartsCmd();
+    public PartImportCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
+        PartImportCmd cmd = new PartImportCmd();
         cmd.setInputFilePath(pathURI);
         mgr.importParts(cmd);
         return cmd;
@@ -41,8 +39,8 @@ public class PartResource {
     @GET
     @Path ("/export")
     @Timed
-    public ExportPartsCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
-        ExportPartsCmd cmd = new ExportPartsCmd();
+    public PartExportCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
+        PartExportCmd cmd = new PartExportCmd();
         cmd.setOutputFilePath(pathURI);
         mgr.exportParts(cmd);
         return cmd;
@@ -51,8 +49,8 @@ public class PartResource {
     @GET
     @Path ("/get")
     @Timed
-    public GetPartCmd getSupplier (@QueryParam("partID") String partID ) {
-        GetPartCmd cmd = new GetPartCmd();
+    public PartFetchCmd getSupplier (@QueryParam("partID") String partID ) {
+        PartFetchCmd cmd = new PartFetchCmd();
         cmd.setPartID(partID);
         mgr.getPart(cmd);
         return cmd;

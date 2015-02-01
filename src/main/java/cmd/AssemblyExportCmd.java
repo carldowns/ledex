@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  *
  */
-public class ExportAssembliesCmd extends BaseCmd {
+public class AssemblyExportCmd extends AbstractBaseCmd {
 
     @JsonProperty
     private String outputFilePath;
 
-    public ExportAssembliesCmd() {
+    public AssemblyExportCmd() {
         super();
     }
 

@@ -7,9 +7,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import cmd.ExportSuppliersCmd;
-import cmd.GetSupplierCmd;
-import cmd.ImportSuppliersCmd;
+import cmd.SupplierExportCmd;
+import cmd.SupplierFetchCmd;
+import cmd.SupplierImportCmd;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import mgr.SupplierMgr;
@@ -37,8 +37,8 @@ public class SupplierResource {
     @GET
     @Path ("/import")
     @Timed
-    public ImportSuppliersCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
-        ImportSuppliersCmd cmd = new ImportSuppliersCmd();
+    public SupplierImportCmd importSuppliers (@QueryParam("pathURI") String pathURI) {
+        SupplierImportCmd cmd = new SupplierImportCmd();
         cmd.setInputFilePath(pathURI);
         mgr.importSuppliers(cmd);
         return cmd;
@@ -47,8 +47,8 @@ public class SupplierResource {
     @GET
     @Path ("/export")
     @Timed
-    public ExportSuppliersCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
-        ExportSuppliersCmd cmd = new ExportSuppliersCmd();
+    public SupplierExportCmd exportSuppliers (@QueryParam("pathURI") String pathURI) {
+        SupplierExportCmd cmd = new SupplierExportCmd();
         cmd.setOutputFilePath(pathURI);
         mgr.exportSuppliers(cmd);
         return cmd;
@@ -57,8 +57,8 @@ public class SupplierResource {
     @GET
     @Path ("/get")
     @Timed
-    public GetSupplierCmd getSupplier (@QueryParam("supplierID") String id ) {
-        GetSupplierCmd cmd = new GetSupplierCmd();
+    public SupplierFetchCmd getSupplier (@QueryParam("supplierID") String id ) {
+        SupplierFetchCmd cmd = new SupplierFetchCmd();
         cmd.setSupplierID(id);
         mgr.getSupplier(cmd);
         return cmd;
