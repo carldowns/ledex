@@ -1,12 +1,12 @@
 package quote.cmd;
 
-import cmd.AbstractBaseCmd;
+import cmd.Cmd;
 import quote.Quote;
 
 /**
  *
  */
-public class QuoteBaseCmd extends AbstractBaseCmd {
+public class QuoteBaseCmd extends Cmd {
 
     private Quote quote;
 

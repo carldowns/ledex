@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  *
  */
-public class AssemblyFetchCmd extends AbstractBaseCmd {
+public class AssemblyFetchCmd extends Cmd {
 
     @JsonProperty
     private String assemblyID;

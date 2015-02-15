@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  *
  */
-public class SupplierImportCmd extends AbstractBaseCmd {
+public class SupplierImportCmd extends Cmd {
 
     @JsonProperty
     private String inputFilePath;

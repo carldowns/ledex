@@ -3,7 +3,7 @@ package cmd;
 /**
  *
  */
-public class CatalogUpdateCmd extends AbstractBaseCmd {
+public class CatalogUpdateCmd extends Cmd {
 
     public CatalogUpdateCmd() {
         super();

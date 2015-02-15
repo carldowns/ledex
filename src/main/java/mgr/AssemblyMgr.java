@@ -9,7 +9,7 @@ import ch.qos.logback.classic.Logger;
 
 import static com.google.common.base.Preconditions.*;
 
-import cmd.AbstractBaseCmd;
+import cmd.Cmd;
 import cmd.CatalogUpdateCmd;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
@@ -43,7 +43,7 @@ public class AssemblyMgr {
     public void exec(CatalogUpdateCmd cmd) {
 
         try {
-            cmd.setState(AbstractBaseCmd.CmdState.started);
+            cmd.setState(Cmd.CmdState.started);
             catalogMgr.deleteCatalog();
 
             cmd.log("rebuilding catalog from scratch");
@@ -82,11 +82,11 @@ public class AssemblyMgr {
                 }
 
             }
-            cmd.setState(AbstractBaseCmd.CmdState.completed);
+            cmd.setState(Cmd.CmdState.completed);
         }
         catch (Exception e) {
             cmd.log(e.toString());
-            cmd.setState(AbstractBaseCmd.CmdState.failed);
+            cmd.setState(Cmd.CmdState.failed);
             logger.error("unable to build catalog", e);
         }
     }
