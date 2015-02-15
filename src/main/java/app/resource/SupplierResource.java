@@ -7,9 +7,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
-import cmd.SupplierExportCmd;
-import cmd.SupplierFetchCmd;
-import cmd.SupplierImportCmd;
+import supplier.cmd.SupplierExportCmd;
+import supplier.cmd.SupplierFetchCmd;
+import supplier.cmd.SupplierImportCmd;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import mgr.SupplierMgr;

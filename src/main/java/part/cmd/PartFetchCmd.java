@@ -1,5 +1,6 @@
-package cmd;
+package part.cmd;
 
+import cmd.Cmd;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import part.Part;
 

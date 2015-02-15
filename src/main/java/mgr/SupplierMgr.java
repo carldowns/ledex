@@ -1,7 +1,6 @@
 package mgr;
 
 import ch.qos.logback.classic.Logger;
-import cmd.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.inject.Inject;
@@ -9,6 +8,9 @@ import com.google.inject.Singleton;
 import org.eclipse.jetty.util.StringUtil;
 import org.slf4j.LoggerFactory;
 import supplier.Supplier;
+import supplier.cmd.SupplierExportCmd;
+import supplier.cmd.SupplierFetchCmd;
+import supplier.cmd.SupplierImportCmd;
 import supplier.dao.SupplierDoc;
 import supplier.dao.SupplierRec;
 import supplier.dao.SupplierSQL;

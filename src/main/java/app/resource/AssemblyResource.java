@@ -1,6 +1,9 @@
 package app.resource;
 
-import cmd.*;
+import catalog.cmd.AssemblyExportCmd;
+import catalog.cmd.AssemblyFetchCmd;
+import catalog.cmd.AssemblyImportCmd;
+import catalog.cmd.CatalogUpdateCmd;
 import com.codahale.metrics.annotation.Timed;
 import mgr.AssemblyMgr;
 import com.google.inject.Inject;

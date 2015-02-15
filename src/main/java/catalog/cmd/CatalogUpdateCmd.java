@@ -1,4 +1,6 @@
-package cmd;
+package catalog.cmd;
+
+import cmd.Cmd;
 
 /**
  *

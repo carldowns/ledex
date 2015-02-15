@@ -10,7 +10,7 @@ import ch.qos.logback.classic.Logger;
 import static com.google.common.base.Preconditions.*;
 
 import cmd.Cmd;
-import cmd.CatalogUpdateCmd;
+import catalog.cmd.CatalogUpdateCmd;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

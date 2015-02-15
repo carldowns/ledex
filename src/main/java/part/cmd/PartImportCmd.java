@@ -1,19 +1,20 @@
-package cmd;
+package part.cmd;
 
+import cmd.Cmd;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  *
  */
-public class AssemblyImportCmd extends Cmd {
+public class PartImportCmd extends Cmd {
 
     @JsonProperty
     private String inputFilePath;
 
     @JsonProperty
-    private String assemblyID;
+    private String supplierID;
 
-    public AssemblyImportCmd() {
+    public PartImportCmd() {
         super();
     }
 
@@ -25,11 +26,11 @@ public class AssemblyImportCmd extends Cmd {
         this.inputFilePath = inputFilePath;
     }
 
-    public String getAssemblyID() {
-        return assemblyID;
+    public String getSupplierID() {
+        return supplierID;
     }
 
-    public void setAssemblyID(String supplierID) {
-        this.assemblyID = assemblyID;
+    public void setSupplierID(String supplierID) {
+        this.supplierID = supplierID;
     }
 }

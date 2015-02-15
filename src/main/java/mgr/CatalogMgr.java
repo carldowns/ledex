@@ -1,11 +1,13 @@
 package mgr;
 
 import catalog.*;
+import catalog.cmd.AssemblyExportCmd;
+import catalog.cmd.AssemblyFetchCmd;
+import catalog.cmd.AssemblyImportCmd;
 import catalog.dao.AssemblyDoc;
 import catalog.dao.AssemblyRec;
 import catalog.dao.AssemblySQL;
 import ch.qos.logback.classic.Logger;
-import cmd.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.google.common.base.Throwables;
@@ -15,6 +17,9 @@ import com.google.inject.Singleton;
 import part.Part;
 import org.eclipse.jetty.util.StringUtil;
 import org.slf4j.LoggerFactory;
+import part.cmd.PartExportCmd;
+import part.cmd.PartFetchCmd;
+import part.cmd.PartImportCmd;
 import part.dao.PartDoc;
 import part.dao.PartRec;
 import part.dao.PartSQL;
