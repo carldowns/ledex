@@ -3,6 +3,7 @@ package app;
 import app.resource.AssemblyResource;
 import app.resource.PartResource;
 import app.resource.SupplierResource;
+import app.resource.WorkflowResource;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.dropwizard.Application;
@@ -46,6 +47,7 @@ public class CatApplication extends Application<CatConfiguration> {
         env.jersey().register(injector.getInstance(SupplierResource.class));
         env.jersey().register(injector.getInstance(AssemblyResource.class));
         env.jersey().register(injector.getInstance(PartResource.class));
+        env.jersey().register(injector.getInstance(WorkflowResource.class));
     }
 
     private void initTasks(Injector injector, CatConfiguration config, Environment env)

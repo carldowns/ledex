@@ -1,14 +1,11 @@
-package cmd;
+package system;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Maps;
-import org.joda.time.Chronology;
 import org.joda.time.DateTime;
-import org.joda.time.chrono.ISOChronology;
 import util.CmdRuntimeException;
-
 import java.util.LinkedHashMap;
 
 /**
@@ -28,14 +25,19 @@ import java.util.LinkedHashMap;
  */
 
 @JsonInclude(value=JsonInclude.Include.NON_EMPTY)
-public abstract class Cmd {
+public class Cmd {
 
-    public static enum CmdState {
-        started,
-        waiting,
-        completed,
-        failed
-    }
+    /**
+     * unique ID for this command instance
+     */
+    @JsonProperty
+    private String ID;
+
+    /**
+     * source command ID (may be null if root command)
+     */
+    @JsonProperty
+    private String sourceCmdID;
 
     /**
      * type of command
@@ -57,7 +59,6 @@ public abstract class Cmd {
     @JsonProperty
     private LinkedHashMap<String,String> log = Maps.newLinkedHashMap();
 
-
     /////////////////////////////////
     // Constructors
     /////////////////////////////////
@@ -72,8 +73,19 @@ public abstract class Cmd {
         this.state = CmdState.started;
     }
 
+    public Cmd(String ID) {
+        this();
+        setID(ID);
+    }
+
+    public Cmd(String ID, String parentID) {
+        this();
+        setID(ID);
+        setSourceCmdID(parentID);
+    }
+
     /////////////////////////////////
-    // Immutable
+    // Type
     /////////////////////////////////
 
     /**
@@ -85,9 +97,32 @@ public abstract class Cmd {
         return type;
     }
 
+    /////////////////////////////////
+    // ID
+    /////////////////////////////////
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public boolean hasAssignedID() {
+        return ID != null;
+    }
+
+    public String getSourceCmdID() {
+        return sourceCmdID;
+    }
+
+    public void setSourceCmdID(String sourceCmdID) {
+        this.sourceCmdID = sourceCmdID;
+    }
 
     /////////////////////////////////
-    // Methods
+    // State
     /////////////////////////////////
 
     /**
@@ -98,19 +133,23 @@ public abstract class Cmd {
         return state;
     }
 
-    public boolean isCompleted () {
+    @JsonIgnore
+    public boolean isCompleted() {
         return state == CmdState.completed;
     }
 
-    public boolean isFailed () {
+    @JsonIgnore
+    public boolean isFailed() {
         return state == CmdState.failed;
     }
 
-    public boolean isStarted () {
+    @JsonIgnore
+    public boolean isStarted() {
         return state == CmdState.started;
     }
 
-    public boolean isWaiting () {
+    @JsonIgnore
+    public boolean isWaiting() {
         return state == CmdState.waiting;
     }
 
@@ -154,6 +193,10 @@ public abstract class Cmd {
             key+= ".";
         }
         log.put(key, step);
+    }
+
+    public LinkedHashMap<String,String> getLogEntries () {
+        return log;
     }
 
     /////////////////////////////////

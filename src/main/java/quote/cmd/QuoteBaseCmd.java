@@ -1,6 +1,6 @@
 package quote.cmd;
 
-import cmd.Cmd;
+import system.Cmd;
 import quote.Quote;
 
 /**

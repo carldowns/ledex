@@ -4,6 +4,8 @@ import org.apache.commons.codec.binary.Hex;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Random;
+import java.util.UUID;
 import java.util.zip.Adler32;
 
 /**
@@ -25,5 +27,10 @@ public class HashUtil {
         MessageDigest md = MessageDigest.getInstance("MD5"); // TODO: make static
         byte[] messageDigest = md.digest(payload.getBytes());
         return new String (Hex.encodeHex(messageDigest));
+    }
+
+    static public String newUUID () {
+        UUID uuid = UUID.randomUUID();
+        return uuid.toString();
     }
 }

@@ -24,7 +24,7 @@ public class SupplierDAOIntegrationTest {
     }
 
     @Test
-    @Ignore
+    //@Ignore
     public void shouldFind() {
         Iterator<String> results = dao.getAllSupplierNames();
         org.junit.Assert.assertNotNull(results);

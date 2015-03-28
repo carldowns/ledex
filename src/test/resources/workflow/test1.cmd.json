@@ -1,0 +1,9 @@
+{
+  "type": "PartExport",
+  "state" : "started",
+  "log" : {
+    "2015-04-34T00:04:04" : "Got stuff done",
+    "2015-04-34T00:04:10" : "What happened?"
+  }
+}
+
