@@ -1,4 +1,4 @@
-package system;
+package cmd;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package system.dao;
+package cmd.dao;
 
 ///////////////////////////////////////////////////////////////////////
 //  Column  |            Type             |       Modifiers

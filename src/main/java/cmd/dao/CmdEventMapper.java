@@ -1,4 +1,4 @@
-package system.dao;
+package cmd.dao;
 
 import org.skife.jdbi.v2.StatementContext;
 import org.skife.jdbi.v2.tweak.ResultSetMapper;

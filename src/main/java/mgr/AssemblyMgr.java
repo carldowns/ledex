@@ -9,7 +9,6 @@ import ch.qos.logback.classic.Logger;
 
 import static com.google.common.base.Preconditions.*;
 
-import system.Cmd;
 import catalog.cmd.CatalogUpdateCmd;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
@@ -19,7 +18,7 @@ import com.google.inject.Singleton;
 import org.slf4j.LoggerFactory;
 import part.Part;
 import catalog.dao.CatalogPart;
-import system.CmdState;
+import cmd.CmdState;
 
 import java.util.LinkedHashMap;
 import java.util.List;

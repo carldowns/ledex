@@ -1,4 +1,4 @@
-package system;
+package cmd;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;

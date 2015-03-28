@@ -1,16 +1,17 @@
-package mgr;
+package cmd;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
+import mgr.CmdMgr;
 import org.junit.*;
 import org.skife.jdbi.v2.DBI;
-import system.Cmd;
-import system.CmdEvent;
-import system.CmdHandler;
-import system.CmdState;
-import system.dao.CmdRow;
-import system.dao.CmdSQL;
+import cmd.Cmd;
+import cmd.CmdEvent;
+import cmd.CmdHandler;
+import cmd.CmdState;
+import cmd.dao.CmdRow;
+import cmd.dao.CmdSQL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +21,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 
 /**
- *
+ * This test requires that Postgres 'catalog' database be started prior to running.
  */
-public class WorkflowMgrIntegrationTest {
+public class CmdMgrIntegrationTest {
 
     private CmdSQL dao;
     private ObjectMapper mapper = new ObjectMapper();
@@ -44,7 +45,7 @@ public class WorkflowMgrIntegrationTest {
 
     @Test
     public void basicCmdStoreAndRetrieveTest () {
-        WorkflowMgr mgr = new WorkflowMgr(dao,"100100");
+        CmdMgr mgr = new CmdMgr(dao,"100100");
 
         mgr.addHandler(new CmdHandler<Cmd>() {
 
@@ -59,7 +60,7 @@ public class WorkflowMgrIntegrationTest {
             }
 
             @Override
-            //@SuppressWarnings("unchecked")
+            @SuppressWarnings("unchecked")
             public Cmd convert(CmdRow row) {
                 try {
                     return mapper.readValue(row.getDoc(), Cmd.class);
@@ -88,7 +89,7 @@ public class WorkflowMgrIntegrationTest {
 
     @Test
     public void extendedCmdStoreAndRetrieveTest () {
-        WorkflowMgr mgr = new WorkflowMgr(dao,"100100");
+        CmdMgr mgr = new CmdMgr(dao,"100100");
 
         mgr.addHandler(new CmdHandler<TestCmd>() {
 
@@ -145,7 +146,7 @@ public class WorkflowMgrIntegrationTest {
 
     @Test
     public void extendedCmdHandlerTest () {
-        WorkflowMgr mgr = new WorkflowMgr(dao,"100100");
+        CmdMgr mgr = new CmdMgr(dao,"100100");
 
         mgr.addHandler(new CmdHandler<TestCmd2>() {
 

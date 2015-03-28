@@ -1,7 +1,7 @@
 package catalog.cmd;
 
 import catalog.Assembly;
-import system.Cmd;
+import cmd.Cmd;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**

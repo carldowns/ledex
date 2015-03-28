@@ -1,15 +1,25 @@
-package system;
+package cmd;
 
-import system.dao.CmdRow;
+import cmd.dao.CmdRow;
 
 
 public interface CmdHandler<CC extends Cmd>  {
-    public String getCmdType();
-    public void process (CmdRow row, CmdEvent event);
 
+    /**
+     * returns the Cmd simple class name.
+     */
+    String getCmdType();
+
+    /**
+     * process the given Cmd row and event
+     */
+    void process (CmdRow row, CmdEvent event);
+
+    // TODO: find a way to quiet these warnings down
     // this form helps the manager not have an error but then handler derivatives need a @SuppressWarnings("unchecked")
     // to get this definition to not show a warning
-    public <C extends Cmd> C convert (CmdRow cmd);
+
+    <C extends Cmd> C convert (CmdRow cmd);
 
     // this form causes the WorkflowMgr to have an error because it does not know
     // the return type of calls that use convert()

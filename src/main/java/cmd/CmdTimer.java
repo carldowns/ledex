@@ -1,4 +1,4 @@
-package system;
+package cmd;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.joda.time.DateTime;

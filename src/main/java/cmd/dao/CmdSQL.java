@@ -1,13 +1,11 @@
-package system.dao;
+package cmd.dao;
 
-import org.joda.time.DateTime;
 import org.skife.jdbi.v2.sqlobject.Bind;
 import org.skife.jdbi.v2.sqlobject.SqlQuery;
 import org.skife.jdbi.v2.sqlobject.SqlUpdate;
 import org.skife.jdbi.v2.sqlobject.customizers.Mapper;
-import system.CmdEvent;
-import system.CmdMutex;
-import system.CmdState;
+import cmd.CmdEvent;
+import cmd.CmdMutex;
 
 import java.util.List;
 

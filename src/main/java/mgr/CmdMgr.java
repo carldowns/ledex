@@ -11,12 +11,12 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.dropwizard.lifecycle.Managed;
 import org.slf4j.LoggerFactory;
-import system.Cmd;
-import system.CmdEvent;
-import system.CmdMutex;
-import system.CmdHandler;
-import system.dao.CmdRow;
-import system.dao.CmdSQL;
+import cmd.Cmd;
+import cmd.CmdEvent;
+import cmd.CmdMutex;
+import cmd.CmdHandler;
+import cmd.dao.CmdRow;
+import cmd.dao.CmdSQL;
 
 import java.util.List;
 import java.util.concurrent.*;
@@ -28,9 +28,9 @@ import java.util.concurrent.*;
  */
 
 @Singleton
-public class WorkflowMgr implements Managed {
+public class CmdMgr implements Managed {
 
-    private static final Logger _log = (Logger) LoggerFactory.getLogger(WorkflowMgr.class);
+    private static final Logger _log = (Logger) LoggerFactory.getLogger(CmdMgr.class);
     private static int corePoolSize = 2;
     private static int _mutexRefreshCycle = 1000;
     private static final ObjectMapper mapper = new ObjectMapper(); // FIXME should be a shared resource
@@ -60,7 +60,7 @@ public class WorkflowMgr implements Managed {
 
     final ExecutorService _threadPool = new ScheduledThreadPoolExecutor(corePoolSize);
 
-    // handler list
+    // cmd handler list
 
     final ConcurrentMap<String, CmdHandler> _handlers = Maps.newConcurrentMap();
     //private static SortedMap<Integer,QuoteHandlerInterface> interpreters = new TreeMap<>();
@@ -80,7 +80,7 @@ public class WorkflowMgr implements Managed {
     /////////////////////////
 
     @Inject
-    public WorkflowMgr (CmdSQL sql, String processID) {
+    public CmdMgr(CmdSQL sql, String processID) {
         _sql = Preconditions.checkNotNull(sql, "CmdSQL");
         _processID = Preconditions.checkNotNull(processID, "processID");
     }
