@@ -109,10 +109,6 @@ public class Cmd {
         this.ID = ID;
     }
 
-    public boolean hasAssignedID() {
-        return ID != null;
-    }
-
     public String getSourceCmdID() {
         return sourceCmdID;
     }

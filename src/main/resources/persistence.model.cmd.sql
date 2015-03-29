@@ -1,4 +1,5 @@
 
+drop table CmdRec;
 create table CmdRec (
   cmdID text NOT NULL,
   cmdType text NOT NULL,
@@ -9,36 +10,40 @@ create table CmdRec (
   PRIMARY KEY(cmdID)
 );
 
-CREATE INDEX Cmd_State_Idx ON CmdRec (cmdState);
+CREATE INDEX CmdRec_State_Idx ON CmdRec (cmdState);
 
-create table CmdEvent (
+drop table CmdEventRec;
+create table CmdEventRec (
   eventID text NOT NULL,
   eventType text NOT NULL,
   eventState text NOT NULL,
-  targetCmdID text NOT NULL,
+  eventDue timestamp NOT NULL DEFAULT now(),
+  targetCmdID text,
   sourceCmdID text,
   ts timestamp NOT NULL DEFAULT now(),
   userID text,
   PRIMARY KEY(eventID)
 );
 
-CREATE INDEX CmdEvent_State_Idx ON CmdEvent (eventState);
+CREATE INDEX CmdEventRec_State_Idx ON CmdEventRec (eventState);
 
-create table CmdTimer (
-  timerID text NOT NULL,
-  timerState text NOT NULL,
-  timerCriteria text not NULL,
-  timerRepeats boolean not NULL,
-  timerDue timestamp NOT NULL,
-  ts timestamp NOT NULL DEFAULT now(),
-  userID text,
-  PRIMARY KEY(timerID)
-);
+-- drop table CmdTimerRec;
+-- create table CmdTimerRec (
+--   timerID text NOT NULL,
+--   timerState text NOT NULL,
+--   timerCriteria text not NULL,
+--   timerRepeats boolean not NULL,
+--   timerDue timestamp NOT NULL,
+--   ts timestamp NOT NULL DEFAULT now(),
+--   userID text,
+--   PRIMARY KEY(timerID)
+-- );
+--
+-- CREATE INDEX CmdTimerRec_State_Idx ON CmdTimerRec (timerState);
+-- CREATE INDEX CmdTimerRec_When_Idx ON CmdTimerRec (timerDue);
 
-CREATE INDEX CmdTimer_State_Idx ON CmdTimer (timerState);
-CREATE INDEX CmdTimer_When_Idx ON CmdTimer (timerDue);
-
-create table CmdMutex (
+drop table CmdMutexRec;
+create table CmdMutexRec (
   mutexID text NOT NULL,
   mutexType text NOT NULL,
   mutexOwner text NOT NULL,

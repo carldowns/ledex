@@ -1,16 +1,13 @@
 package cmd;
 
+import cmd.dao.CmdEventRec;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
 import mgr.CmdMgr;
 import org.junit.*;
 import org.skife.jdbi.v2.DBI;
-import cmd.Cmd;
-import cmd.CmdEvent;
-import cmd.CmdHandler;
-import cmd.CmdState;
-import cmd.dao.CmdRow;
+import cmd.dao.CmdRec;
 import cmd.dao.CmdSQL;
 
 import java.util.ArrayList;
@@ -27,7 +24,8 @@ public class CmdMgrIntegrationTest {
 
     private CmdSQL dao;
     private ObjectMapper mapper = new ObjectMapper();
-    private List<Cmd> cleanup = new ArrayList<Cmd>();
+    private List<Cmd> cmdCleanup = new ArrayList<>();
+    private List<CmdEventRec> eventCleanup = new ArrayList<>();
 
     @Before
     public void setup() {
@@ -38,13 +36,17 @@ public class CmdMgrIntegrationTest {
 
     @After
     public void cleanup() {
-        for (Cmd cmd : cleanup) {
+        for (Cmd cmd : cmdCleanup) {
             dao.deleteCmd(cmd.getID());
+        }
+
+        for (CmdEventRec rec : eventCleanup) {
+            dao.deleteEvent(rec.getEventID());
         }
     }
 
     @Test
-    public void basicCmdStoreAndRetrieveTest () {
+    public void cmdBaseCRUDTest () {
         CmdMgr mgr = new CmdMgr(dao,"100100");
 
         mgr.addHandler(new CmdHandler<Cmd>() {
@@ -55,13 +57,13 @@ public class CmdMgrIntegrationTest {
             }
 
             @Override
-            public void process(CmdRow row, CmdEvent event) {
+            public void process(CmdRec row, CmdEventRec event) {
                 Cmd cmd = convert(row);
             }
 
             @Override
             @SuppressWarnings("unchecked")
-            public Cmd convert(CmdRow row) {
+            public Cmd convert(CmdRec row) {
                 try {
                     return mapper.readValue(row.getDoc(), Cmd.class);
                 } catch (Exception e) {
@@ -70,16 +72,16 @@ public class CmdMgrIntegrationTest {
             }
         });
 
-        Cmd cmd = new Cmd();
+        Cmd cmd = new Cmd("C-1000");
         cmd.log("this is step 1");
         cmd.log("proceeding to step 2");
         cmd.log("finally we have step 3");
-        mgr.saveCmd(cmd);
-        cleanup.add(cmd);
+        mgr.createCmd(cmd);
+        cmdCleanup.add(cmd);
 
         cmd.setState(CmdState.completed);
         cmd.log("showing as completed");
-        mgr.saveCmd(cmd);
+        mgr.updateCmd(cmd);
 
         Cmd cmd2 = mgr.getCmd(cmd.getID());
         Assert.assertEquals(cmd.getID(), cmd2.getID());
@@ -88,8 +90,8 @@ public class CmdMgrIntegrationTest {
     }
 
     @Test
-    public void extendedCmdStoreAndRetrieveTest () {
-        CmdMgr mgr = new CmdMgr(dao,"100100");
+    public void cmdCRUDTest () {
+        CmdMgr mgr = new CmdMgr(dao,"300300");
 
         mgr.addHandler(new CmdHandler<TestCmd>() {
 
@@ -99,13 +101,13 @@ public class CmdMgrIntegrationTest {
             }
 
             @Override
-            public void process(CmdRow row, CmdEvent event) {
+            public void process(CmdRec row, CmdEventRec event) {
                 TestCmd cmd = convert(row);
             }
 
             @Override
             @SuppressWarnings("unchecked")
-            public TestCmd convert(CmdRow row) {
+            public TestCmd convert(CmdRec row) {
                 try {
                     return mapper.readValue(row.getDoc(), TestCmd.class);
                 } catch (Exception e) {
@@ -114,23 +116,68 @@ public class CmdMgrIntegrationTest {
             }
         });
 
-        TestCmd cmd = new TestCmd();
-        cmd.someInt = 300;
-        cmd.someInteger = 5000;
-        cmd.someFloat = 0.1F;
-        cmd.someString = "whatever";
-        cmd.someMap.put("uno", 1);
-        cmd.someMap.put("hundred", 100);
-        cmd.someMap.put("million", 1000000);
-        mgr.saveCmd(cmd);
-        cleanup.add(cmd);
+        TestCmd cmd1 = new TestCmd("C-2000");
+        cmd1.someInt = 300;
+        cmd1.someInteger = 5000;
+        cmd1.someFloat = 0.1F;
+        cmd1.someString = "whatever";
+        cmd1.someMap.put("uno", 1);
+        cmd1.someMap.put("hundred", 100);
+        cmd1.someMap.put("million", 1000000);
+        mgr.createCmd(cmd1);
+        cmdCleanup.add(cmd1);
 
-        TestCmd cmd2 = mgr.getCmd(cmd.getID());
-        Assert.assertEquals(cmd.someInt, cmd2.someInt);
-        Assert.assertEquals(cmd.someInteger, cmd2.someInteger);
-        Assert.assertEquals(cmd.someFloat, cmd2.someFloat);
-        Assert.assertEquals(cmd.someMap, cmd2.someMap);
+        TestCmd cmd2 = mgr.getCmd(cmd1.getID());
+        Assert.assertEquals(cmd1.someInt, cmd2.someInt);
+        Assert.assertEquals(cmd1.someInteger, cmd2.someInteger);
+        Assert.assertEquals(cmd1.someFloat, cmd2.someFloat);
+        Assert.assertEquals(cmd1.someMap, cmd2.someMap);
+
+        Assert.assertTrue(cmd2.getState() != CmdState.completed);
+        cmd2.setState(CmdState.completed);
+        cmd2.someInt = 25000;
+        mgr.updateCmd(cmd2);
+
+        TestCmd cmd3 = mgr.getCmd(cmd2.getID());
+        Assert.assertEquals(cmd2.getState(), cmd3.getState());
+        Assert.assertEquals(cmd3.getState(), CmdState.completed);
+        Assert.assertEquals(cmd3.someInt, 25000);
     }
+
+    /**
+     * Testing event persistence and retrieval by ID.
+     */
+    @Test
+    public void eventCRUDTest () {
+        CmdMgr mgr = new CmdMgr(dao,"220220");
+        CmdEventRec ce1 = new CmdEventRec("100", "whatever");
+        ce1.setTargetCmdID("target");
+        ce1.setSourceCmdID("source");
+
+        mgr.createEvent(ce1);
+        eventCleanup.add(ce1);
+
+        CmdEventRec ce2 = mgr.getEvent(ce1.getEventID());
+        Assert.assertEquals(ce1, ce2);
+
+        ce2.setEventState(CmdEventRec.CmdEventState.completed);
+        mgr.updateEvent(ce2);
+
+        CmdEventRec ce3 = mgr.getEvent(ce2.getEventID());
+        Assert.assertEquals(ce2, ce3);
+    }
+
+    @Test
+    public void newEventWithCmdTypeOnlyTest () {
+    }
+
+    @Test
+    public void returningEventTest () {
+    }
+
+    /////////////////////////////
+    // Cmds for Testing
+    /////////////////////////////
 
     private static class TestCmd extends Cmd {
         @JsonProperty int someInt;
@@ -138,57 +185,18 @@ public class CmdMgrIntegrationTest {
         @JsonProperty Float someFloat;
         @JsonProperty String someString;
         @JsonProperty Map<String, Integer> someMap = Maps.newHashMap();
-
-        public TestCmd () {
-            super();
+        public TestCmd () {}
+        public TestCmd (String ID) {
+            super(ID);
         }
-    }
-
-    @Test
-    public void extendedCmdHandlerTest () {
-        CmdMgr mgr = new CmdMgr(dao,"100100");
-
-        mgr.addHandler(new CmdHandler<TestCmd2>() {
-
-            @Override
-            public String getCmdType() {
-                return TestCmd2.class.getSimpleName();
-            }
-
-            @Override
-            public void process (CmdRow row, CmdEvent event) {
-                TestCmd2 cmd = convert (row);
-            }
-
-            @Override
-            @SuppressWarnings("unchecked")
-            public TestCmd2 convert (CmdRow row) {
-                try {
-                    return mapper.readValue(row.getDoc(), TestCmd2.class);
-                }
-                catch (Exception e) {
-                    throw new RuntimeException (e.getMessage());
-                }
-            }
-        });
-
-        TestCmd2 cmd = new TestCmd2();
-        cmd.someInt = 555;
-        mgr.saveCmd(cmd);
-        cleanup.add(cmd);
-
-        CmdRow row = dao.getCmdRow(cmd.getID());
-        TestCmd2 cmd2 = mgr.getCmdHandler(row).convert(row);
-
-        Assert.assertEquals(cmd.someInt, cmd2.someInt);
-
     }
 
     private static class TestCmd2 extends Cmd {
         @JsonProperty int someInt;
-
-        public TestCmd2 () {
-            super();
+        public TestCmd2 () {}
+        public TestCmd2 (String ID) {
+            super(ID);
         }
     }
+
 }

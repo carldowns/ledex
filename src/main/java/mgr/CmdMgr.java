@@ -12,10 +12,10 @@ import com.google.inject.Singleton;
 import io.dropwizard.lifecycle.Managed;
 import org.slf4j.LoggerFactory;
 import cmd.Cmd;
-import cmd.CmdEvent;
-import cmd.CmdMutex;
+import cmd.dao.CmdEventRec;
+import cmd.dao.CmdMutexRec;
 import cmd.CmdHandler;
-import cmd.dao.CmdRow;
+import cmd.dao.CmdRec;
 import cmd.dao.CmdSQL;
 
 import java.util.List;
@@ -31,39 +31,11 @@ import java.util.concurrent.*;
 public class CmdMgr implements Managed {
 
     private static final Logger _log = (Logger) LoggerFactory.getLogger(CmdMgr.class);
-    private static int corePoolSize = 2;
-    private static int _mutexRefreshCycle = 1000;
     private static final ObjectMapper mapper = new ObjectMapper(); // FIXME should be a shared resource
 
     /////////////////////////
-    // Caching
+    // Concurrency Control
     /////////////////////////
-
-    // the system reads periodically from data store to retrieve 'due' events
-    // due events are cached in an expiring cache to track that they have been encountered thus
-    // avoiding unnecessary reprocessing.
-
-    final Cache<String, CmdEvent> _dueEventCache = CacheBuilder.newBuilder()
-            .maximumSize(1000)
-            .expireAfterWrite(1, TimeUnit.MINUTES)
-            .build();
-
-    // FIFO queue for passing events to the worker threads
-
-    final ConcurrentLinkedQueue<CmdEvent> _dueEventQueue = new ConcurrentLinkedQueue<>();
-
-    // mutexes acquired
-
-    final ConcurrentHashMap<String, CmdMutex> _acquiredMutexes = new ConcurrentHashMap<>();
-
-    // worker pool
-
-    final ExecutorService _threadPool = new ScheduledThreadPoolExecutor(corePoolSize);
-
-    // cmd handler list
-
-    final ConcurrentMap<String, CmdHandler> _handlers = Maps.newConcurrentMap();
-    //private static SortedMap<Integer,QuoteHandlerInterface> interpreters = new TreeMap<>();
 
     // runtime identity of this process needed for mutex negotiation
     // process ID which must be random and unique for this run cycle.
@@ -72,16 +44,53 @@ public class CmdMgr implements Managed {
 
     final String _processID;
 
-    // data access
-    final CmdSQL _sql;
+    // mutexes are acquired for Cmd and Event objects before they can be processed.
+    // This is list is maintained purely for periodic refresh of the lease period.
+
+    final ConcurrentHashMap<String, CmdMutexRec> _acquiredMutexes = new ConcurrentHashMap<>();
 
     /////////////////////////
-    //
+    // Handlers
+    /////////////////////////
+
+    // handlers are registered for each type of Cmd.
+    // events must have the Cmd type to get processed
+
+    final ConcurrentMap<String, CmdHandler> _handlers = Maps.newConcurrentMap();
+
+    /////////////////////////
+    // Caching
+    /////////////////////////
+
+    // the system reads periodically from data store to retrieve 'due' events
+    // due events are cached in an expiring cache to track that they have been evaluated
+    // thus avoiding unnecessary repetitive processing.  As a later optimization, the keys
+    // of this cache can be used as an exclusion list when retrieving from the store.
+
+    final Cache<String, CmdEventRec> _dueEventCache = CacheBuilder.newBuilder()
+            .maximumSize(1000)
+            .expireAfterWrite(1, TimeUnit.MINUTES)
+            .build();
+
+    /////////////////////////
+    // Threading
+    /////////////////////////
+
+    final ScheduledThreadPoolExecutor _threadPool = new ScheduledThreadPoolExecutor(5);
+
+    /////////////////////////
+    // DAO
+    /////////////////////////
+
+    final CmdSQL _dao;
+
+    /////////////////////////
+    // Constructors
     /////////////////////////
 
     @Inject
     public CmdMgr(CmdSQL sql, String processID) {
-        _sql = Preconditions.checkNotNull(sql, "CmdSQL");
+        _dao = Preconditions.checkNotNull(sql, "CmdSQL");
         _processID = Preconditions.checkNotNull(processID, "processID");
     }
 
@@ -91,9 +100,8 @@ public class CmdMgr implements Managed {
 
     @Override
     public void start() throws Exception {
-        _threadPool.submit(pollEvents); // TODO fix this up so we have N of each type of runnable on the go
-        _threadPool.submit(processEvents);
-        _threadPool.submit(refreshMutexes);
+        _threadPool.scheduleAtFixedRate(pollEvents, 0, 1, TimeUnit.SECONDS);
+        _threadPool.scheduleAtFixedRate(refreshMutexes, 0, 10, TimeUnit.SECONDS);
     }
 
     @Override
@@ -102,13 +110,14 @@ public class CmdMgr implements Managed {
     }
 
     /////////////////////////
-    // Runnable
+    // Periodic Actions
     /////////////////////////
 
     Runnable pollEvents = new Runnable () {
         public void run () {
             try {
-                pollForDueEvents();
+                _log.info("polling for events...");
+                pollStoreForDueEvents();
             }
             catch (Exception e) {
                 _log.error("Unable to poll due events", e);
@@ -116,24 +125,17 @@ public class CmdMgr implements Managed {
         }
     };
 
-    Runnable processEvents = new Runnable () {
-        public void run () {
-            try {
-                processDueEvents();
-            }
-            catch (Exception e) {
-                _log.error("Unable to process due events", e);
-            }
-        }
-    };
+    // repeatedly update TTL for any mutexes contained in the mutex map owned by this process
+    // if one fails, free it from the map.
 
     Runnable refreshMutexes = new Runnable () {
         public void run () {
             try {
+                _log.info("refreshing mutex leases...");
                 refreshMutexes();
             }
             catch (Exception e) {
-                _log.error("Unable to refresh process mutexes", e);
+                _log.error("Unable to refresh mutexes", e);
             }
         }
     };
@@ -142,9 +144,9 @@ public class CmdMgr implements Managed {
     // Handler Interface
     //////////////////////
 
-    public CmdHandler<?> getCmdHandler (CmdRow cmdRecord) {
+    public CmdHandler<?> getCmdHandler (CmdRec cmdRecord) {
         CmdHandler<?> handler = _handlers.get(cmdRecord.getCmdType());
-        Preconditions.checkNotNull(handler, "Handler not found for type", cmdRecord.getCmdType());
+        Preconditions.checkNotNull(handler, "Handler not found for type %s", cmdRecord.getCmdType());
         return handler;
     }
 
@@ -158,26 +160,28 @@ public class CmdMgr implements Managed {
     /////////////////////////
 
     public <C extends Cmd> C getCmd (String cmdID) {
-        CmdRow row = _sql.getCmdRow(cmdID);
-        Preconditions.checkNotNull(row, "unable to retrieve cmd for cmdID {}", cmdID);
+        CmdRec row = _dao.getCmd(cmdID);
+        Preconditions.checkNotNull(row, "unable to retrieve cmd for cmdID %s", cmdID);
         return getCmdHandler(row).convert(row);
     }
 
-    public void saveCmd (Cmd cmd) {
+    public void createCmd (Cmd cmd) {
         try {
-            if (!cmd.hasAssignedID()) {
-                //cmd.setID(_sql.nextCmdID()); // FIXME
-                cmd.setID("TEST." + ThreadLocalRandom.current().nextLong()); // FIXME
-                String json = mapper.writeValueAsString(cmd);
-                _sql.insertCmd(cmd.getID(), cmd.getType(), cmd.getState().name(), json);
-            }
-            else {
-                String json = mapper.writeValueAsString(cmd);
-                _sql.updateCmd(cmd.getID(), cmd.getState().name(), json);
-            }
+            String json = mapper.writeValueAsString(cmd);
+            _dao.insertCmd(cmd.getID(), cmd.getType(), cmd.getState().name(), json);
         }
         catch (Exception e) {
-            _log.error("unable to save cmd {}", cmd, e);
+            _log.error("unable to create cmd %s %s", cmd, e);
+        }
+    }
+
+    public void updateCmd (Cmd cmd) {
+        try {
+            String json = mapper.writeValueAsString(cmd);
+            _dao.updateCmd(cmd.getID(), cmd.getState().name(), json);
+        }
+        catch (Exception e) {
+            _log.error("unable to update cmd %s %s", cmd, e);
         }
     }
 
@@ -185,29 +189,65 @@ public class CmdMgr implements Managed {
     // Event Interface
     /////////////////////////
 
-    public void saveEvent (CmdEvent event) {
-        Preconditions.checkArgument(!event.hasAssignedID(), "immutable event already persisted {}", event);
-        _sql.insertEvent(event.getEventID(), event.getEventType());
+    public void createEvent (CmdEventRec event) {
+        try {
+            _dao.insertEvent(
+                event.getEventID(),
+                event.getEventType(),
+                event.getEventState().toString(),
+                event.getSourceCmdID(),
+                event.getTargetCmdID());
+        }
+        catch (Exception e) {
+            _log.error("unable to save event %s %s", event, e);
+        }
     }
 
-    public List<CmdEvent> getEventsForCmd (Cmd cmd) {
+    public void updateEvent (CmdEventRec event) {
+        try {
+                _dao.updateEvent(
+                    event.getEventID(),
+                    event.getEventState().toString(),
+                    event.getSourceCmdID(),
+                    event.getTargetCmdID());
+        }
+        catch (Exception e) {
+            _log.error("unable to save event %s %s", event, e);
+        }
+    }
+
+    public CmdEventRec getEvent (String eventID) {
+        Preconditions.checkNotNull(eventID, "eventID %s", eventID);
+        return _dao.getEvent(eventID);
+    }
+
+    public List<CmdEventRec> getEventsForSourceCmd (Cmd cmd) {
         return ImmutableList.of(); // FIXME
     }
 
-    public Cmd getCmdForEvent (CmdEvent event) {
-        return null; // FIXME
+    public List<CmdEventRec> getEventsForTargetCmd (Cmd cmd) {
+        return ImmutableList.of(); // FIXME
     }
+
+    public Cmd getSourceCmdForEvent (CmdEventRec event) {
+        return getCmd(event.getSourceCmdID());
+    }
+
+    public Cmd getTargetCmdForEvent (CmdEventRec event) {
+        return getCmd(event.getTargetCmdID());
+    }
+
 
     /////////////////////////
     // Event Helpers
     /////////////////////////
 
-    private void pollForDueEvents () {
+    private void pollStoreForDueEvents() {
         // take out any expired / abandoned mutexes
-        _sql.deleteAnyAbandonedMutexes();
+        _dao.deleteAnyAbandonedMutexes();
 
         // poll event store for events that are due (AND do not have a mutex (table join))
-        for (CmdEvent event : _sql.getDueEvents()) {
+        for (CmdEventRec event : _dao.getDueEvents()) {
 
             // if the cache has the event ignore it
             if (_dueEventCache.asMap().containsKey(event.getEventID())) {
@@ -217,31 +257,72 @@ public class CmdMgr implements Managed {
         }
     }
 
-    private void queueEvent(CmdEvent event) {
-        // if the queue has room, queue it and map it else ignore it
-        // the queue implementation we have used is unbounded so this will always return true
-        if (_dueEventQueue.offer(event)) {
-            _dueEventCache.put(event.getEventID(), event);
+    private void queueEvent(final CmdEventRec event) {
+        try {
+            _threadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        acceptEvent(event);
+                    }
+                    catch (Exception e) {
+                        _log.error("Unable to accept event", e);
+                    }
+                }
+            });
+        }
+        catch (Exception e) {
+            _log.error("Unable to queue event", e);
         }
     }
 
-    private void processDueEvents () {
-        // get next event from the event queue.
-        CmdEvent event = _dueEventQueue.poll();
-        if (event == null) {
-            return;
-        }
-        acceptEvent(event);
-    }
+//    private void queueEvent2(CmdEvent event) {
+//        try {
+//            _threadPool.execute(new EventWorker(event));
+//        }
+//        catch (RejectedExecutionException ree) {
+//            _log.error("unable to add event to thread pool queue", ree);
+//        }
+//    }
+//
+//    private class EventWorker implements Runnable {
+//        CmdEvent _event;
+//
+//        EventWorker (CmdEvent event) {
+//            _event = event;
+//        }
+//
+//        @Override
+//        public void run() {
+//            acceptEvent(_event);
+//        }
+//    }
 
-    private void acceptEvent(CmdEvent event) {
-        CmdMutex mutex = null;
+//    private void queueEvent(CmdEvent event) {
+//        // if the queue has room, queue it and map it else ignore it
+//        // the queue implementation we have used is unbounded so this will always return true
+//        if (_dueEventQueue.offer(event)) {
+//            _dueEventCache.put(event.getEventID(), event);
+//        }
+//    }
+
+//    private void processDueEvents () {
+//        // get next event from the event queue.
+//        CmdEvent event = _dueEventQueue.poll();
+//        if (event == null) {
+//            return;
+//        }
+//        acceptEvent(event);
+//    }
+
+    private void acceptEvent(CmdEventRec event) {
+        CmdMutexRec mutex = null;
         try {
             // acquire a mutex lock for the event or exit
             mutex = acquireMutex(event);
             if (mutex == null) return;
 
-            CmdRow cmdRecord = _sql.getCmdRow(event.getTargetCmdID());
+            CmdRec cmdRecord = _dao.getCmd(event.getTargetCmdID());
             acceptCmd(event, cmdRecord);
         }
         catch (Exception e) {
@@ -257,10 +338,8 @@ public class CmdMgr implements Managed {
     // Cmd Helpers
     /////////////////////////
 
-    private void acceptCmd (CmdEvent event, CmdRow cmdRecord) {
-
-        CmdMutex mutex = null;
-
+    private void acceptCmd (CmdEventRec event, CmdRec cmdRecord) {
+        CmdMutexRec mutex = null;
         try {
             // acquire a mutex lock for the command (if applicable) or exit
             mutex = acquireMutex(cmdRecord);
@@ -269,80 +348,80 @@ public class CmdMgr implements Managed {
             // at this point we have the event and command mutexes
             execCmd(event, cmdRecord);
         }
-
         catch (Exception e) {
             _log.error("problems accepting cmd", e);
         }
-
         finally {
             // discard command mutex
             releaseMutex(mutex);
         }
     }
 
-    private void execCmd (CmdEvent event, CmdRow cmdRecord) {
+    private void execCmd (CmdEventRec event, CmdRec cmdRecord) {
 
         // handler will deserialize command implementation or construct new command if event does not reference one
 
-        CmdHandler<?> handler = getCmdHandler(cmdRecord);
-        handler.process(cmdRecord, event);
+        try {
+            CmdHandler<?> handler = getCmdHandler(cmdRecord);
+            handler.process(cmdRecord, event);
 
-        // mutex validity is maintained by the process through refreshing
-        // command completes, possibly creating new events along the way
-
-        // save command state and payload
-        // save event state show as completed if normal completion
-        // save event state show as error if exceptional exit
+            // save command state and payload
+            // save event state show as completed if normal completion
+            // save event state show as error if exceptional exit
+        }
+        catch (Exception e) {
+            _log.error("unable to execute event for cmd", e);
+        }
     }
 
     ////////////////////////////
     // Mutex Helpers
     ////////////////////////////
 
+    /**
+     * mutex validity is maintained by the process through refreshing
+     * command completes, possibly creating new events along the way
+     */
     private void refreshMutexes () {
 
         try {
-            // repeatedly update TTL for any mutexes contained in the mutex map owned by this process
-            // if one fails, free it from the map.
-
-            _sql.refreshProcessMutexes(_processID);
-            Thread.sleep(_mutexRefreshCycle);
+            _dao.refreshProcessMutexes(_processID);
         }
         catch (Exception e) {
             _log.error("unable to refresh all mutexes for process", e);
         }
     }
 
-    private CmdMutex acquireMutex (CmdEvent event) {
-        return acquireMutex (event.getEventID(), CmdMutex.Type.event);
+    private CmdMutexRec acquireMutex (CmdEventRec event) {
+        return acquireMutex (event.getEventID(), CmdMutexRec.Type.event);
     }
 
-    private CmdMutex acquireMutex (CmdRow cmdRec) {
-        return acquireMutex (cmdRec.toString(), CmdMutex.Type.cmd);
+    private CmdMutexRec acquireMutex (CmdRec cmdRec) {
+        return acquireMutex (cmdRec.toString(), CmdMutexRec.Type.cmd);
     }
 
-    private CmdMutex acquireMutex (String mutexID, CmdMutex.Type type) {
-
+    private CmdMutexRec acquireMutex (String mutexID, CmdMutexRec.Type type) {
         // attempt to add row to the mutex table; if not there insert it
         // if already there and TTL expired, ok grab it; else fail
 
-        if (!_sql.acquireMutex(_processID, mutexID, type)) {
+        if (!_dao.acquireMutex(_processID, mutexID, type)) {
             return null;
         }
 
-        CmdMutex mutex = new CmdMutex(_processID, mutexID, type);
-        _acquiredMutexes.put(mutexID, mutex); // FIXME
+        CmdMutexRec mutex = new CmdMutexRec(_processID, mutexID, type);
+        _acquiredMutexes.put(mutexID, mutex);
         return mutex;
     }
 
-    private void releaseMutex (CmdMutex mutex) {
-
+    private void releaseMutex (CmdMutexRec mutex) {
         // attempt to delete the row in the mutex table
         // if not there error
+        _dao.deleteMutex(_processID, mutex);
+        _acquiredMutexes.remove(mutex);
     }
 
-    private boolean isMutexValid (CmdMutex mutex) {
-        return true;
+    private boolean isMutexValid (CmdMutexRec mutex) {
+        return _dao.selectMutex(_processID, mutex) != null;
     }
 
 }

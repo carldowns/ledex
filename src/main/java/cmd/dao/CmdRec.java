@@ -18,7 +18,7 @@ import org.joda.time.DateTime;
  * around until we are ready to construct the correct derivative.  That step is
  * deferred to the corresponding CmdHandler per Cmd type.
  */
-public class CmdRow {
+public class CmdRec {
 
     String cmdID;
     String cmdType;
