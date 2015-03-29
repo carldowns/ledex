@@ -140,9 +140,9 @@ public class CmdMgr implements Managed {
         }
     };
 
-    //////////////////////
-    // Handler Interface
-    //////////////////////
+    //////////////////////////
+    // Cmd Handler Interface
+    //////////////////////////
 
     public CmdHandler<?> getCmdHandler (CmdRec cmdRecord) {
         CmdHandler<?> handler = _handlers.get(cmdRecord.getCmdType());
