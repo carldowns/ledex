@@ -50,19 +50,13 @@ public class CmdMgrIntegrationTest {
         CmdMgr mgr = new CmdMgr(dao,"100100");
 
         mgr.addHandler(new CmdHandler<Cmd>() {
-
-            @Override
-            public String getCmdType() {
+            @Override public String getCmdType() {
                 return Cmd.class.getSimpleName();
             }
-
-            @Override
-            public void process(CmdRec row, CmdEventRec event) {
+            @Override public void process(CmdRec row, CmdEventRec event) {
                 Cmd cmd = convert(row);
             }
-
-            @Override
-            @SuppressWarnings("unchecked")
+            @Override @SuppressWarnings("unchecked")
             public Cmd convert(CmdRec row) {
                 try {
                     return mapper.readValue(row.getDoc(), Cmd.class);
@@ -94,19 +88,13 @@ public class CmdMgrIntegrationTest {
         CmdMgr mgr = new CmdMgr(dao,"300300");
 
         mgr.addHandler(new CmdHandler<TestCmd>() {
-
-            @Override
-            public String getCmdType() {
+            @Override public String getCmdType() {
                 return TestCmd.class.getSimpleName();
             }
-
-            @Override
-            public void process(CmdRec row, CmdEventRec event) {
+            @Override public void process(CmdRec row, CmdEventRec event) {
                 TestCmd cmd = convert(row);
             }
-
-            @Override
-            @SuppressWarnings("unchecked")
+            @Override @SuppressWarnings("unchecked")
             public TestCmd convert(CmdRec row) {
                 try {
                     return mapper.readValue(row.getDoc(), TestCmd.class);
