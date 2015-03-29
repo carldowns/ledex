@@ -18,14 +18,25 @@ create table CmdEventRec (
   eventType text NOT NULL,
   eventState text NOT NULL,
   eventDue timestamp NOT NULL DEFAULT now(),
-  targetCmdID text,
-  sourceCmdID text,
+  cmdSourceID text,
+  cmdTargetID text,
   ts timestamp NOT NULL DEFAULT now(),
   userID text,
   PRIMARY KEY(eventID)
 );
 
 CREATE INDEX CmdEventRec_State_Idx ON CmdEventRec (eventState);
+
+drop table CmdMutexRec;
+create table CmdMutexRec (
+  mutexID text NOT NULL,
+  mutexType text NOT NULL,
+  mutexOwner text NOT NULL,
+  expireTs timestamp NOT NULL DEFAULT now() + '1 minute',
+  PRIMARY KEY(mutexID, mutexType)
+);
+
+CREATE INDEX CmdMutexRec_Owner_Idx ON CmdMutexRec (mutexID, mutexType, mutexOwner);
 
 -- drop table CmdTimerRec;
 -- create table CmdTimerRec (
@@ -41,13 +52,3 @@ CREATE INDEX CmdEventRec_State_Idx ON CmdEventRec (eventState);
 --
 -- CREATE INDEX CmdTimerRec_State_Idx ON CmdTimerRec (timerState);
 -- CREATE INDEX CmdTimerRec_When_Idx ON CmdTimerRec (timerDue);
-
-drop table CmdMutexRec;
-create table CmdMutexRec (
-  mutexID text NOT NULL,
-  mutexType text NOT NULL,
-  mutexOwner text NOT NULL,
-  expireTs timestamp NOT NULL DEFAULT now() + '1 minute',
-  PRIMARY KEY(mutexID, mutexType, mutexOwner)
-);
-

@@ -18,8 +18,8 @@ public class CmdEventRecMapper implements ResultSetMapper<CmdEventRec> {
                 r.getString("eventType"),
                 r.getString("eventState"));
 
-        event.setSourceCmdID(r.getString("sourceCmdID"));
-        event.setTargetCmdID(r.getString("targetCmdID"));
+        event.setCmdSourceID(r.getString("cmdSourceID"));
+        event.setCmdTargetID(r.getString("cmdTargetID"));
 
         return event;
     }

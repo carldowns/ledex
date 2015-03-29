@@ -38,20 +38,20 @@ public interface CmdSQL {
     // CmdEventRec
     //////////////////////////////
 
-    @SqlUpdate ("insert into CmdEventRec (eventID, eventType, eventState, sourceCmdID, targetCmdID) " +
-                "values (:eventID, :eventType, :eventState, :sourceCmdID, :targetCmdID)")
+    @SqlUpdate ("insert into CmdEventRec (eventID, eventType, eventState, cmdSourceID, cmdTargetID) " +
+                "values (:eventID, :eventType, :eventState, :cmdSourceID, :cmdTargetID)")
     void insertEvent (@Bind("eventID") String eventID,
                       @Bind("eventType") String eventType,
                       @Bind("eventState") String eventState,
-                      @Bind("sourceCmdID") String sourceCmdID,
-                      @Bind("targetCmdID") String targetCmdID);
+                      @Bind("cmdSourceID") String cmdSourceID,
+                      @Bind("cmdTargetID") String cmdTargetID);
 
-    @SqlUpdate ("update CmdEventRec set eventState=:eventState, sourceCmdID=:sourceCmdID, targetCmdID=:targetCmdID " +
+    @SqlUpdate ("update CmdEventRec set eventState=:eventState, cmdSourceID=:cmdSourceID, cmdTargetID=:cmdTargetID " +
                 "where eventID=:eventID")
     void updateEvent (@Bind("eventID") String eventID,
                       @Bind("eventState") String eventState,
-                      @Bind("sourceCmdID") String sourceCmdID,
-                      @Bind("targetCmdID") String targetCmdID);
+                      @Bind("cmdSourceID") String cmdSourceID,
+                      @Bind("cmdTargetID") String cmdTargetID);
 
 //    @SqlUpdate ("insert into CmdEventRec (eventID, eventType) values (:eventID, :eventType)")
 //    void insertEvent (@Bind("eventID") String eventID, @Bind("eventType") String eventType);
@@ -75,22 +75,22 @@ public interface CmdSQL {
     // CmdMutexRec
     //////////////////////////////
 
-    @SqlUpdate("delete from CmdMutexRec where timeLeaseExpires < 'now'")
+    @SqlUpdate("delete from CmdMutexRec where expireTs < 'now'")
     void deleteAnyAbandonedMutexes();
 
-    @SqlUpdate("delete from CmdMutexRec where processID=:processID")
+    @SqlUpdate("delete from CmdMutexRec where mutexOwner=:processID")
     void deleteProcessMutexes(String processID);
 
-    @SqlUpdate("update CmdMutexRec set foo = 'now' where processID = :processID")
-    void refreshProcessMutexes (String processID);
+    @SqlUpdate("update CmdMutexRec set expireTs = (now() + '00:01:00'::interval) where mutexOwner=:processID")
+    void refreshMutexes(String processID);
 
-    @SqlUpdate("insert CmdMutexRec set foo = 'now', processID=:processID, mutexID=:mutexID, type=:type")
+    @SqlUpdate("insert CmdMutexRec set expireTs = (now() + '00:01:00'::interval), mutexOwner=:processID, mutexID=:mutexID, mutexType=:type")
     boolean acquireMutex (String processID, String mutexID, CmdMutexRec.Type type);
 
-    @SqlUpdate("delete from CmdMutexRec where processID=:processID and mutexID = mutexID")
+    @SqlUpdate("delete from CmdMutexRec where mutexOwner=:processID and mutexID = mutexID")
     void deleteMutex(String processID, CmdMutexRec mutex);
 
-    @SqlUpdate("select from CmdMutexRec where processID=:processID and mutexID = mutexID")
+    @SqlUpdate("select from CmdMutexRec where mutexOwner=:processID and mutexID = mutexID")
     @Mapper(CmdMutexRecMapper.class)
     CmdMutexRec selectMutex(String processID, CmdMutexRec mutex);
 

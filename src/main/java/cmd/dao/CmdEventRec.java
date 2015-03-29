@@ -1,7 +1,5 @@
 package cmd.dao;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 // Table "public.cmdeventrec"
 //        Column    |            Type             |       Modifiers
 //        -------------+-----------------------------+------------------------
@@ -24,8 +22,8 @@ public class CmdEventRec {
     private final String _eventID;
     private final String _eventType;
     private CmdEventState _eventState = CmdEventState.pending;
-    private String _sourceCmdID;
-    private String _targetCmdID;
+    private String _cmdSourceID;
+    private String _cmdTargetID;
 
 
     public CmdEventRec (String eventID, String eventType) {
@@ -66,20 +64,20 @@ public class CmdEventRec {
     // Cmd IDs
     //////////////
 
-    public String getSourceCmdID() {
-        return _sourceCmdID;
+    public String getCmdSourceID() {
+        return _cmdSourceID;
     }
 
-    public void setSourceCmdID(String _sourceCmdID) {
-        this._sourceCmdID = _sourceCmdID;
+    public void setCmdSourceID(String _sourceCmdID) {
+        this._cmdSourceID = _sourceCmdID;
     }
 
-    public String getTargetCmdID() {
-        return _targetCmdID;
+    public String getCmdTargetID() {
+        return _cmdTargetID;
     }
 
-    public void setTargetCmdID(String _targetCmdID) {
-        this._targetCmdID = _targetCmdID;
+    public void setCmdTargetID(String _targetCmdID) {
+        this._cmdTargetID = _targetCmdID;
     }
 
     /////////////////
@@ -111,8 +109,8 @@ public class CmdEventRec {
         if (!_eventID.equals(that._eventID)) return false;
         if (!_eventType.equals(that._eventType)) return false;
         if (_eventState != that._eventState) return false;
-        if (_sourceCmdID != null ? !_sourceCmdID.equals(that._sourceCmdID) : that._sourceCmdID != null) return false;
-        return !(_targetCmdID != null ? !_targetCmdID.equals(that._targetCmdID) : that._targetCmdID != null);
+        if (_cmdSourceID != null ? !_cmdSourceID.equals(that._cmdSourceID) : that._cmdSourceID != null) return false;
+        return !(_cmdTargetID != null ? !_cmdTargetID.equals(that._cmdTargetID) : that._cmdTargetID != null);
 
     }
 
@@ -121,8 +119,8 @@ public class CmdEventRec {
         int result = _eventID.hashCode();
         result = 31 * result + _eventType.hashCode();
         result = 31 * result + _eventState.hashCode();
-        result = 31 * result + (_sourceCmdID != null ? _sourceCmdID.hashCode() : 0);
-        result = 31 * result + (_targetCmdID != null ? _targetCmdID.hashCode() : 0);
+        result = 31 * result + (_cmdSourceID != null ? _cmdSourceID.hashCode() : 0);
+        result = 31 * result + (_cmdTargetID != null ? _cmdTargetID.hashCode() : 0);
         return result;
     }
 }

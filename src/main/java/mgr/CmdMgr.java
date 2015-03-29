@@ -101,7 +101,7 @@ public class CmdMgr implements Managed {
     @Override
     public void start() throws Exception {
         _threadPool.scheduleAtFixedRate(pollEvents, 0, 1, TimeUnit.SECONDS);
-        _threadPool.scheduleAtFixedRate(refreshMutexes, 0, 10, TimeUnit.SECONDS);
+        _threadPool.scheduleAtFixedRate(refreshMutexes, 0, 5, TimeUnit.SECONDS);
     }
 
     @Override
@@ -195,8 +195,8 @@ public class CmdMgr implements Managed {
                 event.getEventID(),
                 event.getEventType(),
                 event.getEventState().toString(),
-                event.getSourceCmdID(),
-                event.getTargetCmdID());
+                event.getCmdSourceID(),
+                event.getCmdTargetID());
         }
         catch (Exception e) {
             _log.error("unable to save event %s %s", event, e);
@@ -208,8 +208,8 @@ public class CmdMgr implements Managed {
                 _dao.updateEvent(
                     event.getEventID(),
                     event.getEventState().toString(),
-                    event.getSourceCmdID(),
-                    event.getTargetCmdID());
+                    event.getCmdSourceID(),
+                    event.getCmdTargetID());
         }
         catch (Exception e) {
             _log.error("unable to save event %s %s", event, e);
@@ -230,11 +230,11 @@ public class CmdMgr implements Managed {
     }
 
     public Cmd getSourceCmdForEvent (CmdEventRec event) {
-        return getCmd(event.getSourceCmdID());
+        return getCmd(event.getCmdSourceID());
     }
 
     public Cmd getTargetCmdForEvent (CmdEventRec event) {
-        return getCmd(event.getTargetCmdID());
+        return getCmd(event.getCmdTargetID());
     }
 
 
@@ -322,7 +322,7 @@ public class CmdMgr implements Managed {
             mutex = acquireMutex(event);
             if (mutex == null) return;
 
-            CmdRec cmdRecord = _dao.getCmd(event.getTargetCmdID());
+            CmdRec cmdRecord = _dao.getCmd(event.getCmdTargetID());
             acceptCmd(event, cmdRecord);
         }
         catch (Exception e) {
@@ -385,15 +385,15 @@ public class CmdMgr implements Managed {
     private void refreshMutexes () {
 
         try {
-            _dao.refreshProcessMutexes(_processID);
+            _dao.refreshMutexes(_processID);
         }
         catch (Exception e) {
             _log.error("unable to refresh all mutexes for process", e);
         }
     }
 
-    private CmdMutexRec acquireMutex (CmdEventRec event) {
-        return acquireMutex (event.getEventID(), CmdMutexRec.Type.event);
+    private CmdMutexRec acquireMutex (CmdEventRec eventRec) {
+        return acquireMutex (eventRec.getEventID(), CmdMutexRec.Type.event);
     }
 
     private CmdMutexRec acquireMutex (CmdRec cmdRec) {
@@ -403,6 +403,8 @@ public class CmdMgr implements Managed {
     private CmdMutexRec acquireMutex (String mutexID, CmdMutexRec.Type type) {
         // attempt to add row to the mutex table; if not there insert it
         // if already there and TTL expired, ok grab it; else fail
+
+        // BIG NOTE HERE:  mutexID + type must point to a specific Cmd or Event.
 
         if (!_dao.acquireMutex(_processID, mutexID, type)) {
             return null;

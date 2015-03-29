@@ -49,7 +49,7 @@ public class CmdMgrIntegrationTest {
      * test Cmd persistence and retrieval by ID
      */
     @Test
-    public void cmdBaseCRUDTest () {
+    public void testCmdBaseCRUD () {
         CmdMgr mgr = new CmdMgr(dao,"100100");
 
         mgr.addHandler(new CmdHandler<Cmd>() {
@@ -90,7 +90,7 @@ public class CmdMgrIntegrationTest {
      * test Cmd persistence and retrieval by ID
      */
     @Test
-    public void cmdCRUDTest () {
+    public void testCmdCRUD () {
         CmdMgr mgr = new CmdMgr(dao,"300300");
 
         mgr.addHandler(new CmdHandler<TestCmd>() {
@@ -142,11 +142,11 @@ public class CmdMgrIntegrationTest {
      * Testing event persistence and retrieval by ID.
      */
     @Test
-    public void eventCRUDTest () {
+    public void testEventCRUD () {
         CmdMgr mgr = new CmdMgr(dao,"220220");
         CmdEventRec ce1 = new CmdEventRec("100", "whatever");
-        ce1.setTargetCmdID("target");
-        ce1.setSourceCmdID("source");
+        ce1.setCmdTargetID("target");
+        ce1.setCmdSourceID("source");
 
         mgr.createEvent(ce1);
         eventCleanup.add(ce1);
@@ -161,8 +161,12 @@ public class CmdMgrIntegrationTest {
         Assert.assertEquals(ce2, ce3);
     }
 
-    @Test
-    public void newEventWithCmdTypeOnlyTest () {
+    //@Test
+    public void testScheduledWorkers () throws Exception {
+        CmdMgr mgr = new CmdMgr(dao,"340503");
+        mgr.start();
+        Thread.sleep(10000);
+        mgr.stop();
     }
 
     @Test
