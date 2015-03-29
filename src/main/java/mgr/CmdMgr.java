@@ -178,7 +178,7 @@ public class CmdMgr implements Managed {
     public void updateCmd (Cmd cmd) {
         try {
             String json = mapper.writeValueAsString(cmd);
-            _dao.updateCmd(cmd.getID(), cmd.getState().name(), json);
+            _dao.updateCmd(cmd.getID(), cmd.getType(), cmd.getState().name(), json);
         }
         catch (Exception e) {
             _log.error("unable to update cmd %s %s", cmd, e);

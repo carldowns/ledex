@@ -45,6 +45,9 @@ public class CmdMgrIntegrationTest {
         }
     }
 
+    /**
+     * test Cmd persistence and retrieval by ID
+     */
     @Test
     public void cmdBaseCRUDTest () {
         CmdMgr mgr = new CmdMgr(dao,"100100");
@@ -83,6 +86,9 @@ public class CmdMgrIntegrationTest {
         Assert.assertEquals(cmd.getLogEntries(), cmd2.getLogEntries());
     }
 
+    /**
+     * test Cmd persistence and retrieval by ID
+     */
     @Test
     public void cmdCRUDTest () {
         CmdMgr mgr = new CmdMgr(dao,"300300");

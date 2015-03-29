@@ -25,8 +25,9 @@ public interface CmdSQL {
                     @Bind("cmdState") String cmdState,
                     @Bind("doc") String doc);
 
-    @SqlUpdate ("update CmdRec set cmdState=:cmdState, doc=:doc where cmdID=:cmdID")
+    @SqlUpdate ("update CmdRec set cmdState=:cmdState, cmdType=:cmdType, doc=:doc where cmdID=:cmdID")
     void updateCmd (@Bind("cmdID") String cmdID,
+                    @Bind("cmdType") String cmdType,
                     @Bind("cmdState") String cmdState,
                     @Bind("doc") String doc);
 
