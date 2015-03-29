@@ -15,8 +15,21 @@ public class CmdMutexRec {
         _type = type;
     }
 
+    public String get_processID() {
+        return _processID;
+    }
+
+    public String get_mutexID() {
+        return _mutexID;
+    }
+
+    public Type get_type() {
+        return _type;
+    }
+
     public static enum Type {
         event,
         cmd
     }
+
 }

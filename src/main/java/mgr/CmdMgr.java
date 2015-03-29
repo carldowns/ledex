@@ -416,14 +416,12 @@ public class CmdMgr implements Managed {
     }
 
     private void releaseMutex (CmdMutexRec mutex) {
-        // attempt to delete the row in the mutex table
-        // if not there error
-        _dao.deleteMutex(_processID, mutex);
-        _acquiredMutexes.remove(mutex);
+        _dao.deleteMutex(_processID, mutex.get_mutexID(), mutex.get_type());
+        _acquiredMutexes.remove(mutex.get_mutexID());
     }
 
     private boolean isMutexValid (CmdMutexRec mutex) {
-        return _dao.selectMutex(_processID, mutex) != null;
+        return _dao.selectMutex(_processID, mutex.get_mutexID(), mutex.get_type()) != null;
     }
 
 }

@@ -161,17 +161,40 @@ public class CmdMgrIntegrationTest {
         Assert.assertEquals(ce2, ce3);
     }
 
-    //@Test
+    @Test
     public void testScheduledWorkers () throws Exception {
         CmdMgr mgr = new CmdMgr(dao,"340503");
         mgr.start();
-        Thread.sleep(10000);
+        Thread.sleep(1000);
         mgr.stop();
     }
 
-    @Test
-    public void returningEventTest () {
-    }
+//    @Test
+//    public void testEventForNewCmdExec () throws Exception {
+//        CmdMgr mgr = new CmdMgr(dao,"340503");
+//
+//        mgr.addHandler(new CmdHandler<TestCmd>() {
+//            @Override public String getCmdType() {
+//                return TestCmd.class.getSimpleName();
+//            }
+//            @Override public void process(CmdRec row, CmdEventRec event) {
+//                TestCmd cmd = convert(row);
+//                cmd.someString =  "hello new command";
+//            }
+//            @Override @SuppressWarnings("unchecked")
+//            public TestCmd convert(CmdRec row) {
+//                try {
+//                    return mapper.readValue(row.getDoc(), TestCmd.class);
+//                } catch (Exception e) {
+//                    throw new RuntimeException(e.getMessage());
+//                }
+//            }
+//        });
+//
+//        // setting up an event
+//        CmdEventRec ce1 = new CmdEventRec("100", TestCmd.class.getSimpleName());
+//        mgr.createEvent(ce1);
+//    }
 
     /////////////////////////////
     // Cmds for Testing
