@@ -123,4 +123,15 @@ public class CmdEventRec {
         result = 31 * result + (_cmdTargetID != null ? _cmdTargetID.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "CmdEventRec{" +
+                "_eventID='" + _eventID + '\'' +
+                ", _eventType='" + _eventType + '\'' +
+                ", _eventState=" + _eventState +
+                ", _cmdSourceID='" + _cmdSourceID + '\'' +
+                ", _cmdTargetID='" + _cmdTargetID + '\'' +
+                '}';
+    }
 }

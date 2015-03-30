@@ -98,64 +98,61 @@ public interface CmdSQL {
     void deleteEvent (@Bind("eventID") String eventID);
 
     //////////////////////////////
-    // CmdTimerRec
-    //////////////////////////////
-
-    //////////////////////////////
     // CmdMutexRec
     //////////////////////////////
 
     @SqlUpdate(
-            "delete from CmdMutexRec " +
-            "where expireTs < 'now'")
+            "insert into CmdMutexRec (mutexOwner, mutexID, mutexType, expireTs) values " +
+            "(:processID, :mutexID, :mutexType, current_timestamp + interval '1 minute')")
 
-    void deleteAnyAbandonedMutexes();
-
-    @SqlUpdate(
-            "delete from CmdMutexRec " +
-            "where mutexOwner=:processID")
-
-    void deleteProcessMutexes(@Bind("processID") String processID);
-
-    @SqlUpdate(
-            "update CmdMutexRec set " +
-            "expireTs = (current_timestamp + interval '1 minute') " +
-            "where mutexOwner=:processID")
-
-    void refreshMutexes(@Bind("processID") String processID);
-
-    @SqlUpdate(
-            "insert into CmdMutexRec set " +
-            "mutexOwner=:processID, " +
-            "mutexID=:mutexID, " +
-            "mutexType=:type, " +
-            "expireTs = (current_timestamp + interval '1 minute')")
-
-    boolean acquireMutex (@Bind("processID") String processID,
+    Integer acquireMutex (@Bind("processID") String processID,
                           @Bind("mutexID") String mutexID,
-                          @Bind("mutexType") CmdMutexRec.Type type);
+                          @Bind("mutexType") String type);
 
     @SqlUpdate(
             "delete from CmdMutexRec " +
-            "where mutexOwner=:processID " +
+            "where mutexOwner = :processID " +
             "and mutexID = mutexID " +
-            "and mutexType=:mutexType")
+            "and mutexType = :mutexType")
 
-    void deleteMutex(@Bind("processID") String processID,
+    Integer deleteMutex(@Bind("processID") String processID,
                      @Bind("mutexID") String mutexID,
-                     @Bind("mutexType") CmdMutexRec.Type type);
+                     @Bind("mutexType") String type);
 
     @SqlUpdate(
             "select from CmdMutexRec " +
-            "where mutexOwner=:processID " +
+            "where mutexOwner = :processID " +
             "and mutexID = mutexID" +
-            "and mutexType=:mutexType" +
+            "and mutexType = :mutexType" +
             "and expireTs > 'current_timestamp")
 
     @Mapper(CmdMutexRecMapper.class)
     CmdMutexRec selectMutex(@Bind("processID") String processID,
                             @Bind("mutexID") String mutexID,
-                            @Bind("mutexType") CmdMutexRec.Type type);
+                            @Bind("mutexType") String type);
+
+    @SqlUpdate(
+            "update CmdMutexRec set " +
+                    "expireTs = current_timestamp + interval '1 minute' " +
+                    "where mutexOwner = :processID")
+
+    Integer refreshMutexes(@Bind("processID") String processID);
+
+    @SqlUpdate(
+            "delete from CmdMutexRec " +
+            "where mutexOwner = :processID")
+
+    Integer deleteProcessMutexes(@Bind("processID") String processID);
+
+    @SqlUpdate(
+            "delete from CmdMutexRec " +
+                    "where expireTs < 'now'")
+
+    Integer deleteAllExpiredMutexes();
+
+    //////////////////////////////
+    // CmdTimerRec
+    //////////////////////////////
 
     /**
      * this close method is necessary for JDBI Sql Object to close a connection properly

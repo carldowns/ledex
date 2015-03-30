@@ -15,15 +15,15 @@ public class CmdMutexRec {
         _type = type;
     }
 
-    public String get_processID() {
+    public String getProcessID() {
         return _processID;
     }
 
-    public String get_mutexID() {
+    public String getMutexID() {
         return _mutexID;
     }
 
-    public Type get_type() {
+    public Type getType() {
         return _type;
     }
 

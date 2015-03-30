@@ -14,8 +14,8 @@ package cmd.dao;
 import org.joda.time.DateTime;
 
 /**
- * Discern between Cmd and CmdRow to basically pass the Cmd in database row form
- * around until we are ready to construct the correct derivative.  That step is
+ * Discerning between Cmd and CmdRec: basically pass the CmdRec as database row representation
+ * around until we are ready to construct the correct Cmd operational derivative.  That step is
  * deferred to the corresponding CmdHandler per Cmd type.
  */
 public class CmdRec {

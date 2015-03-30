@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-
 /**
  * This test requires that Postgres 'catalog' database be started prior to running.
  */
@@ -56,8 +53,9 @@ public class CmdMgrIntegrationTest {
             @Override public String getCmdType() {
                 return Cmd.class.getSimpleName();
             }
-            @Override public void process(CmdRec row, CmdEventRec event) {
-                Cmd cmd = convert(row);
+            @Override public void process(CmdMgr mgr, CmdEventRec eventRecord) {}
+            @Override public void process(CmdMgr mgr, CmdRec cmdRecord, CmdEventRec eventRecord) {
+                Cmd cmd = convert(cmdRecord);
             }
             @Override @SuppressWarnings("unchecked")
             public Cmd convert(CmdRec row) {
@@ -97,8 +95,8 @@ public class CmdMgrIntegrationTest {
             @Override public String getCmdType() {
                 return TestCmd.class.getSimpleName();
             }
-            @Override public void process(CmdRec row, CmdEventRec event) {
-                TestCmd cmd = convert(row);
+            @Override public void process(CmdMgr mgr, CmdEventRec eventRecord) {}
+            @Override public void process(CmdMgr mgr, CmdRec cmdRecord, CmdEventRec eventRecord) {
             }
             @Override @SuppressWarnings("unchecked")
             public TestCmd convert(CmdRec row) {
@@ -169,32 +167,83 @@ public class CmdMgrIntegrationTest {
         mgr.stop();
     }
 
-//    @Test
-//    public void testEventForNewCmdExec () throws Exception {
-//        CmdMgr mgr = new CmdMgr(dao,"340503");
-//
-//        mgr.addHandler(new CmdHandler<TestCmd>() {
-//            @Override public String getCmdType() {
-//                return TestCmd.class.getSimpleName();
-//            }
-//            @Override public void process(CmdRec row, CmdEventRec event) {
-//                TestCmd cmd = convert(row);
-//                cmd.someString =  "hello new command";
-//            }
-//            @Override @SuppressWarnings("unchecked")
-//            public TestCmd convert(CmdRec row) {
-//                try {
-//                    return mapper.readValue(row.getDoc(), TestCmd.class);
-//                } catch (Exception e) {
-//                    throw new RuntimeException(e.getMessage());
-//                }
-//            }
-//        });
-//
-//        // setting up an event
-//        CmdEventRec ce1 = new CmdEventRec("100", TestCmd.class.getSimpleName());
-//        mgr.createEvent(ce1);
-//    }
+    @Test
+    public void testEventForNewCmdExec () throws Exception {
+        CmdMgr mgr = new CmdMgr(dao,"78750");
+        final String content = "hello new command!!!";
+
+        mgr.addHandler(new CmdHandler<TestCmd>() {
+            @Override public String getCmdType() { return TestCmd.class.getSimpleName();}
+            @Override public void process(CmdMgr mgr, CmdRec cmdRecord, CmdEventRec eventRecord) {
+                TestCmd cmd = convert (cmdRecord);
+                cmd.log("what?");
+                mgr.updateCmd(cmd);
+            }
+            @Override public void process(CmdMgr mgr, CmdEventRec event) {
+
+                // TODO: look at the level of exposure we have to bad things happening here and the effects
+                // TODO: stuff like changing the event state in the Manager come to mind
+
+                TestCmd cmd = new TestCmd();
+                cmd.setID (mgr.assignUniqueID());
+                cmd.someString = content;
+                cmd.setState(CmdState.completed);
+                mgr.createCmd(cmd);
+
+                event.setCmdTargetID(cmd.getID());
+                event.setEventState(CmdEventRec.CmdEventState.completed);
+                mgr.updateEvent(event);
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public TestCmd convert(CmdRec row) {
+                try {
+                    return mapper.readValue(row.getDoc(), TestCmd.class);
+                } catch (Exception e) {
+                    throw new RuntimeException(e.getMessage());
+                }
+            }
+        });
+
+        // set up an event and queue it
+        String testEventID = "60000";
+        CmdEventRec ce1 = new CmdEventRec(testEventID, TestCmd.class.getSimpleName());
+        mgr.createEvent(ce1);
+
+        // start manager threads
+        // wait for the gears to turn
+        mgr.start();
+
+        // get the cmd record via the event
+        for (int retry = 10; retry != 0; retry--) {
+            CmdEventRec cer2 = mgr.getEvent(testEventID);
+
+            if (cer2.getCmdTargetID() == null) {
+                Thread.sleep(200);
+                continue;
+            }
+
+            CmdRec cr2 = mgr.getTargetCmdForEvent(cer2);
+
+            Assert.assertNotNull(cr2);
+            Assert.assertEquals(cr2.getCmdState(), CmdState.completed.name());
+
+            // get the Cmd implementation
+            // check to see if the process method did its thing
+            TestCmd cmd2 = mgr.getCmd(cr2.getCmdID());
+            Assert.assertNotNull(cmd2);
+
+            eventCleanup.add(cer2);
+            cmdCleanup.add(cmd2);
+
+            Assert.assertEquals(content, cmd2.someString);
+            Assert.assertEquals(cmd2.getState(), CmdState.completed);
+            return;
+        }
+
+        Assert.fail("too many retries");
+    }
 
     /////////////////////////////
     // Cmds for Testing
@@ -208,14 +257,6 @@ public class CmdMgrIntegrationTest {
         @JsonProperty Map<String, Integer> someMap = Maps.newHashMap();
         public TestCmd () {}
         public TestCmd (String ID) {
-            super(ID);
-        }
-    }
-
-    private static class TestCmd2 extends Cmd {
-        @JsonProperty int someInt;
-        public TestCmd2 () {}
-        public TestCmd2 (String ID) {
             super(ID);
         }
     }
