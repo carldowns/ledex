@@ -107,7 +107,7 @@ public class CmdMgr implements Managed {
     public void start() throws Exception {
         _threadPool.scheduleAtFixedRate(pollEvents, 0, 1, TimeUnit.SECONDS);
         _threadPool.scheduleAtFixedRate(refreshMutexes, 0, 5, TimeUnit.SECONDS);
-        _threadPool.scheduleAtFixedRate(clearExpiredMutexes, 0, 5, TimeUnit.MINUTES);
+        _threadPool.scheduleAtFixedRate(clearExpiredMutexes, 0, 1, TimeUnit.HOURS);
     }
 
     @Override
