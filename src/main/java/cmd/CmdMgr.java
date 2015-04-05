@@ -1,4 +1,4 @@
-package mgr;
+package cmd;
 
 import ch.qos.logback.classic.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,13 +10,14 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.dropwizard.lifecycle.Managed;
+import org.skife.jdbi.v2.TransactionIsolationLevel;
+import org.skife.jdbi.v2.sqlobject.Transaction;
 import org.slf4j.LoggerFactory;
-import cmd.Cmd;
 import cmd.dao.CmdEventRec;
 import cmd.dao.CmdMutexRec;
-import cmd.CmdHandler;
 import cmd.dao.CmdRec;
 import cmd.dao.CmdSQL;
+import util.CmdRuntimeException;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -107,7 +108,7 @@ public class CmdMgr implements Managed {
     public void start() throws Exception {
         _threadPool.scheduleAtFixedRate(pollEvents, 0, 1, TimeUnit.SECONDS);
         _threadPool.scheduleAtFixedRate(refreshMutexes, 0, 5, TimeUnit.SECONDS);
-        _threadPool.scheduleAtFixedRate(clearExpiredMutexes, 0, 1, TimeUnit.HOURS);
+        _threadPool.scheduleAtFixedRate(clearExpiredMutexes, 0, 15, TimeUnit.MINUTES);
     }
 
     @Override
@@ -170,6 +171,12 @@ public class CmdMgr implements Managed {
         return handler;
     }
 
+    public CmdHandler<?> getCmdHandler (Class cmdType) {
+        CmdHandler<?> handler = _handlers.get(cmdType.getSimpleName());
+        Preconditions.checkNotNull(handler, "Handler not found for type %s", cmdType);
+        return handler;
+    }
+
     @Inject
     public void addHandler(CmdHandler handler) {
         _handlers.put(handler.getCmdType(), handler);
@@ -220,7 +227,10 @@ public class CmdMgr implements Managed {
                 event.getEventType(),
                 event.getEventState().toString(),
                 event.getCmdSourceID(),
-                event.getCmdTargetID());
+                event.getCmdSourceType(),
+                event.getCmdTargetID(),
+                event.getCmdTargetType()
+            );
         }
         catch (Exception e) {
             _log.error("unable to save event", e);
@@ -230,13 +240,17 @@ public class CmdMgr implements Managed {
     public void updateEvent (CmdEventRec event) {
         try {
             _dao.updateEvent(
-                event.getEventID(),
-                event.getEventState().toString(),
-                event.getCmdSourceID(),
-                event.getCmdTargetID());
+                    event.getEventID(),
+                    event.getEventType(),
+                    event.getEventState().toString(),
+                    event.getCmdSourceID(),
+                    event.getCmdSourceType(),
+                    event.getCmdTargetID(),
+                    event.getCmdTargetType());
         }
         catch (Exception e) {
-            _log.error("unable to save event", e);
+            _log.error("updateEvent", e);
+            throw new CmdRuntimeException(String.format("unable to update event %s", event));
         }
     }
 
@@ -284,6 +298,7 @@ public class CmdMgr implements Managed {
                 @Override
                 public void run() {
                     try {
+                        event.validate();
                         acceptEvent(event);
                     }
                     catch (Exception e) {
@@ -297,6 +312,8 @@ public class CmdMgr implements Managed {
         }
     }
 
+    //@Transaction(TransactionIsolationLevel.SERIALIZABLE)
+    //@Transaction
     private void acceptEvent(CmdEventRec eventRecord) {
         CmdMutexRec eventMutex = null;
         try {
@@ -318,6 +335,7 @@ public class CmdMgr implements Managed {
         }
         catch (Exception e) {
             _log.error("problems accepting event", e);
+            throw new CmdRuntimeException("");
         }
         finally {
             // discard event mutex
@@ -359,8 +377,7 @@ public class CmdMgr implements Managed {
         // or construct new command if event does not reference one
 
         try {
-            // FIXME: we are using event type and cmd type interchangeably need to be cleaner on this
-            CmdHandler<?> handler = getCmdHandler(eventRecord.getEventType());
+            CmdHandler<?> handler = getCmdHandler(eventRecord.getCmdTargetType());
 
             if (cmdRecord != null)
                 handler.process(this, cmdRecord, eventRecord);
@@ -437,7 +454,7 @@ public class CmdMgr implements Managed {
     // ID Interface
     /////////////////
 
-    public String assignUniqueID() {
+    public String newID() {
         return _processID + "." + _counter.addAndGet(1);
     }
 
