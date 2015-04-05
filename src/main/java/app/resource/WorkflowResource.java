@@ -2,7 +2,7 @@ package app.resource;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import mgr.CmdMgr;
+import cmd.CmdMgr;
 
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;

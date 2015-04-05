@@ -19,7 +19,9 @@ create table CmdEventRec (
   eventState text NOT NULL,
   eventDue timestamp NOT NULL DEFAULT now(),
   cmdSourceID text,
+  cmdSourceType text,
   cmdTargetID text,
+  cmdTargetType text,
   ts timestamp NOT NULL DEFAULT now(),
   userID text,
   PRIMARY KEY(eventID)

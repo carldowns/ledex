@@ -17,15 +17,15 @@ public interface CmdSQL {
 
     @SqlQuery(
             "select * from CmdRec " +
-            "where cmdID = :cmdID")
+                    "where cmdID = :cmdID")
 
     @Mapper(CmdRecMapper.class)
     CmdRec getCmd(@Bind("cmdID") String cmdID);
 
     @SqlUpdate(
             "insert into CmdRec " +
-            "(cmdID, cmdType, cmdState, doc) values " +
-            "(:cmdID, :cmdType, :cmdState, :doc)")
+                    "(cmdID, cmdType, cmdState, doc) values " +
+                    "(:cmdID, :cmdType, :cmdState, :doc)")
 
     void insertCmd (@Bind("cmdID") String cmdID,
                     @Bind("cmdType") String cmdType,
@@ -34,10 +34,10 @@ public interface CmdSQL {
 
     @SqlUpdate(
             "update CmdRec set " +
-            "cmdState=:cmdState, " +
-            "cmdType=:cmdType, " +
-            "doc=:doc " +
-            "where cmdID=:cmdID")
+                    "cmdState=:cmdState, " +
+                    "cmdType=:cmdType, " +
+                    "doc=:doc " +
+                    "where cmdID=:cmdID")
 
     void updateCmd (@Bind("cmdID") String cmdID,
                     @Bind("cmdType") String cmdType,
@@ -46,7 +46,7 @@ public interface CmdSQL {
 
     @SqlUpdate(
             "delete from CmdRec " +
-            "where cmdID=:cmdID")
+                    "where cmdID=:cmdID")
     void deleteCmd (@Bind("cmdID") String cmdID);
 
     //////////////////////////////
@@ -55,45 +55,53 @@ public interface CmdSQL {
 
     @SqlUpdate(
             "insert into CmdEventRec " +
-            "(eventID, eventType, eventState, cmdSourceID, cmdTargetID) values " +
-            "(:eventID, :eventType, :eventState, :cmdSourceID, :cmdTargetID)")
+                    "(eventID, eventType, eventState, cmdSourceID, cmdSourceType, cmdTargetID, cmdTargetType) values " +
+                    "(:eventID, :eventType, :eventState, :cmdSourceID, :cmdSourceType, :cmdTargetID, :cmdTargetType)")
 
     void insertEvent (@Bind("eventID") String eventID,
                       @Bind("eventType") String eventType,
                       @Bind("eventState") String eventState,
                       @Bind("cmdSourceID") String cmdSourceID,
-                      @Bind("cmdTargetID") String cmdTargetID);
+                      @Bind("cmdSourceType") String cmdSourceType,
+                      @Bind("cmdTargetID") String cmdTargetID,
+                      @Bind("cmdTargetType") String cmdTargetType);
 
     @SqlUpdate(
             "update CmdEventRec set " +
-            "eventState=:eventState, " +
-            "cmdSourceID=:cmdSourceID, " +
-            "cmdTargetID=:cmdTargetID " +
-            "where eventID=:eventID")
+                    "eventState=:eventState, " +
+                    "cmdSourceID=:cmdSourceID, " +
+                    "cmdSourceType=:cmdSourceType, " +
+                    "cmdTargetID=:cmdTargetID, " +
+                    "cmdTargetType=:cmdTargetType " +
+                    "where eventID=:eventID " +
+                    "and eventType=:eventType")
 
     void updateEvent (@Bind("eventID") String eventID,
+                      @Bind("eventType") String eventType,
                       @Bind("eventState") String eventState,
                       @Bind("cmdSourceID") String cmdSourceID,
-                      @Bind("cmdTargetID") String cmdTargetID);
+                      @Bind("cmdSourceType") String cmdSourceType,
+                      @Bind("cmdTargetID") String cmdTargetID,
+                      @Bind("cmdTargetType") String cmdTargetType);
 
     @SqlQuery(
             "select * from CmdEventRec " +
-            "where eventID=:eventID")
+                    "where eventID=:eventID")
 
     @Mapper(CmdEventRecMapper.class)
     CmdEventRec getEvent (@Bind("eventID") String eventID);
 
     @SqlQuery(
             "select * from CmdEventRec " +
-            "where eventDue < 'now' " +
-            "and eventState='pending'")
+                    "where eventDue < 'now' " +
+                    "and eventState='pending'")
 
     @Mapper(CmdEventRecMapper.class)
     List<CmdEventRec> getDueEvents ();
 
     @SqlUpdate(
             "delete from CmdEventRec " +
-            "where eventID=:eventID")
+                    "where eventID=:eventID")
 
     void deleteEvent (@Bind("eventID") String eventID);
 
@@ -102,8 +110,9 @@ public interface CmdSQL {
     //////////////////////////////
 
     @SqlUpdate(
-            "insert into CmdMutexRec (mutexOwner, mutexID, mutexType, expireTs) values " +
-            "(:processID, :mutexID, :mutexType, current_timestamp + interval '1 minute')")
+            "insert into CmdMutexRec " +
+                    "(mutexOwner, mutexID, mutexType, expireTs) values " +
+                    "(:processID, :mutexID, :mutexType, current_timestamp + interval '1 minute')")
 
     Integer acquireMutex (@Bind("processID") String processID,
                           @Bind("mutexID") String mutexID,
@@ -111,9 +120,9 @@ public interface CmdSQL {
 
     @SqlUpdate(
             "delete from CmdMutexRec " +
-            "where mutexOwner = :processID " +
-            "and mutexID = mutexID " +
-            "and mutexType = :mutexType")
+                    "where mutexOwner = :processID " +
+                    "and mutexID = mutexID " +
+                    "and mutexType = :mutexType")
 
     Integer deleteMutex(@Bind("processID") String processID,
                      @Bind("mutexID") String mutexID,
@@ -121,10 +130,10 @@ public interface CmdSQL {
 
     @SqlUpdate(
             "select from CmdMutexRec " +
-            "where mutexOwner = :processID " +
-            "and mutexID = mutexID" +
-            "and mutexType = :mutexType" +
-            "and expireTs > 'current_timestamp")
+                    "where mutexOwner = :processID " +
+                    "and mutexID = mutexID" +
+                    "and mutexType = :mutexType" +
+                    "and expireTs > 'current_timestamp")
 
     @Mapper(CmdMutexRecMapper.class)
     CmdMutexRec selectMutex(@Bind("processID") String processID,
@@ -140,7 +149,7 @@ public interface CmdSQL {
 
     @SqlUpdate(
             "delete from CmdMutexRec " +
-            "where mutexOwner = :processID")
+                    "where mutexOwner = :processID")
 
     Integer deleteProcessMutexes(@Bind("processID") String processID);
 

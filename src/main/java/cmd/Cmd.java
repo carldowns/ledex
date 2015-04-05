@@ -52,6 +52,12 @@ public class Cmd {
     private CmdState state;
 
     /**
+     * set and maintained to indicate whether the object has been persisted
+     */
+    @JsonIgnore
+    private Boolean isPersisted;
+
+    /**
      * log for the command.  User classes can add information in here
      * to record what happened, adding things like "did this, did that, caught this exception..."
      * Steps are keyed by timestamp.

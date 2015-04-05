@@ -2,9 +2,6 @@ package cmd;
 
 import cmd.dao.CmdEventRec;
 import cmd.dao.CmdRec;
-import mgr.CmdMgr;
-
-import javax.annotation.Nullable;
 
 
 public interface CmdHandler<T extends Cmd>  {

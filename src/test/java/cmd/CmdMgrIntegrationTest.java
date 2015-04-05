@@ -1,14 +1,16 @@
 package cmd;
 
+import ch.qos.logback.classic.Logger;
 import cmd.dao.CmdEventRec;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
-import mgr.CmdMgr;
 import org.junit.*;
 import org.skife.jdbi.v2.DBI;
 import cmd.dao.CmdRec;
 import cmd.dao.CmdSQL;
+import org.slf4j.LoggerFactory;
+import util.CmdRuntimeException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.Map;
  */
 public class CmdMgrIntegrationTest {
 
+    private static final Logger _log = (Logger) LoggerFactory.getLogger(CmdMgrIntegrationTest.class);
     private CmdSQL dao;
     private ObjectMapper mapper = new ObjectMapper();
     private List<Cmd> cmdCleanup = new ArrayList<>();
@@ -62,7 +65,7 @@ public class CmdMgrIntegrationTest {
                 try {
                     return mapper.readValue(row.getDoc(), Cmd.class);
                 } catch (Exception e) {
-                    throw new RuntimeException(e.getMessage());
+                    throw new CmdRuntimeException(e.getMessage());
                 }
             }
         });
@@ -103,12 +106,12 @@ public class CmdMgrIntegrationTest {
                 try {
                     return mapper.readValue(row.getDoc(), TestCmd.class);
                 } catch (Exception e) {
-                    throw new RuntimeException(e.getMessage());
+                    throw new CmdRuntimeException(e.getMessage());
                 }
             }
         });
 
-        TestCmd cmd1 = new TestCmd("C-2000");
+        TestCmd cmd1 = new TestCmd(mgr.newID());
         cmd1.someInt = 300;
         cmd1.someInteger = 5000;
         cmd1.someFloat = 0.1F;
@@ -142,9 +145,8 @@ public class CmdMgrIntegrationTest {
     @Test
     public void testEventCRUD () {
         CmdMgr mgr = new CmdMgr(dao,"220220");
-        CmdEventRec ce1 = new CmdEventRec("100", "whatever");
-        ce1.setCmdTargetID("target");
-        ce1.setCmdSourceID("source");
+        CmdEventRec ce1 = new CmdEventRec(mgr.newID(), "whatever", Cmd.class);
+        ce1.setCmdTargetID("target-1").setCmdSourceID("source-2");
 
         mgr.createEvent(ce1);
         eventCleanup.add(ce1);
@@ -168,12 +170,15 @@ public class CmdMgrIntegrationTest {
     }
 
     @Test
-    public void testEventForNewCmdExec () throws Exception {
+    public void testEventForNewCmd () throws Exception {
         CmdMgr mgr = new CmdMgr(dao,"78750");
         final String content = "hello new command!!!";
+        _log.info("testEventForNewCmdExec");
 
         mgr.addHandler(new CmdHandler<TestCmd>() {
-            @Override public String getCmdType() { return TestCmd.class.getSimpleName();}
+            @Override public String getCmdType() {
+                return TestCmd.class.getSimpleName();
+            }
             @Override public void process(CmdMgr mgr, CmdRec cmdRecord, CmdEventRec eventRecord) {
                 TestCmd cmd = convert (cmdRecord);
                 cmd.log("what?");
@@ -185,7 +190,7 @@ public class CmdMgrIntegrationTest {
                 // TODO: stuff like changing the event state in the Manager come to mind
 
                 TestCmd cmd = new TestCmd();
-                cmd.setID (mgr.assignUniqueID());
+                cmd.setID (mgr.newID());
                 cmd.someString = content;
                 cmd.setState(CmdState.completed);
                 mgr.createCmd(cmd);
@@ -201,18 +206,17 @@ public class CmdMgrIntegrationTest {
                 try {
                     return mapper.readValue(row.getDoc(), TestCmd.class);
                 } catch (Exception e) {
-                    throw new RuntimeException(e.getMessage());
+                    throw new CmdRuntimeException(e.getMessage());
                 }
             }
         });
 
         // set up an event and queue it
-        String testEventID = "60000";
-        CmdEventRec ce1 = new CmdEventRec(testEventID, TestCmd.class.getSimpleName());
+        String testEventID = mgr.newID();
+        CmdEventRec ce1 = new CmdEventRec(testEventID, "event-type-3", TestCmd.class);
         mgr.createEvent(ce1);
 
         // start manager threads
-        // wait for the gears to turn
         mgr.start();
 
         // get the cmd record via the event
@@ -220,7 +224,7 @@ public class CmdMgrIntegrationTest {
             CmdEventRec cer2 = mgr.getEvent(testEventID);
 
             if (cer2.getCmdTargetID() == null) {
-                Thread.sleep(200);
+                Thread.sleep(2000);
                 continue;
             }
 
@@ -245,6 +249,132 @@ public class CmdMgrIntegrationTest {
         Assert.fail("too many retries");
     }
 
+    /**
+     * tests the concept of chaining cmd-event-cmd-event-cmd down arbitrary levels with a return event
+     * that is returned to the top level cmd to calculate or accomplish something.
+     * @throws Exception
+     */
+    //@Test
+    public void testCmdEventChaining () throws Exception {
+        CmdMgr mgr = new CmdMgr(dao,"88888");
+        _log.info("testCmdEventChaining");
+
+        // start manager threads
+        mgr.start();
+
+        mgr.addHandler(new CmdHandler<TestCmd2>() {
+            @Override
+            public String getCmdType() {
+                return TestCmd2.class.getSimpleName();
+            }
+
+            /**
+             * @param mgr
+             * @param event
+             */
+            @Override
+            public void process(CmdMgr mgr, CmdEventRec event) {
+                throw new CmdRuntimeException ("state not recognized");
+            }
+
+            /**
+             * respond to returning events at this node
+             * @param mgr
+             * @param cmdRecord
+             * @param eventRecord
+             */
+            @Override
+            public void process(CmdMgr mgr, CmdRec cmdRecord, CmdEventRec event) {
+
+                TestCmd2 cmd = convert(cmdRecord);
+                _log.info("process:  event %s", event);
+                if (event.getEventType().equals("factorial-call")) {
+                    cmd.setState(CmdState.waiting);
+
+                    // we are at the leaf:
+                    // send back the return event
+
+                    if (cmd.getValue() == 1) {
+
+                        CmdEventRec subEvent = new CmdEventRec(mgr.newID(), "factorial-return", TestCmd2.class);
+                        subEvent.setCmdSourceID(cmd.getID());
+                        subEvent.setCmdTargetID(cmd.getSourceCmdID());
+                        mgr.createEvent(subEvent);
+
+                        cmd.setState(CmdState.completed);
+                        mgr.updateCmd(cmd);
+                        return;
+                    }
+
+                    // we are at a non-leaf:
+                    // modify cmd state and queue subEvent
+
+                    TestCmd2 subCmd = new TestCmd2(mgr.newID());
+                    subCmd.setSourceCmdID(cmd.getID());
+                    subCmd.setValue(subCmd.getValue() - 1); // give subcommand a part of the calculation
+                    mgr.createCmd(subCmd);
+
+                    CmdEventRec subEvent = new CmdEventRec(mgr.newID(), "factorial-call", TestCmd2.class);
+                    subEvent.setCmdTargetType(cmd.getType());
+                    subEvent.setCmdSourceID(cmd.getID());
+                    mgr.createEvent(subEvent);
+
+                    mgr.updateCmd(cmd); // FIXME transactional holes - event may thread before we persist
+                    return;
+                }
+
+                // we have a return event:
+                // update the value of this node as product of itself and subNode's value
+                if (event.getEventType().equals("factorial-return")) {
+
+                    TestCmd2 subCmd = mgr.getCmd(event.getCmdSourceID());
+                    cmd.setValue(cmd.getValue() * subCmd.getValue());
+                    cmd.setState(CmdState.completed);
+
+                    // if this is not the root node, queue a return event for the next super Node (source)
+                    if (cmd.getSourceCmdID() != null) {
+                        CmdEventRec subEvent = new CmdEventRec(mgr.newID(), "factorial-return", TestCmd2.class);
+                        subEvent.setCmdSourceID(cmd.getID());
+                        subEvent.setCmdTargetID(cmd.getSourceCmdID());
+                        mgr.createEvent(subEvent);
+                    }
+
+                    mgr.updateCmd(cmd);
+                    return;
+                }
+
+                throw new CmdRuntimeException ("state not recognized");
+
+            }
+
+            @Override
+            @SuppressWarnings("unchecked")
+            public TestCmd2 convert(CmdRec row) {
+                try {
+                    return mapper.readValue(row.getDoc(), TestCmd2.class);
+                } catch (Exception e) {
+                    throw new CmdRuntimeException(e.getMessage());
+                }
+            }
+
+        });
+
+        // TODO: we need ACID transactional scope on the event/cmd persistence methods of the CmdMgr.process methods
+        // TODO: we need ACID transactional scope on the event/cmd persistence methods of the CmdMgr.process methods
+        // TODO: we need ACID transactional scope on the event/cmd persistence methods of the CmdMgr.process methods
+
+        // set up a cmd with a numeric value to calculate the factorial of
+        TestCmd2 cmd = new TestCmd2(mgr.newID());
+        cmd.setValue(2);
+        mgr.createCmd(cmd);
+
+        CmdEventRec ce1 = new CmdEventRec(mgr.newID(), "factorial-call", TestCmd2.class);
+        ce1.setCmdTarget(cmd);
+        mgr.createEvent(ce1);
+
+        Thread.sleep(10000);
+    }
+
     /////////////////////////////
     // Cmds for Testing
     /////////////////////////////
@@ -258,6 +388,22 @@ public class CmdMgrIntegrationTest {
         public TestCmd () {}
         public TestCmd (String ID) {
             super(ID);
+        }
+    }
+
+    private static class TestCmd2 extends Cmd {
+        @JsonProperty int value;
+        public TestCmd2() {}
+        public TestCmd2(String ID) {
+            super(ID);
+        }
+
+        public int getValue() {
+            return value;
+        }
+
+        public void setValue(int value) {
+            this.value = value;
         }
     }
 
