@@ -254,40 +254,26 @@ public class CmdMgrIntegrationTest {
      * that is returned to the top level cmd to calculate or accomplish something.
      * @throws Exception
      */
-    //@Test
+    @Test
     public void testCmdEventChaining () throws Exception {
         CmdMgr mgr = new CmdMgr(dao,"88888");
-        _log.info("testCmdEventChaining");
 
         // start manager threads
         mgr.start();
 
         mgr.addHandler(new CmdHandler<TestCmd2>() {
-            @Override
-            public String getCmdType() {
+            @Override public String getCmdType() {
                 return TestCmd2.class.getSimpleName();
             }
 
-            /**
-             * @param mgr
-             * @param event
-             */
-            @Override
-            public void process(CmdMgr mgr, CmdEventRec event) {
+            @Override public void process(CmdMgr mgr, CmdEventRec event) {
                 throw new CmdRuntimeException ("state not recognized");
             }
 
-            /**
-             * respond to returning events at this node
-             * @param mgr
-             * @param cmdRecord
-             * @param eventRecord
-             */
-            @Override
-            public void process(CmdMgr mgr, CmdRec cmdRecord, CmdEventRec event) {
+            @Override public void process(CmdMgr mgr, CmdRec cmdRecord, CmdEventRec event) {
 
                 TestCmd2 cmd = convert(cmdRecord);
-                _log.info("process:  event %s", event);
+                _log.info("process:  event {}", event);
                 if (event.getEventType().equals("factorial-call")) {
                     cmd.setState(CmdState.waiting);
 
@@ -297,6 +283,7 @@ public class CmdMgrIntegrationTest {
                     if (cmd.getValue() == 1) {
 
                         CmdEventRec subEvent = new CmdEventRec(mgr.newID(), "factorial-return", TestCmd2.class);
+                        _log.info("value = 1: new event {}", subEvent);
                         subEvent.setCmdSourceID(cmd.getID());
                         subEvent.setCmdTargetID(cmd.getSourceCmdID());
                         mgr.createEvent(subEvent);
@@ -365,7 +352,7 @@ public class CmdMgrIntegrationTest {
 
         // set up a cmd with a numeric value to calculate the factorial of
         TestCmd2 cmd = new TestCmd2(mgr.newID());
-        cmd.setValue(2);
+        cmd.setValue(1);
         mgr.createCmd(cmd);
 
         CmdEventRec ce1 = new CmdEventRec(mgr.newID(), "factorial-call", TestCmd2.class);

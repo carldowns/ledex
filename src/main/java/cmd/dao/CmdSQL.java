@@ -114,9 +114,9 @@ public interface CmdSQL {
                     "(mutexOwner, mutexID, mutexType, expireTs) values " +
                     "(:processID, :mutexID, :mutexType, current_timestamp + interval '1 minute')")
 
-    Integer acquireMutex (@Bind("processID") String processID,
-                          @Bind("mutexID") String mutexID,
-                          @Bind("mutexType") String type);
+    Integer insertMutex(@Bind("processID") String processID,
+                        @Bind("mutexID") String mutexID,
+                        @Bind("mutexType") String type);
 
     @SqlUpdate(
             "delete from CmdMutexRec " +

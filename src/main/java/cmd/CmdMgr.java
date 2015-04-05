@@ -10,8 +10,7 @@ import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import io.dropwizard.lifecycle.Managed;
-import org.skife.jdbi.v2.TransactionIsolationLevel;
-import org.skife.jdbi.v2.sqlobject.Transaction;
+import org.skife.jdbi.v2.exceptions.UnableToExecuteStatementException;
 import org.slf4j.LoggerFactory;
 import cmd.dao.CmdEventRec;
 import cmd.dao.CmdMutexRec;
@@ -335,7 +334,7 @@ public class CmdMgr implements Managed {
         }
         catch (Exception e) {
             _log.error("problems accepting event", e);
-            throw new CmdRuntimeException("");
+            throw new CmdRuntimeException(e.getMessage());
         }
         finally {
             // discard event mutex
@@ -420,12 +419,15 @@ public class CmdMgr implements Managed {
     }
 
     private CmdMutexRec acquireMutex (String mutexID, CmdMutexRec.Type type) {
-        // attempt to add row to the mutex table; if not there insert it
-        // if already there and TTL expired, we'll pick it up later.
-        // We have a sweeper thread that clears these periodically
-        // NOTE: mutexID + type must point to a specific Cmd or Event.
 
-        if (_dao.acquireMutex(_processID, mutexID, type.name()) == 0) {
+        try {
+            // attempt to insert a row to the mutex table; if there already this will fail
+            // if already there and TTL expired, the sweeper thread will clear stale mutexes out eventually
+            // NOTE: mutexID + type must point to a specific Cmd or Event.
+            _dao.insertMutex(_processID, mutexID, type.name());
+        }
+        catch (UnableToExecuteStatementException e) {
+            _log.info("mutex busy %s ", mutexID);
             return null;
         }
 
