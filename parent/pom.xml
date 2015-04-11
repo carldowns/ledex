@@ -2,14 +2,154 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <artifactId>ledex</artifactId>
-        <groupId>pwllc</groupId>
-        <version>0.0.1-SNAPSHOT</version>
-    </parent>
+
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>pwllc</groupId>
     <artifactId>ledex-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
+    <properties>
+        <java.minimum.version>1.7</java.minimum.version>
+        <dropwizard.version>0.7.0</dropwizard.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <guice.version>3.0</guice.version>
+    </properties>
+
+    <dependencyManagement>
+
+        <dependencies>
+            <dependency>
+                <groupId>pwllc</groupId>
+                <artifactId>ledex-cmd</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-core</artifactId>
+                <version>${dropwizard.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-jdbi</artifactId>
+                <version>${dropwizard.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>9.3-1100-jdbc41</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.dropwizard</groupId>
+                <artifactId>dropwizard-testing</artifactId>
+                <version>${dropwizard.version}</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.2.4</version>
+            </dependency>
+
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.9</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.inject</groupId>
+                <artifactId>guice</artifactId>
+                <version>${guice.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.inject.extensions</groupId>
+                <artifactId>guice-multibindings</artifactId>
+                <version>${guice.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jukito</groupId>
+                <artifactId>jukito</artifactId>
+                <version>1.4.1</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!--<dependency>-->
+            <!--<groupId>com.hubspot.dropwizard</groupId>-->
+            <!--<artifactId>dropwizard-guice</artifactId>-->
+            <!--<version>0.7.1</version>-->
+            <!--</dependency>-->
+
+            <!--<dependency>-->
+            <!--<groupId>com.google.guava</groupId>-->
+            <!--<artifactId>guava</artifactId>-->
+            <!--<version>17.0</version>-->
+            <!--</dependency>-->
+
+            <!-- 		<dependency>
+                        <groupId>io.dropwizard</groupId>
+                        <artifactId>dropwizard-auth</artifactId>
+                        <version>${dropwizard.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.dropwizard</groupId>
+                        <artifactId>dropwizard-assets</artifactId>
+                        <version>${dropwizard.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.dropwizard</groupId>
+                        <artifactId>dropwizard-spdy</artifactId>
+                        <version>${dropwizard.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.dropwizard</groupId>
+                        <artifactId>dropwizard-hibernate</artifactId>
+                        <version>${dropwizard.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.dropwizard</groupId>
+                        <artifactId>dropwizard-migrations</artifactId>
+                        <version>${dropwizard.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.dropwizard</groupId>
+                        <artifactId>dropwizard-views-freemarker</artifactId>
+                        <version>${dropwizard.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.dropwizard</groupId>
+                        <artifactId>dropwizard-views-mustache</artifactId>
+                        <version>${dropwizard.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.h2database</groupId>
+                        <artifactId>h2</artifactId>
+                        <version>1.4.178</version>
+                    </dependency> -->
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.2</version>
+                <configuration>
+                    <source>${java.minimum.version}</source>
+                    <target>${java.minimum.version}</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
