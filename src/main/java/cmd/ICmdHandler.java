@@ -4,7 +4,7 @@ import cmd.dao.CmdEventRec;
 import cmd.dao.CmdRec;
 
 
-public interface CmdHandler<T extends Cmd>  {
+public interface ICmdHandler<T extends Cmd>  {
 
     /**
      * returns the Cmd simple class name.
