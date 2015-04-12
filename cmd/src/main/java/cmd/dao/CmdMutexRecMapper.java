@@ -12,6 +12,10 @@ import java.sql.SQLException;
 public class CmdMutexRecMapper implements ResultSetMapper<CmdMutexRec> {
 
     public CmdMutexRec map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-        return new CmdMutexRec(r.getString("processID"), r.getString("mutexID"), r.getString("type"));
+        return new CmdMutexRec(
+                r.getString("mutexOwner"),
+                r.getString("mutexID"),
+                r.getString("mutexType"),
+                r.getTimestamp("expireTs").getTime());
     }
 }

@@ -347,7 +347,7 @@ public class CmdMgr implements Managed {
             return null;
         }
 
-        CmdMutexRec mutex = new CmdMutexRec(_processID, mutexID, type);
+        CmdMutexRec mutex = new CmdMutexRec(_processID, mutexID, type, 0L);
         _acquiredMutexes.put(mutexID, mutex);
         return mutex;
     }
@@ -362,10 +362,6 @@ public class CmdMgr implements Managed {
         }
 
         _acquiredMutexes.remove(mutex.getMutexID());
-    }
-
-    private boolean isMutexValid (CmdMutexRec mutex) {
-        return _dao.selectMutex(_processID, mutex.getMutexID(), mutex.getType()) != null;
     }
 
     /////////////////

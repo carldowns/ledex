@@ -104,12 +104,11 @@ public interface CmdSQL {
                         @Bind("mutexID") String mutexID,
                         @Bind("mutexType") String type);
 
-    @SqlUpdate(
-            "select from CmdMutexRec " +
+    @SqlQuery(
+            "select * from CmdMutexRec " +
                     "where mutexOwner = :processID " +
-                    "and mutexID = mutexID" +
-                    "and mutexType = :mutexType" +
-                    "and expireTs > 'current_timestamp")
+                    "and mutexID = :mutexID " +
+                    "and mutexType = :mutexType")
 
     @Mapper(CmdMutexRecMapper.class)
     CmdMutexRec selectMutex(@Bind("processID") String processID,
