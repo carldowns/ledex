@@ -9,10 +9,10 @@ import java.sql.SQLException;
 /**
  *
  */
-public class CmdRecMapper implements ResultSetMapper<CmdRec2> {
+public class CmdRecMapper implements ResultSetMapper<CmdRec> {
 
-    public CmdRec2 map(int index, ResultSet r, StatementContext ctx) throws SQLException {
-        CmdRec2 rec = new CmdRec2();
+    public CmdRec map(int index, ResultSet r, StatementContext ctx) throws SQLException {
+        CmdRec rec = new CmdRec();
         rec.setCmdID(r.getString("cmdID"));
         rec.setCmdType(r.getString("cmdType"));
         rec.setCmdState(r.getString("cmdState"));

@@ -1,8 +1,8 @@
 package cmd;
 
 import ch.qos.logback.classic.Logger;
-import cmd.dao.CmdRec2;
-import cmd.dao.CmdSQL2;
+import cmd.dao.CmdRec;
+import cmd.dao.CmdSQL;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Maps;
@@ -24,7 +24,7 @@ import java.util.Map;
 public class CmdMgrTest {
 
     private static final Logger _log = (Logger) LoggerFactory.getLogger(CmdMgrTest.class);
-    private CmdSQL2 dao;
+    private CmdSQL dao;
     private ObjectMapper mapper = new ObjectMapper();
     private List<Cmd> cmdCleanup = new ArrayList<>();
     private Boolean cleanupRecords = true;
@@ -33,7 +33,7 @@ public class CmdMgrTest {
     public void setup() {
         // TODO change this to work with a DW configuration
         DBI dbi = new DBI("jdbc:postgresql:catalog", "program", "fiddlesticks");
-        dao = dbi.onDemand(CmdSQL2.class);
+        dao = dbi.onDemand(CmdSQL.class);
     }
 
     @After
@@ -61,13 +61,13 @@ public class CmdMgrTest {
             }
 
             @Override
-            public void process(CmdMgr mgr, CmdRec2 cmdRecord) {
+            public void process(CmdMgr mgr, CmdRec cmdRecord) {
                 Cmd cmd = convert(cmdRecord);
             }
 
             @Override
             @SuppressWarnings("unchecked")
-            public Cmd convert(CmdRec2 row) {
+            public Cmd convert(CmdRec row) {
                 try {
                     return mapper.readValue(row.getDoc(), Cmd.class);
                 } catch (Exception e) {
@@ -107,12 +107,12 @@ public class CmdMgrTest {
             }
 
             @Override
-            public void process(CmdMgr mgr, CmdRec2 cmdRecord) {
+            public void process(CmdMgr mgr, CmdRec cmdRecord) {
             }
 
             @Override
             @SuppressWarnings("unchecked")
-            public TestCmd convert(CmdRec2 row) {
+            public TestCmd convert(CmdRec row) {
                 try {
                     return mapper.readValue(row.getDoc(), TestCmd.class);
                 } catch (Exception e) {
@@ -170,7 +170,7 @@ public class CmdMgrTest {
             }
 
             @Override
-            public void process(CmdMgr mgr, CmdRec2 cmdRecord) {
+            public void process(CmdMgr mgr, CmdRec cmdRecord) {
                 TestCmd cmd = convert(cmdRecord);
 
                 if (cmd.someInt == expectedValue) {
@@ -187,7 +187,7 @@ public class CmdMgrTest {
 
             @Override
             @SuppressWarnings("unchecked")
-            public TestCmd convert(CmdRec2 row) {
+            public TestCmd convert(CmdRec row) {
                 try {
                     return mapper.readValue(row.getDoc(), TestCmd.class);
                 } catch (Exception e) {
@@ -206,7 +206,7 @@ public class CmdMgrTest {
 
         // get the cmd record via the event
         for (int retry = 10; retry > 0; retry--) {
-            CmdRec2 result = mgr.getCmdRecord(cmdID);
+            CmdRec result = mgr.getCmdRecord(cmdID);
             _log.info("result CmdRec2 state {}", result.getCmdState());
             if (result.getCmdState().equals(CmdState.completed.name())) {
                 TestCmd test = mgr.getCmd(cmdID);

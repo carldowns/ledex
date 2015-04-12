@@ -10,7 +10,7 @@ import java.util.List;
 
 /**
  */
-public interface CmdSQL2 {
+public interface CmdSQL {
 
     //////////////////////////////
     // CmdRec
@@ -21,7 +21,7 @@ public interface CmdSQL2 {
                     "where cmdID = :cmdID")
 
     @Mapper(CmdRecMapper.class)
-    CmdRec2 getCmd(@Bind("cmdID") String cmdID);
+    CmdRec getCmd(@Bind("cmdID") String cmdID);
 
     @SqlUpdate(
             "insert into CmdRec " +
@@ -71,7 +71,7 @@ public interface CmdSQL2 {
                     "and cmdState in ('started', 'waiting', 'pending')")
 
     @Mapper(CmdRecMapper.class)
-    List<CmdRec2> getDueCmds();
+    List<CmdRec> getDueCmds();
 
     @SqlUpdate(
             "update CmdRec set " +
@@ -112,7 +112,7 @@ public interface CmdSQL2 {
                     "and expireTs > 'current_timestamp")
 
     @Mapper(CmdMutexRecMapper.class)
-    CmdMutexRec2 selectMutex(@Bind("processID") String processID,
+    CmdMutexRec selectMutex(@Bind("processID") String processID,
                             @Bind("mutexID") String mutexID,
                             @Bind("mutexType") String type);
 

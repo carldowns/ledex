@@ -1,8 +1,8 @@
 package cmd;
 
-import cmd.dao.CmdMutexRec2;
-import cmd.dao.CmdRec2;
-import cmd.dao.CmdSQL2;
+import cmd.dao.CmdMutexRec;
+import cmd.dao.CmdRec;
+import cmd.dao.CmdSQL;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
@@ -11,7 +11,6 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.collect.Maps;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.google.inject.name.Named;
 import io.dropwizard.lifecycle.Managed;
 import org.joda.time.Instant;
 import org.skife.jdbi.v2.exceptions.UnableToExecuteStatementException;
@@ -53,7 +52,7 @@ public class CmdMgr implements Managed {
     // mutexes are acquired for Cmd and Event objects before they can be processed.
     // This is list is maintained purely for periodic refresh of the lease period.
 
-    final ConcurrentHashMap<String, CmdMutexRec2> _acquiredMutexes = new ConcurrentHashMap<>();
+    final ConcurrentHashMap<String, CmdMutexRec> _acquiredMutexes = new ConcurrentHashMap<>();
 
     /////////////////////////
     // Handlers
@@ -73,7 +72,7 @@ public class CmdMgr implements Managed {
     // thus avoiding unnecessary repetitive processing.  As a later optimization, the keys
     // of this cache can be used as an exclusion list when retrieving from the store.
 
-    final Cache<String, CmdRec2> _dueCmdCache = CacheBuilder.newBuilder()
+    final Cache<String, CmdRec> _dueCmdCache = CacheBuilder.newBuilder()
             .maximumSize(10000)
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
@@ -88,14 +87,14 @@ public class CmdMgr implements Managed {
     // DAO
     /////////////////////////
 
-    final CmdSQL2 _dao;
+    final CmdSQL _dao;
 
     /////////////////////////
     // Constructors
     /////////////////////////
 
     @Inject
-    public CmdMgr(CmdSQL2 sql, String processID) {
+    public CmdMgr(CmdSQL sql, String processID) {
         _dao = Preconditions.checkNotNull(sql, "CmdSQL");
         _processID = Preconditions.checkNotNull(processID, "processID");
         // TODO: need a way to assert that the processID is in fact unique in the datastore.
@@ -191,12 +190,12 @@ public class CmdMgr implements Managed {
     /////////////////////////
 
     public <C extends Cmd> C getCmd (String cmdID) {
-        CmdRec2 cmdRecord = getCmdRecord(cmdID);
+        CmdRec cmdRecord = getCmdRecord(cmdID);
         Preconditions.checkNotNull(cmdRecord, "unable to retrieve cmdRecord for cmdID %s", cmdID);
         return getCmdHandler(cmdRecord.getCmdType()).convert(cmdRecord);
     }
 
-    public CmdRec2 getCmdRecord (String cmdID) {
+    public CmdRec getCmdRecord (String cmdID) {
         return _dao.getCmd(cmdID);
     }
 
@@ -238,7 +237,7 @@ public class CmdMgr implements Managed {
 
     private void pollForDueCmds() {
         // poll for cmds that are due (AND do not have a mutex (table join))
-        for (CmdRec2 cmd : _dao.getDueCmds()) {
+        for (CmdRec cmd : _dao.getDueCmds()) {
 
             // if the cache has the event ignore it
             if (_dueCmdCache.asMap().containsKey(cmd.getCmdID())) {
@@ -248,7 +247,7 @@ public class CmdMgr implements Managed {
         }
     }
 
-    private void queueCmd(final CmdRec2 cmd) {
+    private void queueCmd(final CmdRec cmd) {
         try {
             _threadPool.execute(new Runnable() {
                 @Override
@@ -272,8 +271,8 @@ public class CmdMgr implements Managed {
 
     //@Transaction(TransactionIsolationLevel.SERIALIZABLE)
     //@Transaction
-    private void acceptCmd (CmdRec2 cmdRecord) {
-        CmdMutexRec2 cmdMutex = null;
+    private void acceptCmd (CmdRec cmdRecord) {
+        CmdMutexRec cmdMutex = null;
         try {
             // if we have a Cmd record, acquire a mutex lock for it or exit
             if (cmdRecord != null) {
@@ -296,7 +295,7 @@ public class CmdMgr implements Managed {
         }
     }
 
-    private void execCmd (CmdRec2 cmdRecord) {
+    private void execCmd (CmdRec cmdRecord) {
         try {
             // handler will deserialize its command implementation
             ICmdHandler<?> handler = getCmdHandler(cmdRecord.getCmdType());
@@ -333,7 +332,7 @@ public class CmdMgr implements Managed {
     }
 
 
-    private CmdMutexRec2 acquireMutex (CmdRec2 cmdRecord) {
+    private CmdMutexRec acquireMutex (CmdRec cmdRecord) {
         String mutexID = cmdRecord.getCmdID();
         String type = cmdRecord.getCmdType();
 
@@ -348,12 +347,12 @@ public class CmdMgr implements Managed {
             return null;
         }
 
-        CmdMutexRec2 mutex = new CmdMutexRec2(_processID, mutexID, type);
+        CmdMutexRec mutex = new CmdMutexRec(_processID, mutexID, type);
         _acquiredMutexes.put(mutexID, mutex);
         return mutex;
     }
 
-    private void releaseMutex (CmdMutexRec2 mutex) {
+    private void releaseMutex (CmdMutexRec mutex) {
         if (mutex == null) {
             return;
         }
@@ -365,7 +364,7 @@ public class CmdMgr implements Managed {
         _acquiredMutexes.remove(mutex.getMutexID());
     }
 
-    private boolean isMutexValid (CmdMutexRec2 mutex) {
+    private boolean isMutexValid (CmdMutexRec mutex) {
         return _dao.selectMutex(_processID, mutex.getMutexID(), mutex.getType()) != null;
     }
 

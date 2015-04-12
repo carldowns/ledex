@@ -2,7 +2,7 @@ package app;
 
 import cmd.CmdMgr;
 import cmd.ICmdHandler;
-import cmd.dao.CmdSQL2;
+import cmd.dao.CmdSQL;
 import catalog.dao.AssemblySQL;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
@@ -81,8 +81,8 @@ public class CatModule extends AbstractModule {
     }
 
     @Provides
-    CmdSQL2 getCmdSQL (CatDBI connectionPool) {
-        return connectionPool.getDbi().onDemand(CmdSQL2.class);
+    CmdSQL getCmdSQL (CatDBI connectionPool) {
+        return connectionPool.getDbi().onDemand(CmdSQL.class);
     }
 
 }

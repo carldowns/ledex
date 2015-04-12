@@ -4,7 +4,7 @@ import cmd.Cmd;
 import cmd.CmdMgr;
 import cmd.CmdRuntimeException;
 import cmd.ICmdHandler;
-import cmd.dao.CmdRec2;
+import cmd.dao.CmdRec;
 import com.google.inject.Singleton;
 
 /**
@@ -19,12 +19,12 @@ import com.google.inject.Singleton;
     }
 
     @Override
-    public void process(CmdMgr mgr, CmdRec2 cmdRecord) {
+    public void process(CmdMgr mgr, CmdRec cmdRecord) {
         throw new CmdRuntimeException("not implemented");
     }
 
     @Override
-    public <C extends Cmd> C convert(CmdRec2 cmdRecord) {
+    public <C extends Cmd> C convert(CmdRec cmdRecord) {
         throw new CmdRuntimeException("not implemented");
     }
 }

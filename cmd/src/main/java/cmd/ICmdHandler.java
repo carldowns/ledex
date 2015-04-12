@@ -1,13 +1,13 @@
 package cmd;
 
-import cmd.dao.CmdRec2;
+import cmd.dao.CmdRec;
 
 
 public interface ICmdHandler<T extends Cmd>  {
 
     String getCmdType();
-    void process(CmdMgr mgr, CmdRec2 cmdRecord);
-    <C extends Cmd> C convert(CmdRec2 cmdRecord);
+    void process(CmdMgr mgr, CmdRec cmdRecord);
+    <C extends Cmd> C convert(CmdRec cmdRecord);
 }
 
 
