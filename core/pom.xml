@@ -28,6 +28,11 @@
 
         <dependency>
             <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-assets</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-jdbi</artifactId>
         </dependency>
 
@@ -54,6 +59,18 @@
         <dependency>
             <groupId>com.google.inject.extensions</groupId>
             <artifactId>guice-multibindings</artifactId>
+        </dependency>
+
+        <!-- web interface -->
+
+        <dependency>
+            <groupId>com.bazaarvoice.dropwizard</groupId>
+            <artifactId>dropwizard-webjars-bundle</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>angularjs</artifactId>
         </dependency>
 
         <!-- testing -->

@@ -4,9 +4,11 @@ import app.resource.AssemblyResource;
 import app.resource.PartResource;
 import app.resource.SupplierResource;
 import app.resource.WorkflowResource;
+import com.bazaarvoice.dropwizard.webjars.WebJarBundle;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import io.dropwizard.Application;
+import io.dropwizard.assets.AssetsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import task.PingTask;
@@ -17,9 +19,7 @@ import task.PingTask;
 public class CatApplication extends Application<CatConfiguration> {
 
 
-    public static void main(String[] args)
-            throws Exception {
-
+    public static void main(String[] args) throws Exception {
         new CatApplication().run(args);
     }
 
@@ -31,27 +31,26 @@ public class CatApplication extends Application<CatConfiguration> {
     @Override
     public void initialize(Bootstrap<CatConfiguration> bootstrap) {
         bootstrap.addCommand(new CatCommand());
+        bootstrap.addBundle(new AssetsBundle());
+        bootstrap.addBundle(new WebJarBundle());
     }
 
     @Override
-    public void run(CatConfiguration config, Environment env)
-            throws ClassNotFoundException {
+    public void run(CatConfiguration config, Environment env) throws ClassNotFoundException {
         Injector injector = Guice.createInjector(new CatModule(config, env));
         initTasks(injector, config, env);
         initResources(injector, config, env);
         initHealthChecks(injector, config, env);
     }
 
-    private void initResources(Injector injector, CatConfiguration config, Environment env)
-            throws ClassNotFoundException {
+    private void initResources(Injector injector, CatConfiguration config, Environment env) throws ClassNotFoundException {
         env.jersey().register(injector.getInstance(SupplierResource.class));
         env.jersey().register(injector.getInstance(AssemblyResource.class));
         env.jersey().register(injector.getInstance(PartResource.class));
         env.jersey().register(injector.getInstance(WorkflowResource.class));
     }
 
-    private void initTasks(Injector injector, CatConfiguration config, Environment env)
-            throws ClassNotFoundException {
+    private void initTasks(Injector injector, CatConfiguration config, Environment env) throws ClassNotFoundException {
         env.admin().addTask(injector.getInstance(PingTask.class));
     }
 
