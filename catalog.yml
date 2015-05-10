@@ -9,7 +9,7 @@ database:
   user: program
 
   # the password
-  password: fiddlesticks
+  #password:
 
   # the JDBC URL
   url: jdbc:postgresql:catalog

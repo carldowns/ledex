@@ -27,7 +27,7 @@ public class CmdSQLTest {
     @Before
     public void setup() {
         // TODO change this to work with a DW configuration
-        DBI dbi = new DBI("jdbc:postgresql:catalog", "program", "fiddlesticks");
+        DBI dbi = new DBI("jdbc:postgresql:catalog", "program", "");
         dao = dbi.onDemand(CmdSQL.class);
     }
 
