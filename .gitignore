@@ -4,5 +4,5 @@
 .settings/
 target/
 logs/
-data/
+etc/data/
 ledex.iml

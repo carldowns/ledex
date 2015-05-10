@@ -1,0 +1,71 @@
+[
+  {
+    "partID": "LIGHT-01",
+    "supplierID": "S1000",
+    "name": "Flex LED Light Strip",
+    "function": "LIGHT",
+    "skuLabel" : "FLEX",
+    "properties": [
+      {
+        "type": "VOLTAGE",
+        "name": "Supported Voltage",
+        "value": "12VDC"
+      },
+      {
+        "type": "LED_TYPE",
+        "name": "LED Type",
+        "value": "5050"
+      },
+      {
+        "type": "LED_COLOR",
+        "name": "LED Color",
+        "value": "UVA"
+      },
+      {
+        "type": "STRIP_LENGTH",
+        "name": "Strip Length",
+        "skuLabel" : "{value}",
+        "increment": {
+          "incMin": "2in",
+          "incMax": "72in",
+          "incDiv": "1in"
+        }
+      }
+    ],
+    "costs": [
+      {
+        "qty": 100,
+        "baseCost": "5.00 USD",
+        "increments": [
+          {
+            "type": "STRIP_LENGTH",
+            "name": "Strip Length",
+            "addCost": "1.00 USD"
+          }
+        ]
+      },
+      {
+        "qty": 250,
+        "baseCost": "4.00 USD",
+        "increments": [
+          {
+            "type": "STRIP_LENGTH",
+            "name": "STRIP_LENGTH",
+            "addCost": "0.50 USD"
+          }
+        ]
+      },
+      {
+        "qty": 500,
+        "baseCost": "3.00 USD",
+        "increments": [
+          {
+            "type": "STRIP_LENGTH",
+            "name": "STRIP_LENGTH",
+            "addCost": "0.25 USD"
+          }
+        ]
+      }
+    ]
+  }
+]

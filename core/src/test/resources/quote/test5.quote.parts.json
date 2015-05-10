@@ -1,0 +1,255 @@
+[
+  {
+    "partID": "ADAPT-01",
+    "supplierID": "S1000",
+    "name": "AC Adapter",
+    "function": "POWER",
+    "skuLabel" : "ADAPT",
+    "properties": [
+      {
+        "type": "VOLTAGE",
+        "name": "Voltage current",
+        "value": "12VDC"
+      },
+      {
+        "type": "AMPERAGE",
+        "name": "Amp output",
+        "value": "1A"
+      },
+      {
+        "type": "SWITCH",
+        "name": "Inline On/Off switch",
+        "skuLabel": "S"
+      },
+      {
+        "type": "POWER_CORD_LENGTH",
+        "name": "Cord Length",
+        "skuLabel" : "CordLength-{value}",
+        "increment": {
+          "incMin": "12in",
+          "incMax": "144in",
+          "incDiv": "1in"
+        }
+      }
+    ],
+    "costs": [
+      {
+        "qty": 100,
+        "baseCost": "5 USD",
+        "increments": [
+          {
+            "type": "POWER_CORD_LENGTH",
+            "name": "Cord Length",
+            "addCost": "0.10 USD"
+          }
+        ]
+      },
+      {
+        "qty": 250,
+        "baseCost": "4 USD",
+        "increments": [
+          {
+            "type": "POWER_CORD_LENGTH",
+            "name": "Cord Length",
+            "addCost": "0.09 USD"
+          }
+        ]
+      },
+      {
+        "qty": 500,
+        "baseCost": "3 USD",
+        "increments": [
+          {
+            "type": "POWER_CORD_LENGTH",
+            "name": "Cord Length",
+            "addCost": "0.08 USD"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "partID": "LIGHT-01",
+    "supplierID": "S1000",
+    "name": "Flex LED Light Strip",
+    "function": "LIGHT",
+    "skuLabel" : "FLEX",
+    "connections": [
+      {
+        "type": "JST-01",
+        "gender": "female",
+        "pinOut": "vcc,gnd"
+      }
+    ],
+    "properties": [
+      {
+        "type": "LED_TYPE",
+        "name": "LED Type",
+        "value": "3528"
+      },
+      {
+        "type": "LED_COLOR",
+        "name": "Color",
+        "value": "White"
+      },
+      {
+        "type": "LED_COLOR_TEMP",
+        "name": "Color Temp",
+        "value": "6000k"
+      },
+      {
+        "type": "LED_BEAM_ANGLE",
+        "name": "LED beam angle",
+        "value": "180 degrees",
+        "skuLabel" : "180d"
+      },
+      {
+        "type": "VOLTAGE",
+        "name": "Supported Voltage",
+        "value": "4.5VDC"
+      },
+      {
+        "type": "STRIP_LENGTH",
+        "name": "Strip Length",
+        "skuLabel": "StripLength-{value}",
+        "increment": {
+          "incMin": "5cm",
+          "incMax": "500cm",
+          "incDiv": "5cm"
+        }
+      },
+      {
+        "type": "FEMALE_LEAD_LENGTH",
+        "name": "Strip Input Lead Length",
+        "skuLabel": "{value}L",
+        "increment": {
+          "incMin": "2in",
+          "incMax": "36in",
+          "incDiv": "1in"
+        }
+      }
+    ],
+    "costs": [
+      {
+        "qty": 50,
+        "baseCost": "3.00 USD",
+        "increments": [
+          {
+            "type": "STRIP_LENGTH",
+            "name": "Strip Length",
+            "addCost": "1.00 USD"
+          },
+          {
+            "type": "FEMALE_LEAD_LENGTH",
+            "name": "Strip Input Lead Length",
+            "addCost": "0.10 USD"
+          }
+        ]
+      },
+      {
+        "qty": 250,
+        "baseCost": "2.00 USD",
+        "increments": [
+          {
+            "type": "STRIP_LENGTH",
+            "name": "STRIP_LENGTH",
+            "addCost": "0.04 USD"
+          },
+          {
+            "type": "FEMALE_LEAD_LENGTH",
+            "name": "Strip Input Lead Length",
+            "addCost": "0.01 USD"
+          }
+        ]
+      },
+      {
+        "qty": 500,
+        "baseCost": "1.00 USD",
+        "increments": [
+          {
+            "type": "STRIP_LENGTH",
+            "name": "STRIP_LENGTH",
+            "addCost": "0.03 USD"
+          },
+          {
+            "type": "FEMALE_LEAD_LENGTH",
+            "name": "Strip Input Lead Length",
+            "addCost": "0.01 USD"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "partID": "PLUG-01",
+    "supplierID": "S1000",
+    "name": "Threaded Jack Plug",
+    "function": "PLUG",
+    "skuLabel" : "PLUG",
+    "connections": [
+      {
+        "type": "5MM_BARREL_JACK",
+        "gender": "female",
+        "pinOut": "center-pos"
+      },
+      {
+        "type": "JST-01",
+        "gender": "male",
+        "pinOut": "gnd,vcc"
+      }
+    ],
+    "properties": [
+      {
+        "type": "PLUG_THREAD_DEPTH",
+        "name": "Thread Depth",
+        "value" : "8mm",
+        "skuLabel" : "ThreadDepth-8mm"
+      },
+      {
+        "type": "LEAD_LENGTH",
+        "name": "Lead Wire Length",
+        "skuLabel" : "LeadWireLength-{value}",
+        "increment": {
+          "incMin": "5cm",
+          "incMax": "500cm",
+          "incDiv": "1cm"
+        }
+      }
+    ],
+    "costs": [
+      {
+        "qty": 50,
+        "baseCost": "1.00 USD",
+        "increments": [
+          {
+            "type": "LEAD_LENGTH",
+            "name": "Lead Wire Length",
+            "addCost": "0.05 USD"
+          }
+        ]
+      },
+      {
+        "qty": 100,
+        "baseCost": "0.90 USD",
+        "increments": [
+          {
+            "type": "LEAD_LENGTH",
+            "name": "Lead Wire Length",
+            "addCost": "0.04 USD"
+          }
+        ]
+      },
+      {
+        "qty": 250,
+        "baseCost": "0.80 USD",
+        "increments": [
+          {
+            "type": "LEAD_LENGTH",
+            "name": "Lead Wire Length",
+            "addCost": "0.03 USD"
+          }
+        ]
+      }
+    ]
+  }
+]
